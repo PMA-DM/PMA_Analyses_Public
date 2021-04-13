@@ -134,7 +134,7 @@ cd "`briefdir'"
 use "`datadir'",clear
 
 * Confirm that it is phase 1 data
-gen check=(phase==1)
+gen check=(phase=="1")
 	if check!=1 {
 		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
 		exit
