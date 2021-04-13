@@ -173,7 +173,7 @@ use "`datadir'",clear
 * Confirm that it is phase 1 data
 gen check=(phase==1)
 	if check!=1 {
-		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
+		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
 		stop
 		}
 	drop check
@@ -192,14 +192,14 @@ gen check=(phase==1)
 *	Weight Variable
 	capture confirm var `weight'
 	if _rc!=0 {
-		di in smcl as error "Variable `weight' not found in dataset. Please search for the correct weight variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
+		di in smcl as error "Variable `weight' not found in dataset. Please search for the correct weight variable in the dataset and update the local macro 'weight'. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
 		stop
 		}
 		
 *	Wealth Variable	
 	capture confirm var `wealth'
 	if _rc!=0 {
-		di in smcl as error "Variable `wealth' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
+		di in smcl as error "Variable `wealth' not found in dataset. Please search for the correct wealth variable in the dataset and update the local macro 'wealth'. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
 		stop
 		} 
 
@@ -555,7 +555,7 @@ label values wanted_later wanted_laterlist
 * Percent not wanted at all
 gen wanted_nomore = 1 if wanted == 3
 replace wanted_nomore = 0 if wanted == 1| wanted == 2
-label variable wanted_nomore "% Wanted nomore" 
+label variable wanted_nomore "% Wanted no more" 
 label define wanted_nomorelist 1 "Wanted none at all" 0"Wanted then or later"
 label values wanted_nomore wanted_nomorelist
 
@@ -629,7 +629,7 @@ label var attitude_lifestyle "Self Attittude: People who use FP have a better qu
 	label var wge_conflict "If I use FP it could/will cause conflict in my relationship" 
 	label val wge_conflict agree_down5_list
 
-* Rename fp_aut* varaibles to wge
+* Rename fp_aut* variables to wge
 rename fp_aut_otherptr wge_seek_partner
 rename fp_aut_diffpreg wge_trouble_preg
 rename fp_aut_abchild wge_abnormal_birth 
@@ -1005,7 +1005,7 @@ save, replace
 
 * ALERT FOR ALL DATA
 pause on
-di in smcl as error "Data presented in the online breifs represent preliminary results and therefore there may be slight differences between the .do file results and those in the brief. Please access datalab at https://datalab.pmadata.org/ to cross check any discrepancies"
+di in smcl as error "Data presented in the online briefs represent preliminary results and therefore there may be slight differences between the .do file results and those in the brief. Please access datalab at https://datalab.pmadata.org/ to cross check any discrepancies"
 di in smcl as error "Please type 'end' to continue"
 pause
 pause off
@@ -1252,7 +1252,7 @@ tabout intention_use worked_recent [aw=`weight'] ///
 * Personal Attitudes
 *******************************************************************************
 
-* Percent of women who personally agree with th following statements made about 
+* Percent of women who personally agree with the following statements made about 
 *	contraceptive use,
 *	by age
 *	1) Adolescents who use FP are promiscuous
@@ -1265,7 +1265,7 @@ foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifesty
 	h1("Personal norms around FP by contraceptive use age (weighted) - all women")
 	}
 	
-* Percent of women who personally agree with th following statements made about 
+* Percent of women who personally agree with the following statements made about 
 *	contraceptive use,
 *	by residence
 *	1) Adolescents who use FP are promiscuous
