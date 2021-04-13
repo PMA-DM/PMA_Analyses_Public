@@ -376,7 +376,7 @@ pause off
 * 	among public and private facilities offering familiy planning
 tabout fees_rw sector if fp_offered==1 ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h2("Percent of public and private facilities where FP clients have to pay fees to be seen by a provider")
+	h1("Percent of public and private facilities where FP clients have to pay fees to be seen by a provider")
 
 *******************************************************************************
 * FACILITY READINESS
@@ -386,13 +386,13 @@ tabout fees_rw sector if fp_offered==1 ///
 *	among all facilities providing implants
 tabout implant_supplies_personnel sector ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h2("Has a trained provider and supplies for implant insertion/removal- Among facilities providing implants")
+	h1("Has a trained provider and supplies for implant insertion/removal- Among facilities providing implants")
 	
 * IUD insertion and removal,
 *	among all facilities providing IUDs
 tabout iud_supplies_personnel sector ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h2("Has a trained provider and supplies for IUD insertion/removal- Among facilities providing IUDs")
+	h1("Has a trained provider and supplies for IUD insertion/removal- Among facilities providing IUDs")
 	
 *******************************************************************************
 * OBTAINED METHOD FROM PUBLIC FACILITY
