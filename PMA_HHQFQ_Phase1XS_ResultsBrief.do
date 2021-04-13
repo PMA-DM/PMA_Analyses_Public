@@ -1073,6 +1073,7 @@ pause off
 *******************************************************************************
 * Modern Contraceptive Method Mix
 *******************************************************************************
+capture ssc install tabout 
 
 * Current/recent method, 
 *	among married women currently using a modern method
