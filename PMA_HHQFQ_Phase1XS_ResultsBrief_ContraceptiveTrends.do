@@ -265,6 +265,9 @@ local today=c(current_date)
 local c_today= "`today'"
 local date=subinstr("`c_today'", " ", "",.)
 
+global level1_var `subnational_unit'
+global level1 `subnational'
+
 *******************************************************************************
 * SECTION 4: RESPONSE RATES
 *
@@ -501,8 +504,10 @@ putexcel A`row'=("PMA")
 forval i=1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
 	if "$level1"!="" {
-		keep if level1=="$level1"	
-		replace level1 = upper(level1)
+		numlabel, remove force
+		decode $level1_var, gen(str_$level1_var)
+		replace str_$level1_var = proper(str_$level1_var)
+		keep if str_$level1_var == proper("$level1")
 		}
 	
 	capture rename EA EA_ID
@@ -643,11 +648,12 @@ local row=`PMA2020dataset_count'+2
 forval y = 1/17 {
 	forval i = 1/`PMAdataset_count' {
 		use "`PMAdataset`i''", clear
-		if "$level1"!="" {
-			keep if level1=="$level1"	
-			replace level1 = upper(level1)
-			}
-
+	if "$level1"!="" {
+		numlabel, remove force
+		decode $level1_var, gen(str_$level1_var)
+		replace str_$level1_var = proper(str_$level1_var)
+		keep if str_$level1_var == proper("$level1")
+	}
 		capture rename EA EA_ID
 		capture rename ClusterID Cluster_ID
 		
@@ -846,8 +852,10 @@ forval i = 1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
 
 	if "$level1"!="" {
-		keep if level1=="$level1"	
-		replace level1 = upper(level1)
+		numlabel, remove force
+		decode $level1_var, gen(str_$level1_var)
+		replace str_$level1_var = proper(str_$level1_var)
+		keep if str_$level1_var == proper("$level1")
 		}
 	
 	capture rename EA EA_ID
