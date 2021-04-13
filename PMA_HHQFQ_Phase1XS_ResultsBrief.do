@@ -745,6 +745,15 @@ gen wge_quint=.
 	replace wge_quint=5 if fp_wge_comb==5
 	
 label var wge_quint "WGE Quintile values, from least to most"	
+
+if country=="Nigeria" {
+drop wge_quint
+gen wge_quint=. 
+	replace wge_quint=1 if fp_wge_comb>=1 & fp_wge_comb<=3
+	replace wge_quint=3 if fp_wge_comb>3 & fp_wge_comb<=4
+	replace wge_quint=4 if fp_wge_comb>4 & fp_wge_comb<5
+	replace wge_quint=5 if fp_wge_comb==5
+	}
 	
 save, replace
 
