@@ -481,6 +481,11 @@ forval i = 1/`PMA2020dataset_count' {
 		gen strata=1
 		}
 	
+	if country=="Nigeria" | country=="NG" {
+		if "`subnational'"=="lagos" capture rename FQweight_Lagos FQweight 
+		if "`subnational'"=="kano" 	capture rename FQweight_Kano FQweight 
+		}
+	
 	svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
 	foreach group in all {
 	preserve
@@ -622,6 +627,11 @@ forval y = 1/17 {
 			}
 		else{
 			gen strata=1
+			}
+			
+		if country=="Nigeria" | country=="NG" {
+			if "`subnational'"=="lagos" capture rename FQweight_Lagos FQweight 
+			if "`subnational'"=="kano" 	capture rename FQweight_Kano FQweight 
 			}
 			
 		label define methods_list_num 1 "Female Sterilization" 2 "Male Sterilization" 3 "Implants" 4 "IUD"  5 "Injectables-IM"  ///
@@ -803,6 +813,11 @@ forval i = 1/`PMA2020dataset_count' {
 		}
 	else{
 		gen strata=1
+		}
+			
+	if country=="Nigeria" | country=="NG" {
+		if "`subnational'"=="lagos" capture rename FQweight_Lagos FQweight 
+		if "`subnational'"=="kano" 	capture rename FQweight_Kano FQweight 
 		}
 	
 	svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
