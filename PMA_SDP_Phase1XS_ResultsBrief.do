@@ -140,7 +140,7 @@ use "`datadir'",clear
 gen check=(phase==1)
 	if check!=1 {
 		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
-		stop
+		exit
 		}
 	drop check
 
@@ -151,7 +151,7 @@ gen check=(phase==1)
 	gen check=(countrycheck==country)
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
-		stop
+		exit
 		}
 	drop countrycheck check
 
@@ -169,7 +169,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check county
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -186,7 +186,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check region
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop		
+				exit		
 				}
 		local country `country'_`subnational'
 		drop subnational region_string subnational_keep subnational_keep1 check
@@ -203,7 +203,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
