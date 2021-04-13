@@ -291,12 +291,12 @@ if _rc == 0 {
 
 
 	gen stockout_why_injectables=. 
-		replace stockout_why_injectables = 1 if (stockout_why_inj_dp == 1| stockout_why_inj_sp == 1)
-		replace stockout_why_injectables = 2 if (stockout_why_inj_dp == 2| stockout_why_inj_sp == 2)
-		replace stockout_why_injectables = 3 if (stockout_why_inj_dp == 3| stockout_why_inj_sp == 3)
-		replace stockout_why_injectables = 4 if (stockout_why_inj_dp == 4| stockout_why_inj_sp == 4)
-		replace stockout_why_injectables = 5 if (stockout_why_inj_dp == 5| stockout_why_inj_sp == 5)
-		replace stockout_why_injectables = 96 if (stockout_why_inj_dp == 96| stockout_why_inj_sp == 96) & stockout_why_injectables==.
+		replace stockout_why_injectables = 1 if (stockout_why_dp == 1| stockout_why_sp == 1)
+		replace stockout_why_injectables = 2 if (stockout_why_dp == 2| stockout_why_sp == 2)
+		replace stockout_why_injectables = 3 if (stockout_why_dp == 3| stockout_why_sp == 3)
+		replace stockout_why_injectables = 4 if (stockout_why_dp == 4| stockout_why_sp == 4)
+		replace stockout_why_injectables = 5 if (stockout_why_dp == 5| stockout_why_sp == 5)
+		replace stockout_why_injectables = 96 if (stockout_why_dp == 96| stockout_why_sp == 96) & stockout_why_injectables==.
 		label values stockout_why_injectables out_of_stock_reason_list	
 	}
 * Generate Label
