@@ -278,7 +278,7 @@ pause off
 
 * Provider told woman of the advantages/disadvantages of the FP method,
 *	all fp clients
-tabout prov_disc_fp ///
+tabout disc_mtd_pro_con ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
 	h1("Provider told female client about the advantages and disadvantages of the FP method - women who were prescribed a method")
 
