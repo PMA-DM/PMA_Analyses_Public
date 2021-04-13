@@ -229,6 +229,30 @@ local PSU "EA_ID"
 *		- For example (DRC): nothing (there is no strata variable in DRC)
 local strata "strata"
 
+*	5. The subnational macros allow you to generate the estimates on one of
+*		 PMA's subnational restulsts brief. The value for the subnational_yn 
+*		 macro should be "yes" if you are running a subnational estimate, or 
+*		 "no" if you are running a national estimate. If you are running a 
+*		 subnational estimate, the value for the subnational_unit macro should 
+*		 be the name of the geographical level, and the value for the subnational 
+*		 macro should be the name of the region as it appears in the highest 
+*		 geographical level variable, typically "region" or "county". 
+*		 If you are not running a submational estimate, leave the subnational_unit 
+*		 and subnational macros empty ("")
+*		 - For example (No subnational estimate):
+*		   local subnational_yn "no"
+*		   local subnational_unit ""
+*		   local subnational ""
+*		 - For example (Subnational estimate for Kenya, Kericho county):
+*		   local subnational_yn "yes"
+*		   local subnational_unit county
+*		   local subnational "KERICHO"
+		
+local subnational_yn "yes"
+local subnational_unit state
+local subnational "kano"
+
+
 *******************************************************************************
 * SECTION 3: CREATE MACRO FOR DATE, XLS and Dataset
 *
@@ -288,6 +312,13 @@ use "`PMAdataset1'",clear
 * Subnational estimates
 gen subnational_yn="`subnational_yn'"
 
+*	Subnational Unit Variable 
+	if subnational_yn=="yes" capture confirm var `subnational_unit' 
+	if _rc!=0 {
+		di in smcl as error "Variable `subnational_unit' not found in dataset. Please search for the correct geographic variable in the dataset to specify as the local macro, update the local and rerun the .do file"
+		exit
+		}
+		
 *	Kenya
 	if country=="Kenya" & subnational_yn=="yes" {
 		gen subnational="`subnational'"
@@ -321,7 +352,30 @@ gen subnational_yn="`subnational_yn'"
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
-					
+
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}
+		
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_Log_`date'.log", replace		
 
