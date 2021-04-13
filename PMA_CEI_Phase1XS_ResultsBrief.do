@@ -275,7 +275,18 @@ pause off
 *******************************************************************************
 * CLIENT EXIT INTERVIEWS
 *******************************************************************************
+*Recode missing values
+foreach var in disc_mtd_pro_con fp_obtain_desired service_satisfied {
+	recode `var' (-88 -99 -77 =.)
+	}
 
+*Generatea combined satisfaction with FP services indicator
+gen satisfaction_fpservice = 0 if service_satisfied!=.
+replace satisfaction_fpservice = 1 if (service_satisfied == 1| service_satisfied == 2)
+label define satisfaction_fpservice_lab 1 "Satisfied/Very Satisfied" 0 "Not very satisfied/very satisfied"
+label values satisfaction_fpservice satisfaction_fpservice_lab
+label var satisfaction_fpservice "Satisfaction with FP services provided at this facility on the day of survey"	
+	
 * Provider told woman of the advantages/disadvantages of the FP method,
 *	all fp clients
 tabout disc_mtd_pro_con ///
@@ -290,7 +301,7 @@ tabout fp_obtain_desired ///
 	
 * Obtained desired FP method,
 * 	all fp clients
-tabout service_satisfied ///
+tabout satisfaction_fpservice ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
 	h1("Female client satisfied with the FP services - women who were prescribed a method")
 
