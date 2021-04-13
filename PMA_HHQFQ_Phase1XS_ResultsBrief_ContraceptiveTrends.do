@@ -287,7 +287,7 @@ use "`PMAdataset1'",clear
 	gen check=(countrycheck==country)
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
-		stop
+		exit
 		}
 	drop countrycheck check
 
@@ -295,21 +295,21 @@ use "`PMAdataset1'",clear
 	capture confirm var `weight'
 	if _rc!=0 {
 		di in smcl as error "Variable `weight' not found in dataset. Please search for the correct weight variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		exit
 		}
 		
 *	PSU Variable
 	capture confirm var `PSU'
 	if _rc!=0 {
-		di in smcl as error "Variable `PUS' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		di in smcl as error "Variable `PSU' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
+		exit
 		} 
 		
 *	Strata Variable
 	capture confirm var `strata'
 	if _rc!=0 {
-		di in smcl as error "Variable `strata' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		di in smcl as error "Variable `strata' not found in dataset. Please search for the correct strata variable in the dataset to specify as the local macro and rerun the .do file. Some countries do not have a strata variable and the macro should be left blank"
+		exit
 		} 
 
 * Subnational estimates
@@ -333,7 +333,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check county
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -350,7 +350,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
