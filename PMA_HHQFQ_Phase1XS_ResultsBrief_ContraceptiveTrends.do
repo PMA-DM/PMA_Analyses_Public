@@ -474,7 +474,8 @@ forval i = 1/`PMA2020dataset_count' {
 	egen all=tag(FQmetainstanceID)
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($leve1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
@@ -559,7 +560,8 @@ forval i=1/`PMAdataset_count' {
 	egen all=tag(FQmetainstanceID)
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($leve1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
@@ -615,7 +617,8 @@ forval y = 1/17 {
 		putexcel C`row'=("`PMA2020dataset`i'dates'")
 
 		if "`strata'"!="" {
-			capture egen strata=concat(`strata'), punct(-)
+			capture egen strata=concat($leve1_var ur), punct(-)
+			capture egen strata=concat($level1_var), punct(-)
 			}
 		else{
 			gen strata=1
@@ -665,7 +668,8 @@ forval y = 1/17 {
 		putexcel C`row'=("`PMAdatasett`i'dates'")
 
 		if "`strata'"!="" {
-			capture egen strata=concat(`strata'), punct(-)
+			capture egen strata=concat($leve1_var ur), punct(-)
+			capture egen strata=concat($level1_var), punct(-)
 			}
 		else{
 			gen strata=1
@@ -794,7 +798,8 @@ forval i = 1/`PMA2020dataset_count' {
 	egen umsex = tag(FQmetainstanceID) if umsexactive == 1
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($level1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
@@ -910,7 +915,8 @@ forval i = 1/`PMAdataset_count' {
 	
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($level1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
