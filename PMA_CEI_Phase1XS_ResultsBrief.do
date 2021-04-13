@@ -205,6 +205,31 @@ gen subnational_yn="`subnational_yn'"
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
+		
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}
+			
+	
 			
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase1_XS_CEI_Log_`date'.log", replace		
