@@ -423,7 +423,9 @@ forval i = 1/`PMA2020dataset_count' {
 		keep if str_$level1_var == proper("$level1")
 		}
 		
-	putexcel B`row'=("Round `i'")
+	quietly sum round
+	local round `r(max)'
+	putexcel B`row'=("Round `round'")
 	putexcel C`row'=("`PMA2020dataset`i'dates'")
 
 	** COUNT - Female Sample - All **
@@ -607,7 +609,9 @@ forval y = 1/17 {
 			keep if str_$level1_var == proper("$level1")
 			}
 			
-		putexcel B`row' =("Round `i'")
+		quietly sum round
+		local round `r(max)'
+		putexcel B`row'=("Round `round'")
 		putexcel C`row'=("`PMA2020dataset`i'dates'")
 
 		if "`strata'"!="" {
@@ -747,7 +751,10 @@ forval i = 1/`PMA2020dataset_count' {
 		replace str_$level1_var = proper(str_$level1_var)
 		keep if str_$level1_var== proper("$level1")
 		}
-	putexcel B`row'=("Round `i'")
+	
+	quietly sum round
+	local round `r(max)'
+	putexcel B`row'=("Round `round'")
 	putexcel C`row'=("`PMA2020dataset`i'dates'")
 	
 * Generate Unmarried sexually active	
