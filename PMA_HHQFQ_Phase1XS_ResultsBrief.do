@@ -813,9 +813,9 @@ gen recentmarriageyear=year(dofc(husband_cohabit_start_recentSIF))
 	recode firstmarriageyear 2030=.
 	recode recentmarriageyear 2030=.
 	
-*** Recode month as missing if equal to -87
-	replace firstmarriagemonth=1 if firstmarriagemonth==-87
-	replace recentmarriagemonth=1 if recentmarriagemonth==-87
+*** Recode month as missing if equal to -88
+	replace firstmarriagemonth=1 if firstmarriagemonth==-88 | firstmarriagemonth==0 | firstmarriagemonth==-87
+	replace recentmarriagemonth=1 if recentmarriagemonth==-88 | recentmarriagemonth==0 | recentmarriagemonth==-87
 	
 *** Generate marriage century month code variable
 	gen marriagecmc=(firstmarriageyear-1900)*12+firstmarriagemonth
