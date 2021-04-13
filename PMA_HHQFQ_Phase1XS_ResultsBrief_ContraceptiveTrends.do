@@ -40,7 +40,7 @@
 *******************************************************************************/
 
 *******************************************************************************
-* SECITON A: STATA SET UP (PLEASE DO NOT DELETE)
+* SECTION A: STATA SET UP (PLEASE DO NOT DELETE)
 *
 * Section A is necessary to make sure the .do file runs correctly, please do not 
 *	move, update or delete
@@ -219,7 +219,7 @@ local weight "FQweight"
 *		that corresponds to the primary sampling unit in the country. It should
 *		be either EA_ID or Cluster_ID depending on the country.
 *		- For example (Kenya): EA_ID
-*		- For example (Nigeria): Cluseter_ID
+*		- For example (Nigeria): Cluster_ID
 local PSU "EA_ID"
 
 *	4. The strata local should be the variables that are used to calculate the
