@@ -3,7 +3,7 @@
 * 	generate its Phase 1 cross sectional results briefs using PMA's publicly  
 * 	available Client Exit Interview dataset
 *
-* This .do file will only work on Phase 1 SDP cross sectional datasets. You 
+* This .do file will only work on Phase 1 CEI cross sectional datasets. You 
 *   can  find the .do files to generate the .xls file outputs for PMA's publicly
 * 	available Phase 1 Household and Female datasets and other surveys in the  
 *   PMA_Analyses_Public repository
@@ -136,7 +136,7 @@ use "`datadir'",clear
 * Confirm that it is phase 1 data
 gen check=(phase==1)
 	if check!=1 {
-		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
+		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
 		stop
 		}
 	drop check
@@ -255,19 +255,19 @@ pause off
 *	all fp clients
 tabout prov_disc_fp ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h1("Provider told female cleint about the advantages and disadvantages of the FP method - women who were prescribed a method")
+	h1("Provider told female client about the advantages and disadvantages of the FP method - women who were prescribed a method")
 
 * Obtained desired FP method,
 * 	all fp clients
 tabout fp_obtain_desired ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h1("Female client received the method they desired - women who were prescribed. amethod")
+	h1("Female client received the method they desired - women who were prescribed a method")
 	
 * Obtained desired FP method,
 * 	all fp clients
 tabout service_satisfied ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h1("Female client satisfied with the FP services - women who were prescribed. amethod")
+	h1("Female client satisfied with the FP services - women who were prescribed a method")
 
 *******************************************************************************
 * CLOSE
