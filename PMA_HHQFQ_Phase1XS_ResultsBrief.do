@@ -1082,10 +1082,14 @@ tabout current_methodnum_rc if mcp==1 & married==1 [aweight=`weight'] ///
 	h2("Method Mix - married women (weighted)")
 
 * Current/recent method, 
-*	among unmarried sexually active women currently using a modern method
-tabout current_methodnum_rc if mcp==1 & umsexactive==1 [aweight=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
-	h2("Method mix - unmarried sexually active women (weighted)") 
+*	among unmarried sexually active women currently using a modern method if N>=50
+quietly tab current_methodnum_rc if umsexactive==1 & mcp==1
+
+if r(N)>=50 {
+	tabout current_methodnum_rc if mcp==1 & umsexactive==1 [aweight=`weight'] ///
+		using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+		h2("Method mix - unmarried sexually active women (weighted)") 
+	}
 
 *******************************************************************************
 * Method Use, Unmet Need, and Demand Satisfied by a Modern Method
