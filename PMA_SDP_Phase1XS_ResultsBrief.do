@@ -137,10 +137,10 @@ cd "`briefdir'"
 use "`datadir'",clear
 
 * Confirm that it is phase 1 data
-gen check=(phase==1)
+gen check=(phase=="1")
 	if check!=1 {
 		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
-		stop
+		exit
 		}
 	drop check
 
@@ -151,7 +151,7 @@ gen check=(phase==1)
 	gen check=(countrycheck==country)
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
-		stop
+		exit
 		}
 	drop countrycheck check
 
@@ -169,7 +169,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check county
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -186,7 +186,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check region
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop		
+				exit		
 				}
 		local country `country'_`subnational'
 		drop subnational region_string subnational_keep subnational_keep1 check
@@ -203,11 +203,35 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
+
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}
+			
 			
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase1_XS_SDP_Log_`date'.log", replace		
@@ -352,7 +376,7 @@ pause off
 * 	among public and private facilities offering familiy planning
 tabout fees_rw sector if fp_offered==1 ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h2("Percent of public and private facilities where FP clients have to pay fees to be seen by a provider")
+	h1("Percent of public and private facilities where FP clients have to pay fees to be seen by a provider")
 
 *******************************************************************************
 * FACILITY READINESS
@@ -362,13 +386,13 @@ tabout fees_rw sector if fp_offered==1 ///
 *	among all facilities providing implants
 tabout implant_supplies_personnel sector ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h2("Has a trained provider and supplies for implant insertion/removal- Among facilities providing implants")
+	h1("Has a trained provider and supplies for implant insertion/removal- Among facilities providing implants")
 	
 * IUD insertion and removal,
 *	among all facilities providing IUDs
 tabout iud_supplies_personnel sector ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h2("Has a trained provider and supplies for IUD insertion/removal- Among facilities providing IUDs")
+	h1("Has a trained provider and supplies for IUD insertion/removal- Among facilities providing IUDs")
 	
 *******************************************************************************
 * OBTAINED METHOD FROM PUBLIC FACILITY

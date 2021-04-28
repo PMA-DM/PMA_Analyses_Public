@@ -40,7 +40,7 @@
 *******************************************************************************/
 
 *******************************************************************************
-* SECITON A: STATA SET UP (PLEASE DO NOT DELETE)
+* SECTION A: STATA SET UP (PLEASE DO NOT DELETE)
 *
 * Section A is necessary to make sure the .do file runs correctly, please do not 
 *	move, update or delete
@@ -219,7 +219,7 @@ local weight "FQweight"
 *		that corresponds to the primary sampling unit in the country. It should
 *		be either EA_ID or Cluster_ID depending on the country.
 *		- For example (Kenya): EA_ID
-*		- For example (Nigeria): Cluseter_ID
+*		- For example (Nigeria): Cluster_ID
 local PSU "EA_ID"
 
 *	4. The strata local should be the variables that are used to calculate the
@@ -228,6 +228,30 @@ local PSU "EA_ID"
 *		- For example (Kenya): strata
 *		- For example (DRC): nothing (there is no strata variable in DRC)
 local strata "strata"
+
+*	5. The subnational macros allow you to generate the estimates on one of
+*		 PMA's subnational restulsts brief. The value for the subnational_yn 
+*		 macro should be "yes" if you are running a subnational estimate, or 
+*		 "no" if you are running a national estimate. If you are running a 
+*		 subnational estimate, the value for the subnational_unit macro should 
+*		 be the name of the geographical level, and the value for the subnational 
+*		 macro should be the name of the region as it appears in the highest 
+*		 geographical level variable, typically "region" or "county". 
+*		 If you are not running a submational estimate, leave the subnational_unit 
+*		 and subnational macros empty ("")
+*		 - For example (No subnational estimate):
+*		   local subnational_yn "no"
+*		   local subnational_unit ""
+*		   local subnational ""
+*		 - For example (Subnational estimate for Kenya, Kericho county):
+*		   local subnational_yn "yes"
+*		   local subnational_unit county
+*		   local subnational "KERICHO"
+		
+local subnational_yn "yes"
+local subnational_unit state
+local subnational "kano"
+
 
 *******************************************************************************
 * SECTION 3: CREATE MACRO FOR DATE, XLS and Dataset
@@ -240,6 +264,9 @@ local strata "strata"
 local today=c(current_date)
 local c_today= "`today'"
 local date=subinstr("`c_today'", " ", "",.)
+
+global level1_var `subnational_unit'
+global level1 `subnational'
 
 *******************************************************************************
 * SECTION 4: RESPONSE RATES
@@ -260,7 +287,7 @@ use "`PMAdataset1'",clear
 	gen check=(countrycheck==country)
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
-		stop
+		exit
 		}
 	drop countrycheck check
 
@@ -268,26 +295,33 @@ use "`PMAdataset1'",clear
 	capture confirm var `weight'
 	if _rc!=0 {
 		di in smcl as error "Variable `weight' not found in dataset. Please search for the correct weight variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		exit
 		}
 		
 *	PSU Variable
 	capture confirm var `PSU'
 	if _rc!=0 {
-		di in smcl as error "Variable `PUS' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		di in smcl as error "Variable `PSU' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
+		exit
 		} 
 		
 *	Strata Variable
 	capture confirm var `strata'
 	if _rc!=0 {
-		di in smcl as error "Variable `strata' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		di in smcl as error "Variable `strata' not found in dataset. Please search for the correct strata variable in the dataset to specify as the local macro and rerun the .do file. Some countries do not have a strata variable and the macro should be left blank"
+		exit
 		} 
 
 * Subnational estimates
 gen subnational_yn="`subnational_yn'"
 
+*	Subnational Unit Variable 
+	if subnational_yn=="yes" capture confirm var `subnational_unit' 
+	if _rc!=0 {
+		di in smcl as error "Variable `subnational_unit' not found in dataset. Please search for the correct geographic variable in the dataset to specify as the local macro, update the local and rerun the .do file"
+		exit
+		}
+		
 *	Kenya
 	if country=="Kenya" & subnational_yn=="yes" {
 		gen subnational="`subnational'"
@@ -299,7 +333,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check county
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -316,12 +350,35 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
-					
+
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}
+		
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_Log_`date'.log", replace		
 
@@ -366,7 +423,9 @@ forval i = 1/`PMA2020dataset_count' {
 		keep if str_$level1_var == proper("$level1")
 		}
 		
-	putexcel B`row'=("Round `i'")
+	quietly sum round
+	local round `r(max)'
+	putexcel B`row'=("Round `round'")
 	putexcel C`row'=("`PMA2020dataset`i'dates'")
 
 	** COUNT - Female Sample - All **
@@ -415,10 +474,16 @@ forval i = 1/`PMA2020dataset_count' {
 	egen all=tag(FQmetainstanceID)
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($leve1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
+		}
+	
+	if country=="Nigeria" | country=="NG" {
+		if "`subnational'"=="lagos" capture rename FQweight_Lagos FQweight 
+		if "`subnational'"=="kano" 	capture rename FQweight_Kano FQweight 
 		}
 	
 	svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
@@ -447,8 +512,10 @@ putexcel A`row'=("PMA")
 forval i=1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
 	if "$level1"!="" {
-		keep if level1=="$level1"	
-		replace level1 = upper(level1)
+		numlabel, remove force
+		decode $level1_var, gen(str_$level1_var)
+		replace str_$level1_var = proper(str_$level1_var)
+		keep if str_$level1_var == proper("$level1")
 		}
 	
 	capture rename EA EA_ID
@@ -498,7 +565,8 @@ forval i=1/`PMAdataset_count' {
 	egen all=tag(FQmetainstanceID)
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($leve1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
@@ -548,14 +616,22 @@ forval y = 1/17 {
 			keep if str_$level1_var == proper("$level1")
 			}
 			
-		putexcel B`row' =("Round `i'")
+		quietly sum round
+		local round `r(max)'
+		putexcel B`row'=("Round `round'")
 		putexcel C`row'=("`PMA2020dataset`i'dates'")
 
 		if "`strata'"!="" {
-			capture egen strata=concat(`strata'), punct(-)
+			capture egen strata=concat($leve1_var ur), punct(-)
+			capture egen strata=concat($level1_var), punct(-)
 			}
 		else{
 			gen strata=1
+			}
+			
+		if country=="Nigeria" | country=="NG" {
+			if "`subnational'"=="lagos" capture rename FQweight_Lagos FQweight 
+			if "`subnational'"=="kano" 	capture rename FQweight_Kano FQweight 
 			}
 			
 		label define methods_list_num 1 "Female Sterilization" 2 "Male Sterilization" 3 "Implants" 4 "IUD"  5 "Injectables-IM"  ///
@@ -589,11 +665,12 @@ local row=`PMA2020dataset_count'+2
 forval y = 1/17 {
 	forval i = 1/`PMAdataset_count' {
 		use "`PMAdataset`i''", clear
-		if "$level1"!="" {
-			keep if level1=="$level1"	
-			replace level1 = upper(level1)
-			}
-
+	if "$level1"!="" {
+		numlabel, remove force
+		decode $level1_var, gen(str_$level1_var)
+		replace str_$level1_var = proper(str_$level1_var)
+		keep if str_$level1_var == proper("$level1")
+	}
 		capture rename EA EA_ID
 		capture rename ClusterID Cluster_ID
 		
@@ -601,7 +678,8 @@ forval y = 1/17 {
 		putexcel C`row'=("`PMAdatasett`i'dates'")
 
 		if "`strata'"!="" {
-			capture egen strata=concat(`strata'), punct(-)
+			capture egen strata=concat($leve1_var ur), punct(-)
+			capture egen strata=concat($level1_var), punct(-)
 			}
 		else{
 			gen strata=1
@@ -687,7 +765,10 @@ forval i = 1/`PMA2020dataset_count' {
 		replace str_$level1_var = proper(str_$level1_var)
 		keep if str_$level1_var== proper("$level1")
 		}
-	putexcel B`row'=("Round `i'")
+	
+	quietly sum round
+	local round `r(max)'
+	putexcel B`row'=("Round `round'")
 	putexcel C`row'=("`PMA2020dataset`i'dates'")
 	
 * Generate Unmarried sexually active	
@@ -727,10 +808,16 @@ forval i = 1/`PMA2020dataset_count' {
 	egen umsex = tag(FQmetainstanceID) if umsexactive == 1
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($level1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1
+		}
+			
+	if country=="Nigeria" | country=="NG" {
+		if "`subnational'"=="lagos" capture rename FQweight_Lagos FQweight 
+		if "`subnational'"=="kano" 	capture rename FQweight_Kano FQweight 
 		}
 	
 	svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
@@ -792,8 +879,10 @@ forval i = 1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
 
 	if "$level1"!="" {
-		keep if level1=="$level1"	
-		replace level1 = upper(level1)
+		numlabel, remove force
+		decode $level1_var, gen(str_$level1_var)
+		replace str_$level1_var = proper(str_$level1_var)
+		keep if str_$level1_var == proper("$level1")
 		}
 	
 	capture rename EA EA_ID
@@ -841,7 +930,8 @@ forval i = 1/`PMAdataset_count' {
 	
 	
 	if "`strata'"!="" {
-		capture egen strata=concat(`strata'), punct(-)
+		capture egen strata=concat($level1_var ur), punct(-)
+		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
 		gen strata=1

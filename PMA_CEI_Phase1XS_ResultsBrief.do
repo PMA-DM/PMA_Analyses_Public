@@ -3,7 +3,7 @@
 * 	generate its Phase 1 cross sectional results briefs using PMA's publicly  
 * 	available Client Exit Interview dataset
 *
-* This .do file will only work on Phase 1 SDP cross sectional datasets. You 
+* This .do file will only work on Phase 1 CEI cross sectional datasets. You 
 *   can  find the .do files to generate the .xls file outputs for PMA's publicly
 * 	available Phase 1 Household and Female datasets and other surveys in the  
 *   PMA_Analyses_Public repository
@@ -134,10 +134,10 @@ cd "`briefdir'"
 use "`datadir'",clear
 
 * Confirm that it is phase 1 data
-gen check=(phase==1)
+gen check=(phase=="1")
 	if check!=1 {
-		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
-		stop
+		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
+		exit
 		}
 	drop check
 
@@ -148,7 +148,7 @@ gen check=(phase==1)
 	gen check=(countrycheck==country)
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
-		stop
+		exit
 		}
 	drop countrycheck check
 
@@ -166,7 +166,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -183,7 +183,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop		
+				exit		
 				}
 		local country `country'_`subnational'
 		drop subnational region_string subnational_keep subnational_keep1 check
@@ -200,11 +200,36 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
+		
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}
+			
+	
 			
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase1_XS_CEI_Log_`date'.log", replace		
@@ -250,24 +275,35 @@ pause off
 *******************************************************************************
 * CLIENT EXIT INTERVIEWS
 *******************************************************************************
+*Recode missing values
+foreach var in disc_mtd_pro_con fp_obtain_desired service_satisfied {
+	recode `var' (-88 -99 -77 =.)
+	}
 
+*Generatea combined satisfaction with FP services indicator
+gen satisfaction_fpservice = 0 if service_satisfied!=.
+replace satisfaction_fpservice = 1 if (service_satisfied == 1| service_satisfied == 2)
+label define satisfaction_fpservice_lab 1 "Satisfied/Very Satisfied" 0 "Not very satisfied/very satisfied"
+label values satisfaction_fpservice satisfaction_fpservice_lab
+label var satisfaction_fpservice "Satisfaction with FP services provided at this facility on the day of survey"	
+	
 * Provider told woman of the advantages/disadvantages of the FP method,
 *	all fp clients
-tabout prov_disc_fp ///
+tabout disc_mtd_pro_con ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h1("Provider told female cleint about the advantages and disadvantages of the FP method - women who were prescribed a method")
+	h1("Provider told female client about the advantages and disadvantages of the FP method - women who were prescribed a method")
 
 * Obtained desired FP method,
 * 	all fp clients
 tabout fp_obtain_desired ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h1("Female client received the method they desired - women who were prescribed. amethod")
+	h1("Female client received the method they desired - women who were prescribed a method")
 	
 * Obtained desired FP method,
 * 	all fp clients
-tabout service_satisfied ///
+tabout satisfaction_fpservice ///
 	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
-	h1("Female client satisfied with the FP services - women who were prescribed. amethod")
+	h1("Female client satisfied with the FP services - women who were prescribed a method")
 
 *******************************************************************************
 * CLOSE

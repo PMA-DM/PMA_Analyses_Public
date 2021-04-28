@@ -171,10 +171,10 @@ cd "`briefdir'"
 use "`datadir'",clear
 
 * Confirm that it is phase 1 data
-gen check=(phase==1)
+gen check=(phase=="1")
 	if check!=1 {
-		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
-		stop
+		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
+		exit
 		}
 	drop check
 
@@ -185,22 +185,22 @@ gen check=(phase==1)
 	gen check=(countrycheck==country)
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
-		stop
+		exit
 		}
 	drop countrycheck check
 
 *	Weight Variable
 	capture confirm var `weight'
 	if _rc!=0 {
-		di in smcl as error "Variable `weight' not found in dataset. Please search for the correct weight variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		di in smcl as error "Variable `weight' not found in dataset. Please search for the correct weight variable in the dataset and update the local macro 'weight'. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
+		exit
 		}
 		
 *	Wealth Variable	
 	capture confirm var `wealth'
 	if _rc!=0 {
-		di in smcl as error "Variable `wealth' not found in dataset. Please search for the correct wealth variable in the dataset to specify as the local macro. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
-		stop
+		di in smcl as error "Variable `wealth' not found in dataset. Please search for the correct wealth variable in the dataset and update the local macro 'wealth'. If you are doing a regional/state-level analysis, please make sure that you have selected the correct variable for the geographic level, update the local and rerun the .do file"
+		exit
 		} 
 
 * Subnational estimates
@@ -217,7 +217,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check county
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file."
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -234,10 +234,10 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop		
+				exit		
 				}
 		di in smcl as error "The sub-national estimates are not yet available for Burkina Faso, we will update the .do file once they become available. If you would like Burkina Faso-related estimates, please update the .do file to generate national-level estimates"
-		stop
+		exit
 		local country `country'_`subnational'
 		drop subnational region_string subnational_keep subnational_keep1 check
 		}	
@@ -253,11 +253,35 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
+
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}
+			
 		
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase1_XS_HHQFQ_Log_`date'.log", replace		
@@ -555,7 +579,7 @@ label values wanted_later wanted_laterlist
 * Percent not wanted at all
 gen wanted_nomore = 1 if wanted == 3
 replace wanted_nomore = 0 if wanted == 1| wanted == 2
-label variable wanted_nomore "% Wanted nomore" 
+label variable wanted_nomore "% Wanted no more" 
 label define wanted_nomorelist 1 "Wanted none at all" 0"Wanted then or later"
 label values wanted_nomore wanted_nomorelist
 
@@ -629,7 +653,7 @@ label var attitude_lifestyle "Self Attittude: People who use FP have a better qu
 	label var wge_conflict "If I use FP it could/will cause conflict in my relationship" 
 	label val wge_conflict agree_down5_list
 
-* Rename fp_aut* varaibles to wge
+* Rename fp_aut* variables to wge
 rename fp_aut_otherptr wge_seek_partner
 rename fp_aut_diffpreg wge_trouble_preg
 rename fp_aut_abchild wge_abnormal_birth 
@@ -721,6 +745,15 @@ gen wge_quint=.
 	replace wge_quint=5 if fp_wge_comb==5
 	
 label var wge_quint "WGE Quintile values, from least to most"	
+
+if country=="Nigeria" {
+drop wge_quint
+gen wge_quint=. 
+	replace wge_quint=1 if fp_wge_comb>=1 & fp_wge_comb<=3
+	replace wge_quint=3 if fp_wge_comb>3 & fp_wge_comb<=4
+	replace wge_quint=4 if fp_wge_comb>4 & fp_wge_comb<5
+	replace wge_quint=5 if fp_wge_comb==5
+	}
 	
 save, replace
 
@@ -780,9 +813,9 @@ gen recentmarriageyear=year(dofc(husband_cohabit_start_recentSIF))
 	recode firstmarriageyear 2030=.
 	recode recentmarriageyear 2030=.
 	
-*** Recode month as missing if equal to -87
-	replace firstmarriagemonth=1 if firstmarriagemonth==-87
-	replace recentmarriagemonth=1 if recentmarriagemonth==-87
+*** Recode month as missing if equal to -88
+	replace firstmarriagemonth=1 if firstmarriagemonth==-88 | firstmarriagemonth==0 | firstmarriagemonth==-87
+	replace recentmarriagemonth=1 if recentmarriagemonth==-88 | recentmarriagemonth==0 | recentmarriagemonth==-87
 	
 *** Generate marriage century month code variable
 	gen marriagecmc=(firstmarriageyear-1900)*12+firstmarriagemonth
@@ -1005,7 +1038,7 @@ save, replace
 
 * ALERT FOR ALL DATA
 pause on
-di in smcl as error "Data presented in the online breifs represent preliminary results and therefore there may be slight differences between the .do file results and those in the brief. Please access datalab at https://datalab.pmadata.org/ to cross check any discrepancies"
+di in smcl as error "Data presented in the online briefs represent preliminary results and therefore there may be slight differences between the .do file results and those in the brief. Please access datalab at https://datalab.pmadata.org/ to cross check any discrepancies"
 di in smcl as error "Please type 'end' to continue"
 pause
 pause off
@@ -1040,6 +1073,7 @@ pause off
 *******************************************************************************
 * Modern Contraceptive Method Mix
 *******************************************************************************
+capture ssc install tabout 
 
 * Current/recent method, 
 *	among married women currently using a modern method
@@ -1048,10 +1082,14 @@ tabout current_methodnum_rc if mcp==1 & married==1 [aweight=`weight'] ///
 	h2("Method Mix - married women (weighted)")
 
 * Current/recent method, 
-*	among unmarried sexually active women currently using a modern method
-tabout current_methodnum_rc if mcp==1 & umsexactive==1 [aweight=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
-	h2("Method mix - unmarried sexually active women (weighted)") 
+*	among unmarried sexually active women currently using a modern method if N>=50
+quietly tab current_methodnum_rc if umsexactive==1 & mcp==1
+
+if r(N)>=50 {
+	tabout current_methodnum_rc if mcp==1 & umsexactive==1 [aweight=`weight'] ///
+		using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+		h2("Method mix - unmarried sexually active women (weighted)") 
+	}
 
 *******************************************************************************
 * Method Use, Unmet Need, and Demand Satisfied by a Modern Method
@@ -1252,7 +1290,7 @@ tabout intention_use worked_recent [aw=`weight'] ///
 * Personal Attitudes
 *******************************************************************************
 
-* Percent of women who personally agree with th following statements made about 
+* Percent of women who personally agree with the following statements made about 
 *	contraceptive use,
 *	by age
 *	1) Adolescents who use FP are promiscuous
@@ -1265,7 +1303,7 @@ foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifesty
 	h1("Personal norms around FP by contraceptive use age (weighted) - all women")
 	}
 	
-* Percent of women who personally agree with th following statements made about 
+* Percent of women who personally agree with the following statements made about 
 *	contraceptive use,
 *	by residence
 *	1) Adolescents who use FP are promiscuous
