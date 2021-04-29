@@ -355,6 +355,23 @@ gen subnational_yn="`subnational_yn'"
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
+		
+*	Burkina
+	if country=="Burkina" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode region, gen(region_string)
+		gen subnational_keep=substr(province_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1=subnational)
+		keep if check==1
+		capture quietly regress check region
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Plese search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational province_string subnational_keep subnational_keep1 check
+		}
 
 *	Nigeria
 	if country=="Nigeria" & subnational_yn=="yes" {
