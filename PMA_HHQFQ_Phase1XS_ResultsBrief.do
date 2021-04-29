@@ -186,7 +186,7 @@ else if country=="Nigeria" {
 if check!=1 {
 	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
 	exit
-		}
+	}
 	drop check
 
 * Confirm that correct variables were chosen for locals
@@ -1089,7 +1089,7 @@ capture ssc install tabout
 * Current/recent method, 
 *	among married women currently using a modern method
 tabout current_methodnum_rc if mcp==1 & married==1 [aweight=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Method Mix - married women (weighted)")
 
 * Current/recent method, 
@@ -1098,7 +1098,7 @@ quietly tab current_methodnum_rc if umsexactive==1 & mcp==1
 
 if r(N)>=50 {
 	tabout current_methodnum_rc if mcp==1 & umsexactive==1 [aweight=`weight'] ///
-		using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+		using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 		h2("Method mix - unmarried sexually active women (weighted)") 
 	}
 
@@ -1123,7 +1123,7 @@ if r(N)>=50 {
 * Intention of most recent birth/current pregnancy, 
 *	among all women currently pregnant or who have giving birth in the last 5 years
 tabout unintend wanted_later wanted_nomore if tsinceb<=60 [aweight=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Fertility Intention Indicators (weighted) - women who are currently pregnant or who gave birth in the last 5 years")
 	
 *******************************************************************************
@@ -1143,13 +1143,13 @@ tabout unintend wanted_later wanted_nomore if tsinceb<=60 [aweight=`weight'] ///
 *	3) Told about other FP methods
 *	4) Told that they could switch to different method in the future
 tabout fp_side_effects fp_side_effects_instructions fp_told_other_methods fp_told_switch [aweight=`weight'] ///
-	using "`tabout'", oneway append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", oneway append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("MII+ Indicators (weighted) - current modern contraceptive users")
 	
 * Percent of women who responded "Yes" to all four MII+ questions,
 *	among modern contraceptive users
 tabout mii [aweight=`weight'] ///
-	using "`tabout'", oneway append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", oneway append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Percent of women who responded 'Yes' to all four MII+ indicators (weighted) - current modern contraceptive users")
 
 *******************************************************************************
@@ -1159,7 +1159,7 @@ tabout mii [aweight=`weight'] ///
 * Percent of women who received FP information from a provider or CHW,
 *	by age
 tabout healthworkerinfo age_cat [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h1("Discussed FP in the past year with a provider/community health worker by age (weighted) - all women")
 	
 *******************************************************************************
@@ -1185,21 +1185,21 @@ tabout healthworkerinfo age_cat [aw=`weight'] ///
 *	2) "Before you started using this method had you discussed the decision to
 *		delay or avoid pregnancy with your partner?"
 tabout partner_know partner_decision if mcp==1 [aw=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Partner Dynamics (weighted) - female-controlled method users ")
 	
 * Percent of women who agree with the following statement,
 *	among all family planning users
 *	1) "Would you say that using FP is mainly your decision"
 tabout partner_overall [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Joint decision making around contraceptive use (weighted) - all contraceptive users")  
 	
 * Percent of women who agree with the following statement,
 *	among all women who do not use family planning
 *	1) "Would you say that not using FP is mainly your decision"
 tabout why_not_decision [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Joint decision making around non-use of contraception (weighted) - all non-contraceptive users") 
 
 *******************************************************************************
@@ -1220,12 +1220,12 @@ tabout why_not_decision [aw=`weight'] ///
 	* Kenya is among all women
 	if country=="Kenya" {
 		tabout wge_confident_method wge_switch_fp [aw=`weight'] ///
-			using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+			using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 			h2("Exercise of Choice for Family Planning (weighted) - all women")
 		}
 else {
 tabout wge_confident_method wge_switch_fp if married==1 [aw=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Exercise of Choice for Family Planning (weighted) - all married women")
 	}
 	
@@ -1242,12 +1242,12 @@ tabout wge_confident_method wge_switch_fp if married==1 [aw=`weight'] ///
 	* Kenya is among all women
 	if country=="Kenya" {
 		tabout wge_body_side_effects wge_abnormal_birth wge_conflict wge_trouble_preg wge_seek_partner [aw=`weight'] ///
-			using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+			using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 			h2("Existence of Choice for Family Planning (weighted) - all  women")	
 		}
 else {
 tabout wge_body_side_effects wge_abnormal_birth wge_conflict wge_trouble_preg wge_seek_partner if married==1 [aw=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Existence of Choice for Family Planning (weighted) - all married women")	
 	}
 
@@ -1258,13 +1258,13 @@ tabout wge_body_side_effects wge_abnormal_birth wge_conflict wge_trouble_preg wg
 * Mean WGE Score,
 *	by education, among married women
 tabout education if married==1 ///
-	using "`tabout'", append sum cells(mean fp_wge_comb) npos(row) ///
+	using "`tabout'", append sum cells(mean fp_wge_comb) nwt(`weight') npos(row) ///
 	h2("Mean WGE Score by education - married women")
 	
 * Mean WGE Score,
 *	by age, among married women
 tabout age_cat if married==1 ///
-	using "`tabout'", append sum cells(mean fp_wge_comb) npos(row) ///
+	using "`tabout'", append sum cells(mean fp_wge_comb) nwt(`weight') npos(row) ///
 	h2("Mean WGE Score by age - married women")
 	
 * Percent of women using a modern method of contraception,
@@ -1310,7 +1310,7 @@ tabout intention_use worked_recent [aw=`weight'] ///
 *	4) People who use FP have a better quality of life
 foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifestyle {
 	tabout `var' age_cat [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h1("Personal norms around FP by contraceptive use age (weighted) - all women")
 	}
 	
@@ -1323,7 +1323,7 @@ foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifesty
 *	4) People who use FP have a better quality of life
 foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifestyle {
 	tabout `var' urban [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h1("Personal norms around FP by contraceptive use residence (weighted) - all women")
 	}
 	
@@ -1336,7 +1336,7 @@ foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifesty
 *	4) People who use FP have a better quality of life
 foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifestyle {
 	tabout `var' cp [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h1("Personal norms around FP by contraceptive use status (weighted) - all women")
 	}
 
@@ -1353,7 +1353,7 @@ foreach var in attitude_promis attitude_onlymar attitude_nomore attitude_lifesty
 * Mean of living children at first contraceptive use,
 *	among women who have ever used contraception 
 tabout urban if fp_ever_used==1 & age_at_first_use_children>=0 [aweight=`weight'] ///
-	using "`tabout'", append sum c(mean age_at_first_use_children) f(3) npos(row) ///
+	using "`tabout'", append sum c(mean age_at_first_use_children) f(3) nwt(`weight') npos(row) ///
 	h2("Mean number of children at first contraceptive use (weighted) - women who have used contraception") 
 
 
@@ -1424,7 +1424,7 @@ ssc install listtab, all replace
 * Married by 18, first birth before 18, contraceptive use by 18, first sex by 18,
 *	among women age 18-24
 tabout sex18 married18 birth18 fp18 if FQ_age>=18 & FQ_age<25 [aw=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
 	h2("Married by 18, first sex by 18, contraceptive use by 18, first birth before 18 (weighted) - women aged 18-24") 
 	
 *******************************************************************************
@@ -1438,7 +1438,7 @@ tabout sex18 married18 birth18 fp18 if FQ_age>=18 & FQ_age<25 [aw=`weight'] ///
 * Percent of women who obtained their modern method at a public facility,
 *	among current modern contraceptive users
 tabout publicfp_rw if mcp==1 [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) npos(row) ///
+	using "`tabout'", append c(col) f(1) nwt(`weight') npos(row) ///
 	h2("Respondent/partner received method from public facility (weighted) - current modern user") 
 
 *******************************************************************************
@@ -1449,27 +1449,27 @@ tabout publicfp_rw if mcp==1 [aw=`weight'] ///
 
 * Distribtuion of de facto women by age
 tabout age_cat5 [aw=`weight'] ///
-	using "`tabout'",  append c(freq col) f(0 1) clab(n %) npos(row) ///
+	using "`tabout'",  append c(freq col) f(0 1) clab(n %) nwt(`weight') npos(row) ///
 	h2("Distribution of de facto women by age - weighted")
 
 * Distribution of de facto women by education
 tabout school [aw=`weight'] ///
-	using "`tabout'",  append c(freq col) f(0 1) clab(n %) npos(row) ///
+	using "`tabout'",  append c(freq col) f(0 1) clab(n %) nwt(`weight') npos(row) ///
 	h2("Distribution of de facto women by education - weighted")
 
 * Distribution of de facto women by marital status
 tabout FQmarital_status [aw=`weight'] ///
-	using "`tabout'",  append c(freq col) f(0 1) clab(n %) npos(row) ///
+	using "`tabout'",  append c(freq col) f(0 1) clab(n %) nwt(`weight') npos(row) ///
 	h2("Distribution of de facto women by marital status - weighted")
 
 * Distribution of de facto women by wealth
 tabout `wealth' [aw=`weight'] ///
-	using "`tabout'",  append c(freq col) f(0 1) clab(n %) npos(row) ///
+	using "`tabout'",  append c(freq col) f(0 1) clab(n %) nwt(`weight') npos(row) ///
 	h2("Distribution of de facto women by wealth - weighted")
 
 * Distribution of de facto women by urban/rural
 tabout urban [aw=`weight'] ///
-	using "`tabout'",  append c(freq col) f(0 1) clab(n %) npos(row) ///
+	using "`tabout'",  append c(freq col) f(0 1) clab(n %) nwt(`weight') npos(row) ///
 	h2("Distribution of de facto women by urban/rural - weighted")
 	
 
