@@ -269,7 +269,7 @@ gen subnational_yn="`subnational_yn'"
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
 		}	
-
+		
 *	Nigeria
 	if country=="Nigeria" & subnational_yn=="yes" {
 		gen subnational="`subnational'"

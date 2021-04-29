@@ -8,8 +8,8 @@
 * 	available Phase 1 SDP and CQ datasets and other surveys in the  
 *   PMA_Analyses_Public repository
 *
-* This .do file does not contain the necessary codes for trends over time or
-*   for discontinuation rates. You can find those .do files in the
+* This .do file does not contain the cross sectional estimates or the 
+*   discontinuation rates. You can find those .do files in the
 *   PMA_Analyses_Public repository
 *
 * If you have any questions on how to use this or any of the other .do files in
@@ -66,15 +66,23 @@ numlabel, add
 
 *	1a. Total number of PMA2020 datasets to include in the analysis. The local should 
 *		be the number.
-*		- For example: local dataset_count 4
-*		- For example: local dataset_count 7
+*		- For example: local PMA2020dataset_count 4
+*		- For example: local PMA2020dataset_count 7
 local PMA2020dataset_count 7
 
 *	1b. Total number of PMA datasets to include in the analysis. The local should 
 *		be the number.
-*		- For example: local dataset_count 1
-*		- For example: local dataset_count 3
+*		- For example: local PMAdataset_count 1
+*		- For example: local PMAdataset_count 3
 local PMAdataset_count 1
+
+*	2. A directory for the folder where you want to save the dataset, xls and
+*		log files that this .do file creates
+*		- For example (Mac): 
+*		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
+*		- For example (PC): 
+*		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
+local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease"
 
 ************** DATASETS & DATES *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -180,15 +188,6 @@ local PMAdataset3 "/Users/ealarson/Dropbox (Gates Institute)/13 Nigeria/PMANG_Da
 local PMAdataset3dates "11/2019-01/2020"
 
 
-*	3. A directory for the folder where you want to save the dataset, xls and
-*		log files that this .do file creates
-*		- For example (Mac): 
-*		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
-*		- For example (PC): 
-*		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease"
-
-
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
 *
@@ -247,7 +246,6 @@ local strata "strata"
 *		   local subnational_yn "yes"
 *		   local subnational_unit county
 *		   local subnational "KERICHO"
-		
 local subnational_yn "yes"
 local subnational_unit state
 local subnational "kano"
@@ -269,10 +267,10 @@ global level1_var `subnational_unit'
 global level1 `subnational'
 
 *******************************************************************************
-* SECTION 4: RESPONSE RATES
+* SECTION 4: DATA CHECKS
 *
-* Section 4 will generate household and female survey response rates. To
-* 	generate the correct response rates, please do not move, update or delete
+* Section 4 will perform data checks to make sure that the .do file will run 
+* 	correclty, please do not move, update or delete
 *******************************************************************************
 * Set main output directory
 cd "`briefdir'"
