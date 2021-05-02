@@ -314,10 +314,12 @@ use "`PMAdataset1'",clear
 gen subnational_yn="`subnational_yn'"
 
 *	Subnational Unit Variable 
-	if subnational_yn=="yes" capture confirm var `subnational_unit' 
-	if _rc!=0 {
-		di in smcl as error "Variable `subnational_unit' not found in dataset. Please search for the correct geographic variable in the dataset to specify as the local macro, update the local and rerun the .do file"
-		exit
+	if subnational_yn=="yes" {
+		capture confirm var `subnational_unit' 
+		if _rc!=0 {
+			di in smcl as error "Variable `subnational_unit' not found in dataset. Please search for the correct geographic variable in the dataset to specify as the local macro, update the local and rerun the .do file"
+			exit
+			}
 		}
 		
 *	Kenya
