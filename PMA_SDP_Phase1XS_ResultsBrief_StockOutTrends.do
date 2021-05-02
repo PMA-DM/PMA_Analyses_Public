@@ -176,15 +176,6 @@ local country "Kenya"
 local subnational_yn "no"
 local subnational_unit 
 local subnational ""
-
-*If doing subnational analysis, variable name for the level1 geographic area in public release
-local level1 province
-
-*If doing subnational analysis, code of the subnational unit in public release, otherwise leave blank
-local sub_nat 2
-
-*For current phase of data collection, the string name of the subnational unit if doing subnational analysis
-local level1_name lagos
 	
 **** MACROS FOR DATE	
 * Set local/global macros for current date
