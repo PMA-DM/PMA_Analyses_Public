@@ -134,11 +134,23 @@ cd "`briefdir'"
 use "`datadir'",clear
 
 * Confirm that it is phase 1 data
-gen check=(phase=="1")
-	if check!=1 {
-		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
-		exit
-		}
+if country=="Burkina" {
+	gen check=(phase=="Phase1")
+	}
+else if country=="DRC" {
+	gen check=(phase==1)
+	}
+else if country=="Kenya" {
+	gen phase==1
+	gen check=(phase==1)
+	}
+else if country=="Nigeria" {
+	gen check=(phase=="1")
+	}
+if check!=1 {
+	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
+	exit
+	}
 	drop check
 
 * Confirm that correct variables were chosen for locals
@@ -280,7 +292,7 @@ foreach var in disc_mtd_pro_con fp_obtain_desired service_satisfied {
 	recode `var' (-88 -99 -77 =.)
 	}
 
-*Generatea combined satisfaction with FP services indicator
+*Generate a combined satisfaction with FP services indicator
 gen satisfaction_fpservice = 0 if service_satisfied!=.
 replace satisfaction_fpservice = 1 if (service_satisfied == 1| service_satisfied == 2)
 label define satisfaction_fpservice_lab 1 "Satisfied/Very Satisfied" 0 "Not very satisfied/very satisfied"
