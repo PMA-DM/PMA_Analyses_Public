@@ -207,12 +207,22 @@ cd "`calendardir'"
 use "`datadir'", clear
 
 * Confirm that it is phase 1 data
-capture destring phase, replace
-gen check=(phase==1)
-	if check!=1 {
-		di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey rerun the .do file"
-		stop
-		}
+if country=="Burkina" {
+	gen check=(phase==1)
+	}
+else if country=="DRC" {
+	gen check=(phase==1)
+	}
+else if country=="Kenya" {
+	gen check=(phase==1)
+	}
+else if country=="Nigeria" {
+	gen check=(phase=="1")
+	}
+if check!=1 {
+	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 1 XS surveys only. Please use a PMA Phase 1 XS survey and rerun the .do file"
+	exit
+	}
 	drop check
 
 * Confirm that correct variables were chosen for locals
@@ -240,7 +250,7 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check county
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop	
+				exit	
 				}
 		local country `country'_`subnational'
 		drop subnational county_string subnational_keep subnational_keep1 check
@@ -257,10 +267,8 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check region
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop		
+				exit		
 				}
-		di in smcl as error "The sub-national estimates are not yet available for Burkina Faso, we will update the .do file once they become available. If you would like Burkina Faso-related estimates, please update the .do file to generate national-level estimates"
-		stop
 		local country `country'_`subnational'
 		drop subnational region_string subnational_keep subnational_keep1 check
 		}	
@@ -276,11 +284,34 @@ gen subnational_yn="`subnational_yn'"
 		capture quietly regress check province
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				stop
+				exit
 				}
 		local country `country'_`subnational'
 		drop subnational province_string subnational_keep subnational_keep1 check
-		}		
+		}	
+
+*	Nigeria
+	if country=="Nigeria" & subnational_yn=="yes" {
+		gen subnational="`subnational'"
+		decode state, gen(state_string)
+		gen subnational_keep=substr(state_string,4,.)
+		gen subnational_keep1=subinstr(subnational_keep," ","",.)
+		gen check=(subnational_keep1==subnational)
+		keep if check==1
+		capture quietly regress check state
+			if _rc==2000 {
+				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+				exit
+				}
+		local country `country'_`subnational'
+		drop subnational state_string subnational_keep subnational_keep1 check
+		}	
+		
+*	Countries without national analysis
+	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
+		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+		exit
+		}	
 	
 * Start log file
 log using "`calendardir'/PMA_`country'_Phase1_XS_DiscontinuationRates_Log_`date'.log", replace		
@@ -340,22 +371,26 @@ foreach var in `r(varlist)' {
 
 *Restrict the data to only variables you need
 if country=="Nigeria" {
-	keep FQmetainstanceID calendar_es_* calendar_ed_* FQdoi_correctedSIF state FQweight*
+	keep FQmetainstanceID calendar_es_* calendar_ed_* calendar_c1_full calendar_c2_full FQdoi_correctedSIF state FQweight*
+	}
+else if country=="DRC" {
+	keep FQmetainstanceID calendar_es_* calendar_ed_* calendar_c1_full calendar_c2_full FQdoi_correctedSIF province FQweight*
 	}
 else {
-	keep FQmetainstanceID calendar_es_* calendar_ed_* FQdoi_correctedSIF FQweight*
+	keep FQmetainstanceID calendar_es_* calendar_ed_* calendar_c1_full calendar_c2_full FQdoi_correctedSIF region FQweight*
 	}
 drop *_string
 duplicates tag FQmetainstanceID, gen(d)
 keep if d== 0 
+order calendar_c1_full calendar_c2_full FQmetainstanceID FQweight FQdoi_correctedSIF d, after(calendar_ed_36)
 
 * Step 1 : Rename Contraceptive Calendar Month by Month Data serially in the order of the calendar with *_1 being the month prior to interview month. Interview month is denoted with *_0 (Step 1a). Generate variables that document the number of changes in contraceptive use status (Refer Step 1b)  
 
 *Step 1.a
-local cc_m = 1
+local cc_m = `cal_len'
 forval m = 1/`cal_len' {
 	rename calendar_e*_`m' calendar_e*_`cc_m'a
-	local cc_m=`cc_m'+1
+	local cc_m=`cc_m'-1
 	}
 
 rename calendar_e*a calendar_e*
@@ -384,7 +419,7 @@ forvalues j = `cal_len'(-1)1 {
 
 * Step 2: Reshape to data into Long Format and drop unnnecessary variables
 * Drop the calendar variables now we have the separate month by month variables
-drop episodes_tot prev_cal_col
+drop *_full episodes_tot prev_cal_col
 * Reshape the new month by month variables into a long format
 reshape long event_number calendar_es_ calendar_ed_ , i(FQmetainstanceID) j(i)
 
@@ -451,7 +486,7 @@ format event_duration event_code_numeric discontinuation_code_numeric	///
 	previous_event previous_event_dur next_event next_event_dur %2.0f	
 	
 * save the events file
-save `country'_eventsfile.dta, replace
+save "PMA_`country'_Phase1_XS_EventsFile_`date'.dta", replace
 
 * Step 5
 * Use Events File to generate Discontinuation Indicators: - 
@@ -669,7 +704,7 @@ drop if exposure > `x'
 keep method drate* exposure reason discont_sw FQweight
 
 * save smaller dataset for x-month duration which we will use in collapse commands below
-save "`country'_drates_`x'm.dta", replace
+save "PMA_`country'_Phase1_XS_DiscontinuationRates_`date'.dta", replace
 
 * collapsing data for reasons, all reasons, switching, merging and adding method Ns
 
@@ -687,7 +722,7 @@ gen reason = 8
 save "`country'_allreasons.dta", replace
 
 * switching data
-use "`country'_drates_`x'm.dta"
+use "PMA_`country'_Phase1_XS_DiscontinuationRates_`date'.dta"
 * collapse and save a file just for switching
 collapse (max) $drate_list_sw drate_allmeth_sw, by(discont_sw)
 * only keep row for switching, not for other reasons
@@ -731,18 +766,18 @@ forval y= 1/11 {
 	}
 sort reason
 
-save "`country'_drates_`x'm.dta", replace
+save "PMA_`country'_Phase1_XS_DiscontinuationRates_`date'.dta", replace
 
 * Step 10
 * Output results in various ways
 
 * simple output with reasons in rows and methods in columns
 list reason $drate_list drate_allmeth, tab div abb(16) sep(9) noobs linesize(160)
-outsheet reason $drate_list drate_allmeth using `country'_`x'm_rates.csv, comma replace	
+outsheet reason $drate_list drate_allmeth using "PMA_`country'_Phase1_XS_DiscontinuationRates_`date'.csv", comma replace	
 
 * Outputting as excel file with putexcel	
 * putexcel output
-putexcel set "`country'_drates_`x'm.xlsx", replace
+putexcel set "PMA_`country'_Phase1_XS_DiscontinuationRates_`date'.xlsx", replace
 putexcel B1 = "Reasons for discontinuation"
 putexcel A2 = "Contraceptive method"
 * list out the contraceptive methods
