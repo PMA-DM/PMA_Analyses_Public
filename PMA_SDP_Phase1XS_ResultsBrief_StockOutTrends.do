@@ -448,7 +448,7 @@ foreach method in iud implants injectables pills male_condoms {
 			putexcel F`textrow'=("Don't offer method")
 			putexcel G`textrow'=("N")
 			
-			putexcel I`methodrow'=("Stock of `method' in public facilities")
+			putexcel I`methodrow'=("Stock of `method' in private facilities")
 			putexcel I`textrow'=("Survey")
 			putexcel J`textrow'=("Round or Phase")
 			putexcel K`textrow'=("In Stock")
