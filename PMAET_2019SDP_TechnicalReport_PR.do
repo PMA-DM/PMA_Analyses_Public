@@ -299,7 +299,7 @@ ta electricity_7d electricity_binary, m
 
 *	Generate binary internet variable
 gen internet_binary = 0 if facility_type2!=5
-replace internet_binary = 1 if internet_7d==1 | internet_7d==2
+replace internet_binary = 1 if internet==1 | internet==2
 label var internet_binary "Access to internet"
 label val internet_binary yesno
 ta internet_binary internet_7d, m
