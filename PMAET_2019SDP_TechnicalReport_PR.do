@@ -152,6 +152,8 @@ capture label define yesno 0 "No" 1 "Yes"
 
 numlabel, remove
 
+ssc install mdesc, replace
+
 *	Check completeness of background characteristic variables
 mdesc facility_type2 sector region
 tab1 facility_type2 sector region
