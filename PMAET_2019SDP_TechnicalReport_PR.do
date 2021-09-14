@@ -657,7 +657,7 @@ foreach var of varlist proc_fmoh_ob indr_ivsoln  {
 	}
 
 *   Create dichotomous variable for whether medication is observed at facility on the day of the interview
-local meds "ivsoln"
+local meds "ivsoln_obs"
 foreach x in `meds' {
 		gen `x'_obs=0 if labor_delivery_yn==1 & facility_type2!=5
 		replace `x'_obs=1 if indr_`x'==1 | outdr_`x'==1
@@ -771,7 +771,7 @@ foreach var of varlist indr_dexamethasone indr_inj_cagluc indr_hydralazine indr_
 	}
 
 *   Create dichotomous variable for whether medication is observed at facility on the day of the interview
-local meds "dexamethasone inj_cagluc hydralazine inj_mgso4 mife miso nifedipine inj_oxt"
+local meds "dexamethasone_obs inj_cagluc_obs hydralazine_obs inj_mgso4_obs mife_obs miso_obs nifedipine_obs inj_oxt_obs"
 foreach x in `meds' {
 		gen `x'_obs=0 if labor_delivery_yn==1 & facility_type2!=5
 		replace `x'_obs=1 if indr_`x'==1 | outdr_`x'==1
@@ -792,7 +792,7 @@ rename outdr_inj_gentamicin_obs inj_gentamicin_obs
 rename outdr_inj_metro_obs inj_metronidazole_obs
 
 *   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist inj_ampicillin_obs outdr_azithromycin_obs outdr_benzathine_obs dexamethasone_obs inj_cagluc_obs outdr_cefixime_obs inj_gentamicin_obs hydralazine_obs inj_mgso4_obs outdr_methyldopa_obs inj_metronidazole_obs mife_obs miso_obs nifedipine_obs inj_oxt_obs ivsoln_obs indr_dexamethasone_obs indr_inj_cagluc_obs indr_hydralazine_obs indr_inj_mgso4_obs indr_mife_obs indr_miso_obs indr_nifedipine_obs indr_inj_oxt_obs indr_ivsoln  {
+foreach v of varlist inj_ampicillin_obs outdr_azithromycin_obs outdr_benzathine_obs dexamethasone_obs inj_cagluc_obs outdr_cefixime_obs inj_gentamicin_obs hydralazine_obs inj_mgso4_obs outdr_methyldopa_obs inj_metronidazole_obs mife_obs miso_obs nifedipine_obs inj_oxt_obs ivsoln_obs indr_dexamethasone_obs indr_inj_cagluc_obs indr_hydralazine_obs indr_inj_mgso4_obs indr_mife_obs indr_miso_obs indr_nifedipine_obs indr_inj_oxt_obs indr_ivsoln_obs  {
 		recode `v' (1 = 100), gen(percent_`v')
 	}
 
@@ -1155,7 +1155,7 @@ foreach var of varlist indr_tetracycline indr_chlorhexidine indr_inj_vitk proc_b
 	}
 
 *   Create dichotomous variable for whether medication is observed at facility on the day of the interview
-local meds "tetracycline chlorhexidine inj_vitk"
+local meds "tetracycline_obs chlorhexidine_obs inj_vitk_obs"
 foreach x in `meds' {
 		gen `x'_obs=0 if labor_delivery_yn==1 & facility_type2!=5
 		replace `x'_obs=1 if outdr_`x'==1 | indr_`x'==1
