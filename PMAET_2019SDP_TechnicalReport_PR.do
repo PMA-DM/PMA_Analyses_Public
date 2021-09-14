@@ -195,32 +195,6 @@ foreach v of varlist staffing_phy_tot staffing_anes_tot staffing_uhep_tot staffi
 		replace `v'=. if `v'==-88
 	}
 
-*	Staffing pattern in survey SDPs, expanded (as defined in the SDP questionnaire)
-putexcel set "PMAET_2019SDP_Analysis_Staff_$date.xls", sheet("Expanded Staffing Pattern") replace
-putexcel A1=("Provider type") B1=("Hospital") C1=("Health center") D1=("Health post") E1=("Health clinic") F1=("Pharmacy/Drug shop")
-
-local row=2
-foreach v of varlist staffing_gyn_tot staffing_neo_tot staffing_ped_tot staffing_phy_tot staffing_ho_tot staffing_eo_tot staffing_po_tot staffing_anes_tot staffing_otherspec_tot staffing_anestech_tot staffing_nurse_tot staffing_midwife_tot staffing_uhep_tot staffing_hewl3_tot staffing_hewl4_tot staffing_pharmacy_tot staffing_labtech_tot {
-		sum `v' if facility_type2==1, detail
-		local varlabel: variable label `v'
-		local med_iqr1: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
-		sum `v' if facility_type2==2, detail
-		local med_iqr2: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
-		sum `v' if facility_type2==3, detail
-		local med_iqr3: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
-		sum `v' if facility_type2==4, detail
-		local med_iqr4: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
-		sum `v' if facility_type2==5, detail
-		local med_iqr5: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
-		putexcel A`row'=("`varlabel'") B`row'=("`med_iqr1'") C`row'=("`med_iqr2'") D`row'=("`med_iqr3'") E`row'=("`med_iqr4'") F`row'=("`med_iqr5'")
-		local row = `row' + 1
-	}
-
 *	Generate variable for specialist doctors
 gen staffing_specialist = staffing_gyn_tot + staffing_neo_tot + staffing_ped_tot + staffing_anes_tot + staffing_otherspec_tot
 label var staffing_specialist "Specialist"
@@ -238,7 +212,7 @@ label var staffing_extension "Health extension worker"
 ta staffing_extension facility_type2, m
 
 *   Staffing pattern in survey SDPs, condensed
-putexcel set "PMAET_2019SDP_Analysis_Staff_$date.xls", sheet("Condensed Staffing Pattern") modify
+putexcel set "PMAET_2019SDP_Analysis_Staff_$date.xls", sheet("Condensed Staffing Pattern") replace
 putexcel A1=("Provider type") B1=("Hospital") C1=("Health center") D1=("Health post") E1=("Health clinic") F1=("Pharmacy/Drug shop")
 
 local row=2
@@ -246,24 +220,61 @@ foreach v of varlist staffing_phy_tot staffing_specialist staffing_clinician sta
 		sum `v' if facility_type2==1, detail
 		local varlabel: variable label `v'
 		local med_iqr1: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_1= r(N)
 
 		sum `v' if facility_type2==2, detail
 		local med_iqr2: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
+		if r(N)!=0 local n_2= r(N)
+		
 		sum `v' if facility_type2==3, detail
 		local med_iqr3: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
+		if r(N)!=0 local n_3= r(N)
+		
 		sum `v' if facility_type2==4, detail
 		local med_iqr4: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
-
+		if r(N)!=0 local n_4= r(N)
+		
 		sum `v' if facility_type2==5, detail
 		local med_iqr5: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_5= r(N)
+		
+		putexcel A`row'=("`varlabel'") B`row'=("`med_iqr1'") C`row'=("`med_iqr2'") D`row'=("`med_iqr3'") E`row'=("`med_iqr4'") F`row'=("`med_iqr5'")
+		local row = `row' + 1
+	}
+		putexcel A`row'=("Number of SDPs") B`row'=("`n_1'") C`row'=("`n_2'") D`row'=("`n_3'") E`row'=("`n_4'") F`row'=("`n_5'")
+	
+*	Staffing pattern in survey SDPs, expanded (as defined in the SDP questionnaire)
+putexcel set "PMAET_2019SDP_Analysis_Staff_$date.xls", sheet("Expanded Staffing Pattern") modify
+putexcel A1=("Provider type") B1=("Hospital") C1=("Health center") D1=("Health post") E1=("Health clinic") F1=("Pharmacy/Drug shop")
+
+local row=2
+foreach v of varlist staffing_phy_tot staffing_gyn_tot staffing_neo_tot staffing_ped_tot staffing_anes_tot staffing_otherspec_tot staffing_ho_tot staffing_eo_tot staffing_po_tot staffing_anestech_tot staffing_nurse_tot staffing_midwife_tot staffing_uhep_tot staffing_hewl3_tot staffing_hewl4_tot staffing_pharmacy_tot staffing_labtech_tot {
+		sum `v' if facility_type2==1, detail
+		local varlabel: variable label `v'
+		local med_iqr1: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_1= r(N)
+		
+		sum `v' if facility_type2==2, detail
+		local med_iqr2: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_2= r(N)
+		
+		sum `v' if facility_type2==3, detail
+		local med_iqr3: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_3= r(N)
+		
+		sum `v' if facility_type2==4, detail
+		local med_iqr4: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_4= r(N)
+		
+		sum `v' if facility_type2==5, detail
+		local med_iqr5: disp %1.0f r(p50) " (" %1.0f r(p25) "-" %1.0f r(p75) ")"
+		if r(N)!=0 local n_5= r(N)
 
 		putexcel A`row'=("`varlabel'") B`row'=("`med_iqr1'") C`row'=("`med_iqr2'") D`row'=("`med_iqr3'") E`row'=("`med_iqr4'") F`row'=("`med_iqr5'")
 		local row = `row' + 1
 	}
-
-
+		putexcel A`row'=("Number of SDPs") B`row'=("`n_1'") C`row'=("`n_2'") D`row'=("`n_3'") E`row'=("`n_4'") F`row'=("`n_5'")
+		
 *********************************************************
 ***   Availability of basic amenities
 *********************************************************
