@@ -111,6 +111,18 @@ log using "PMAET_2019SDP_Analysis_$date.log", replace
 *	Load data 
 use "`datadir'", clear
 
+* Confirm that it is Ethiopia 2019 SDP data
+gen check=(svy_year=="2019" & country=="Ethiopia")
+capture confirm var facility_type 
+if _rc!=0 {
+	replace check=0
+	}
+if check!=1 {
+	di in smcl as error "The dataset you are using is not the PMA Ethiopia 2019 SDP dataset. This .do file is to generate the .xls files for PMA Ethiopia 2019 SDP Technical Report only. Please use a the PMA Ethiopia 2019 SDP dataset and rerun the .do file"
+	exit
+	}
+	drop check
+
 *	Create a public/private variable
 gen sector=.
 replace sector=0 if managing_authority==1 
