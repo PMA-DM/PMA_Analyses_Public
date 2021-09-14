@@ -385,10 +385,9 @@ foreach v of varlist fb_leadership fb_external fb_any fb_rec_action {
 	}
 
 *   HMIS feedback (tabout)
-tabout facility_type2 if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership N percent_fb_leadership mean percent_fb_external N percent_fb_external mean percent_fb_any N percent_fb_any mean percent_fb_rec_action N percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-tabout sector if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership N percent_fb_leadership mean percent_fb_external N percent_fb_external mean percent_fb_any N percent_fb_any mean percent_fb_rec_action N percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-tabout region if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership N percent_fb_leadership mean percent_fb_external N percent_fb_external mean percent_fb_any N percent_fb_any mean percent_fb_rec_action N percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-
+tabout facility_type2 if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
+tabout sector if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
+tabout region if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action ) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
 
 *********************************************************
 ***   Type of HMIS recommendations
@@ -409,9 +408,9 @@ foreach v of varlist review_effort review_facility improv_care resource_allocati
 	}
 
 *	HMIS recommendations (tabout)
-tabout facility_type2 if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort N perc_review_effort mean perc_review_facility N perc_review_facility mean perc_improv_care N perc_improv_care mean perc_resource_allocation N perc_resource_allocation mean perc_resource_advocacy N perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
-tabout sector if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort N perc_review_effort mean perc_review_facility N perc_review_facility mean perc_improv_care N perc_improv_care mean perc_resource_allocation N perc_resource_allocation mean perc_resource_advocacy N perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
-tabout region if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort N perc_review_effort mean perc_review_facility N perc_review_facility mean perc_improv_care N perc_improv_care mean perc_resource_allocation N perc_resource_allocation mean perc_resource_advocacy N perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
+tabout facility_type2 if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort mean perc_review_facility mean perc_improv_care mean perc_resource_allocation mean perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
+tabout sector if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort mean perc_review_facility mean perc_improv_care mean perc_resource_allocation mean perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
+tabout region if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort mean perc_review_facility mean perc_improv_care mean perc_resource_allocation mean perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
 
 
 *********************************************************
@@ -437,7 +436,6 @@ foreach v of varlist pmt pmt_meet_monthly {
 
 *	PMT (tabout)
 tabout facility_type2 if (facility_type2==1 | facility_type2==2) & sector==0 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_pmt mean percent_pmt_meet_monthly) f(1) npos(col) sum append  h2("PMT") show(none)
-tabout sector if (facility_type2==1 | facility_type2==2) & sector==0 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_pmt mean percent_pmt_meet_monthly) f(1) npos(col) sum append  h2("PMT") show(none)
 tabout region if (facility_type2==1 | facility_type2==2) & sector==0 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_pmt mean percent_pmt_meet_monthly) f(1) npos(col) sum append  h2("PMT") show(none)
 
 
@@ -1222,8 +1220,9 @@ tabout region if fp_offered_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(me
 *********************************************************	
 
 *   Check completeness
-mdesc provided_implants provided_iud provided_injectables provided_pills provided_male_condoms if fp_offered_yn==1 
-tab1 provided_implants provided_iud provided_injectables provided_pills provided_male_condoms if fp_offered_yn==1 
+mdesc provided_implants provided_iud provided_injectables provided_pills  if fp_offered_yn==1 
+tab1 provided_implants provided_iud provided_injectables provided_pills  if fp_offered_yn==1 
+
 mdesc visits_implants_total visits_iud_total visits_injectables_total visits_pill_total visits_male_condoms_total if fp_offered_yn==1 & facility_type2!=5
 tab1 visits_implants_total visits_iud_total visits_injectables_total visits_pill_total visits_male_condoms_total if fp_offered_yn==1 & facility_type2!=5
 
@@ -1258,9 +1257,9 @@ foreach v of varlist implants_1mo iud_1mo injectables_1mo pills_1mo male_condoms
 	}
 
 *   Provision of contraceptive methods (tabout)
-tabout facility_type2 if fp_offered_yn==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_implants_1mo mean percent_iud_1mo mean percent_injectables_1mo mean percent_pills_1mo mean percent_male_condoms_1mo) f(1) npos(col) sum append  h2("Provision of methods") show(none)
-tabout sector if fp_offered_yn==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_implants_1mo mean percent_iud_1mo mean percent_injectables_1mo mean percent_pills_1mo mean percent_male_condoms_1mo) f(1) npos(col) sum append  h2("Provision of methods") show(none)
-tabout region if fp_offered_yn==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_implants_1mo mean percent_iud_1mo mean percent_injectables_1mo mean percent_pills_1mo mean percent_male_condoms_1mo) f(1) npos(col) sum append  h2("Provision of methods") show(none)
+tabout facility_type2 if fp_offered_yn==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_implants_1mo mean percent_iud_1mo mean percent_injectables_1mo mean percent_pills_1mo) f(1) npos(col) sum append  h2("Provision of methods") show(none)
+tabout sector if fp_offered_yn==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_implants_1mo mean percent_iud_1mo mean percent_injectables_1mo mean percent_pills_1mo) f(1) npos(col) sum append  h2("Provision of methods") show(none)
+tabout region if fp_offered_yn==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_implants_1mo mean percent_iud_1mo mean percent_injectables_1mo mean percent_pills_1mo ) f(1) npos(col) sum append  h2("Provision of methods") show(none)
 
 
 *********************************************************
