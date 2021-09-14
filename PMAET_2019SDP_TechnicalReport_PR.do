@@ -1449,27 +1449,27 @@ tabout region  if abt_provide_yn==1 & (facility_type2==1 | facility_type2==2) us
 *********************************************************	
 
 *   Check completeness
-mdesc abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_pt_tot_1mo if abt_provide_yn==1 
-tab1 abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_pt_tot_1mo if abt_provide_yn==1 
+mdesc abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_meds_1mo if abt_provide_yn==1 
+tab1 abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_meds_1mo if abt_provide_yn==1 
 
 *   Recode those with don't know/no response
-foreach var of varlist abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_pt_tot_1mo  {
+foreach var of varlist abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_meds_1mo  {
 		replace `var'=. if `var'==-77 | `var'==-88 | `var'==-99   
 	}
 
 *   Check missing
-mdesc abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_pt_tot_1mo if abt_provide_yn==1 	
-misstable pattern abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_pt_tot_1mo  if abt_provide_yn==1, freq
+mdesc abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_meds_1mo if abt_provide_yn==1 	
+misstable pattern abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_meds_1mo  if abt_provide_yn==1, freq
 
 *   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_pt_tot_1mo {
+foreach v of varlist abt_mva_1mo abt_dc_1mo abt_ec_1mo abt_meds_1mo {
 		recode `v' (1 = 100), gen(percent_`v')
 	}
 
 *   Meds and equipment (tabout)
-tabout facility_type2 if abt_provide_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_abt_mva_1mo mean percent_abt_dc_1mo mean percent_abt_ec_1mo mean percent_abt_pt_tot_1mo) f(1) npos(col) sum append  h2("SAC functions") show(none)
-tabout sector if abt_provide_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_abt_mva_1mo mean percent_abt_dc_1mo mean percent_abt_ec_1mo mean percent_abt_pt_tot_1mo) f(1) npos(col) sum append  h2("SAC functions") show(none)
-tabout region if abt_provide_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_abt_mva_1mo mean percent_abt_dc_1mo mean percent_abt_ec_1mo mean percent_abt_pt_tot_1mo) f(1) npos(col) sum append  h2("SAC functions") show(none)
+tabout facility_type2 if abt_provide_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_abt_mva_1mo mean percent_abt_dc_1mo mean percent_abt_ec_1mo mean percent_abt_meds_1mo) f(1) npos(col) sum append  h2("SAC functions") show(none)
+tabout sector if abt_provide_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_abt_mva_1mo mean percent_abt_dc_1mo mean percent_abt_ec_1mo mean percent_abt_meds_1mo) f(1) npos(col) sum append  h2("SAC functions") show(none)
+tabout region if abt_provide_yn==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_abt_mva_1mo mean percent_abt_dc_1mo mean percent_abt_ec_1mo mean percent_abt_meds_1mo) f(1) npos(col) sum append  h2("SAC functions") show(none)
 
 
 *********************************************************
