@@ -136,7 +136,7 @@ label variable sector "Sector"
 
 *	Create a new facility type variable with combined category for pharmacies and drug shops
 gen facility_type2=facility_type
-replace facility_type2=5 if facility_type==6
+replace facility_type2=5 if facility_type==7
 label var facility_type2 "Type of facility" 
 label define facility_type2_list 1 "Hospital" 2 "Health center" 3 "Health post" 4 "Health clinic" 5 "Pharmacy/Drug shop"
 label val facility_type2 facility_type2_list
