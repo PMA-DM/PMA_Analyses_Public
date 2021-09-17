@@ -158,27 +158,193 @@ ssc install mdesc, replace
 mdesc facility_type2 sector region
 tab1 facility_type2 sector region
 
-*	Tabulation of SDP response rate
-tabout SDP_result using "PMAET_2019SDP_Analysis_$date.xls", replace cells(col freq) f(1 0) h2("Response rate of sampled service delivery points") h3 (| % | n)
+*	Set up putexcel
+putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) replace
+putexcel A1="Table 1. Response rate of sampled service delivery points, by background characteristics", bold 
+putexcel B2="Completed" C2="Not at facility" D2="Partly completed" E2="Other" F2="Number of SDPs in sample"
+putexcel A3="Type" A9="Managing authority" A12="Region", bold
 
-*	Tabulation of SDP response rate by facility type, sector, and region 
-foreach var in facility_type2 sector region {
-		tabout `var' SDP_result using "PMAET_2019SDP_Analysis_$date.xls", append c(row freq) clab(% n) f(1 0) h1("Response rate of sampled service delivery points, by background characteristics")
+*	Response rate by facility type
+local RowVar = "facility_type2"
+local ColVar = "SDP_result"
+tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
+tab `RowVar' `ColVar', matcell(cellcounts)
+local RowCount = r(r)
+local ColCount = r(c)
+ 
+local RowValueLabel : value label `RowVar'
+levelsof `RowVar', local(RowLevels)
+local ColValueLabel : value label `ColVar'
+levelsof `ColVar', local(ColLevels)
+ 
+putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
+forvalues row = 1/`RowCount' {
+		local RowValueLabelNum = word("`RowLevels'", `row')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local Cell = char(64 + 1) + string(`row' + 3)
+		putexcel `Cell' = "`CellContents'", left
+			 
+		local CellContents = rowtotals[`row',1]
+		local Cell = char(64 + `ColCount' + 2) + string(`row' + 3)
+		putexcel `Cell' = `CellContents', left
+	 
+		forvalues col = 1/`ColCount' {
+			local cellcount = cellcounts[`row',`col']
+			local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
+			local CellContents = "`cellpercent'"
+			local Cell = char(64 + `col' + 1) + string(`row' + 3)
+			putexcel `Cell' = `CellContents', left			
+		}
 	}
+
+*	Response rate by managing authority
+local RowVar = "sector"
+tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
+tab `RowVar' `ColVar', matcell(cellcounts)
+local RowCount = r(r)
+local ColCount = r(c)
+ 
+local RowValueLabel : value label `RowVar'
+levelsof `RowVar', local(RowLevels)
+
+putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
+forvalues row = 1/`RowCount' {
+		local RowValueLabelNum = word("`RowLevels'", `row')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local Cell = char(64 + 1) + string(`row' + 9)
+		putexcel `Cell' = "`CellContents'", left
+			 
+		local CellContents = rowtotals[`row',1]
+		local Cell = char(64 + `ColCount' + 2) + string(`row' + 9)
+		putexcel `Cell' = `CellContents', left
+	 
+		forvalues col = 1/`ColCount' {
+			local cellcount = cellcounts[`row',`col']
+			local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
+			local CellContents = "`cellpercent'"
+			local Cell = char(64 + `col' + 1) + string(`row' + 9)
+			putexcel `Cell' = `CellContents', left
+		}
+	}
+
+*	Response rate by region 
+local RowVar = "region"
+tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
+tab `RowVar' `ColVar', matcell(cellcounts)
+local RowCount = r(r)
+local ColCount = r(c)
+ 
+local RowValueLabel : value label `RowVar'
+levelsof `RowVar', local(RowLevels)
+
+putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
+forvalues row = 1/`RowCount' {
+		local RowValueLabelNum = word("`RowLevels'", `row')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local Cell = char(64 + 1) + string(`row' + 12)
+		putexcel `Cell' = "`CellContents'", left
+			 
+		local CellContents = rowtotals[`row',1]
+		local Cell = char(64 + `ColCount' + 2) + string(`row' + 12)
+		putexcel `Cell' = `CellContents', left
+	 
+		forvalues col = 1/`ColCount' {
+			local cellcount = cellcounts[`row',`col']
+			local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
+			local CellContents = "`cellpercent'"
+			local Cell = char(64 + `col' + 1) + string(`row' + 12)
+			putexcel `Cell' = `CellContents', left
+		}
+	}
+
+*	Overall response rate 
+putexcel A24="Total", bold left
+quietly {
+		count 
+		local totalSDP = r(N)
+		count if SDP_result==1 
+		local complete = string(r(N) / `totalSDP' * 100, "%5.1f")
+		count if SDP_result==2
+		local na = string(r(N) / `totalSDP' * 100, "%5.1f")
+		count if SDP_result==5
+		local par_complete = string(r(N) / `totalSDP' * 100, "%5.1f")
+		count if SDP_result==96
+		local other = string(r(N) / `totalSDP' * 100, "%5.1f")
+	}
+
+putexcel B24 = `complete' C24 = `na' D24 = `par_complete' E24=`other' F24=`totalSDP', left 
 
 *	Keep only completed surveys (n=799) 
 keep if SDP_result==1
-
 
 ********************************************************************************
 ***   SECTION 5: SDP BACKGROUND CHARACTERISTICS
 ********************************************************************************	
 
+putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table2) modify
+putexcel A1=("Table 2. Distribution of surveyed service delivery points, by facility characteristics"), bold
+putexcel B2="Percent distribution of surveyed SDPs" C2="Number of SDPs" 
+putexcel A3="Type" A9="Managing authority" A12="Region", bold
+
+*	Facility type 
+tabulate facility_type2, matcell(freq) matrow(names)
+local rows = rowsof(names)
+local row = 4
+ 
+forvalues i = 1/`rows' {
+        local val = names[`i',1]
+        local val_lab : label (facility_type2) `val'
+        local freq_val = freq[`i',1]
+        local percent_val = `freq_val'/`r(N)'*100
+        local percent_val : display %9.1f `percent_val'
+ 
+        putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
+        local row = `row' + 1
+}
+
+*	Managing authority
+tabulate sector, matcell(freq) matrow(names)
+local rows = rowsof(names)
+local row = 10
+ 
+forvalues i = 1/`rows' {
+        local val = names[`i',1]
+        local val_lab : label (sector) `val'
+        local freq_val = freq[`i',1]
+        local percent_val = `freq_val'/`r(N)'*100
+        local percent_val : display %9.1f `percent_val'
+ 
+        putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
+        local row = `row' + 1
+}
+
+*	Region 
+tabulate region, matcell(freq) matrow(names)
+local rows = rowsof(names)
+local row = 13
+ 
+forvalues i = 1/`rows' {
+        local val = names[`i',1]
+        local val_lab : label (region) `val'
+        local freq_val = freq[`i',1]
+        local percent_val = `freq_val'/`r(N)'*100
+        local percent_val : display %9.1f `percent_val'
+ 
+        putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
+        local row = `row' + 1
+}
+
+putexcel A`row'=("Total"), left bold
+putexcel B`row'=(100.0) C`row'=(r(N)), left
+
+
+/*
 *	Descriptive statistics by background characteristics
 foreach var in facility_type2 sector region {
 		tabout `var' using "PMAET_2019SDP_Analysis_$date.xls", append c(col freq) clab(% n) f(1 0) h2("Distribution of surveyed service delivery points, by background characteristics") show(none)
 	}
 
+*/
 
 *********************************************************
 ***   Staffing pattern
