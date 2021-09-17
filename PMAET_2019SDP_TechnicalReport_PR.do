@@ -162,117 +162,61 @@ tab1 facility_type2 sector region
 putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) replace
 putexcel A1="Table 1. Response rate of sampled service delivery points, by background characteristics", bold 
 putexcel B2="Completed" C2="Not at facility" D2="Partly completed" E2="Other" F2="Number of SDPs in sample"
-putexcel A3="Type" A9="Managing authority" A12="Region", bold
+putexcel A3="Type" A10="Managing authority" A14="Region", bold
 
-*	Response rate by facility type
-local RowVar = "facility_type2"
-local ColVar = "SDP_result"
-tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
-tab `RowVar' `ColVar', matcell(cellcounts)
-local RowCount = r(r)
-local ColCount = r(c)
- 
-local RowValueLabel : value label `RowVar'
-levelsof `RowVar', local(RowLevels)
-local ColValueLabel : value label `ColVar'
-levelsof `ColVar', local(ColLevels)
- 
-putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
-forvalues row = 1/`RowCount' {
-		local RowValueLabelNum = word("`RowLevels'", `row')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local Cell = char(64 + 1) + string(`row' + 3)
-		putexcel `Cell' = "`CellContents'", left
+local datarow=4
+
+*	Response rate by facility type, managing authority and region
+foreach RowVar in facility_type2 sector region {
+		local ColVar = "SDP_result"
+		tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
+		tab `RowVar' `ColVar', matcell(cellcounts)
+		local RowCount = r(r)
+		local ColCount = r(c)
+		 
+		local RowValueLabel : value label `RowVar'
+		levelsof `RowVar' if !missing(`ColVar'), local(RowLevels) 
+		local ColValueLabel : value label `ColVar'
+		levelsof `ColVar', local(ColLevels) 
+		 
+		putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
+		
+		forvalues row = 1/`RowCount' {
+				local RowValueLabelNum = word("`RowLevels'", `row')
+				local CellContents : label `RowValueLabel' `RowValueLabelNum'
+				local Cell = char(64 + 1) + string(`datarow')
+				putexcel `Cell' = "`CellContents'", left
+					 
+				local CellContents = rowtotals[`row',1]
+				local Cell = char(64 + `ColCount' + 2) + string(`datarow')
+				putexcel `Cell' = `CellContents', left
 			 
-		local CellContents = rowtotals[`row',1]
-		local Cell = char(64 + `ColCount' + 2) + string(`row' + 3)
-		putexcel `Cell' = `CellContents', left
-	 
-		forvalues col = 1/`ColCount' {
-			local cellcount = cellcounts[`row',`col']
-			local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
-			local CellContents = "`cellpercent'"
-			local Cell = char(64 + `col' + 1) + string(`row' + 3)
-			putexcel `Cell' = `CellContents', left			
-		}
-	}
-
-*	Response rate by managing authority
-local RowVar = "sector"
-tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
-tab `RowVar' `ColVar', matcell(cellcounts)
-local RowCount = r(r)
-local ColCount = r(c)
- 
-local RowValueLabel : value label `RowVar'
-levelsof `RowVar', local(RowLevels)
-
-putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
-forvalues row = 1/`RowCount' {
-		local RowValueLabelNum = word("`RowLevels'", `row')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local Cell = char(64 + 1) + string(`row' + 9)
-		putexcel `Cell' = "`CellContents'", left
-			 
-		local CellContents = rowtotals[`row',1]
-		local Cell = char(64 + `ColCount' + 2) + string(`row' + 9)
-		putexcel `Cell' = `CellContents', left
-	 
-		forvalues col = 1/`ColCount' {
-			local cellcount = cellcounts[`row',`col']
-			local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
-			local CellContents = "`cellpercent'"
-			local Cell = char(64 + `col' + 1) + string(`row' + 9)
-			putexcel `Cell' = `CellContents', left
-		}
-	}
-
-*	Response rate by region 
-local RowVar = "region"
-tab `RowVar' if !missing(`ColVar'), matcell(rowtotals)
-tab `RowVar' `ColVar', matcell(cellcounts)
-local RowCount = r(r)
-local ColCount = r(c)
- 
-local RowValueLabel : value label `RowVar'
-levelsof `RowVar', local(RowLevels)
-
-putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) modify
-forvalues row = 1/`RowCount' {
-		local RowValueLabelNum = word("`RowLevels'", `row')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local Cell = char(64 + 1) + string(`row' + 12)
-		putexcel `Cell' = "`CellContents'", left
-			 
-		local CellContents = rowtotals[`row',1]
-		local Cell = char(64 + `ColCount' + 2) + string(`row' + 12)
-		putexcel `Cell' = `CellContents', left
-	 
-		forvalues col = 1/`ColCount' {
-			local cellcount = cellcounts[`row',`col']
-			local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
-			local CellContents = "`cellpercent'"
-			local Cell = char(64 + `col' + 1) + string(`row' + 12)
-			putexcel `Cell' = `CellContents', left
-		}
+				forvalues col = 1/`ColCount' {
+					local cellcount = cellcounts[`row',`col']
+					local cellpercent = string(100*`cellcount'/rowtotals[`row',1],"%9.1f")
+					local CellContents = "`cellpercent'"
+					local Cell = char(64 + `col' + 1) + string(`datarow')
+					putexcel `Cell' = `CellContents', left			
+			
+				}
+				
+			local datarow=`datarow'+1
+			
+			}
+		local datarow=`datarow'+2
 	}
 
 *	Overall response rate 
-putexcel A24="Total", bold left
-quietly {
-		count 
-		local totalSDP = r(N)
-		count if SDP_result==1 
-		local complete = string(r(N) / `totalSDP' * 100, "%5.1f")
-		count if SDP_result==2
-		local na = string(r(N) / `totalSDP' * 100, "%5.1f")
-		count if SDP_result==5
-		local par_complete = string(r(N) / `totalSDP' * 100, "%5.1f")
-		count if SDP_result==96
-		local other = string(r(N) / `totalSDP' * 100, "%5.1f")
-	}
+putexcel A`datarow'="Total", bold left
+tab `ColVar', matcell(coltotals)
+local totalSDP = r(N)
+mat define cellpercent=coltotals'/`totalSDP'*100
 
-putexcel B24 = `complete' C24 = `na' D24 = `par_complete' E24=`other' F24=`totalSDP', left 
+local Cell = char(64 + 2) + string(`datarow')
+putexcel `Cell' = matrix(cellpercent), left nformat(0.0)
+
+local Cell = char(64 + `ColCount'+ 2) + string(`datarow')
+putexcel `Cell'= "`totalSDP'", left
 
 *	Keep only completed surveys (n=799) 
 keep if SDP_result==1
