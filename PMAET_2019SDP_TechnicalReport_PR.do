@@ -754,6 +754,112 @@ replace fb_rec_action=0 if hmis_report==1 & facility_type2!=5 & fb_any==0 & fb_r
 mdesc fb_leadership fb_external fb_any fb_rec_action if hmis_report==1 & facility_type2!=5
 misstable patterns fb_leadership fb_external fb_any fb_rec_action if hmis_report==1 & facility_type2!=5, freq
 
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table6") modify
+putexcel A1="Table 6. HMIS feedback and recommendations", bold
+putexcel A2="Among facilities that produce reports, percentages that receive feedback on reports", italic
+putexcel B3=("From facility's leadership team") C3=("From external stakeholders") D3=("From facility leadership and/or external stakeholders") E3="That include recommendations for action to improve quality of care" F3=("Number of facilities")
+putexcel A4="Type" A9="Managing authority" A12="Region" A24="Total", bold
+
+*	HMIS feedback and recommendations by facility type
+local row = 5
+local RowValueLabel : value label facility_type2
+levelsof facility_type2, local(RowLevels)
+
+forvalues i = 1/4 {
+		sum fb_leadership if facility_type2==`i' & hmis_report==1
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum fb_external if facility_type2==`i' & hmis_report==1
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum fb_any if facility_type2==`i' & hmis_report==1
+		local mean3: disp %3.1f r(mean)*100
+		
+		sum fb_rec_action if facility_type2==`i' & hmis_report==1
+		local mean4: disp %3.1f r(mean)*100
+		count if facility_type2==`i' & hmis_report==1
+		if r(N)!=0 local n_1= r(N)
+
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left	
+		
+		local row = `row' + 1	
+	}
+
+*	HMIS feedback and recommendations by managing authority
+local row = 10
+local RowValueLabel : value label sector_new
+levelsof sector_new, local(RowLevels)
+	
+forvalues i = 1/2 {
+		sum fb_leadership if sector_new==`i' & hmis_report==1
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum fb_external if sector_new==`i' & hmis_report==1
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum fb_any if sector_new==`i' & hmis_report==1
+		local mean3: disp %3.1f r(mean)*100
+			
+		sum fb_rec_action if sector_new==`i' & hmis_report==1
+		local mean4: disp %3.1f r(mean)*100
+		count if sector_new==`i' & hmis_report==1
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left		
+		local row = `row' + 1
+	}
+		
+*	HMIS feedback and recommendations by region
+local row = 13
+local RowValueLabel : value label region
+levelsof region, local(RowLevels)
+	
+forvalues i = 1/11 {
+		sum fb_leadership if region==`i' & hmis_report==1
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum fb_external if region==`i' & hmis_report==1
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum fb_any if region==`i' & hmis_report==1
+		local mean3: disp %3.1f r(mean)*100
+			
+		sum fb_rec_action if region==`i' & hmis_report==1
+		local mean4: disp %3.1f r(mean)*100
+		count if region==`i' & hmis_report==1
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left
+		
+		local row = `row' + 1
+	}	
+
+*	HMIS feedback and recommendations overall
+local row = 24
+sum fb_leadership if hmis_report==1
+local mean1: disp %3.1f r(mean)*100
+
+sum fb_external if hmis_report==1
+local mean2: disp %3.1f r(mean)*100
+
+sum fb_any if hmis_report==1
+local mean3: disp %3.1f r(mean)*100
+
+sum fb_rec_action if hmis_report==1
+local mean4: disp %3.1f r(mean)*100
+count if hmis_report==1
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4')  F`row'=`n_1', left
+	
+;
 *	Recode yes/no variables as percentages on scale of 0 to 100
 foreach v of varlist fb_leadership fb_external fb_any fb_rec_action {
 		recode `v' (1 = 100), gen(percent_`v')
@@ -763,7 +869,7 @@ foreach v of varlist fb_leadership fb_external fb_any fb_rec_action {
 tabout facility_type2 if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
 tabout sector if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
 tabout region if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action ) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-
+;
 *********************************************************
 ***   Type of HMIS recommendations
 *********************************************************	
