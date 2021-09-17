@@ -618,7 +618,97 @@ label var hmis_report_monthly "Produces HMIS reports monthly or more often"
 label val hmis_report_monthly yesno
 ta hmis_report_freq  hmis_report_monthly if facility_type2!=5, m
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table5") modify
+putexcel A1="Table 5. Health management information system (HMIS)", bold
+putexcel B2=("Functional mechanism for summarizing outcome data") C2=("Produces reports for HMIS") D2=("Produces reports for HMIS monthly or more often") E2=("Number of facilities")
+putexcel A3="Type" A8="Managing authority" A11="Region" A23="Total", bold
+
+*	HMIS by facility type
+local row = 4
+local RowValueLabel : value label facility_type2
+levelsof facility_type2, local(RowLevels)
+
+forvalues i = 1/4 {
+		sum hmis_system_yn if facility_type2==`i'
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum hmis_report if facility_type2==`i'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum hmis_report_monthly if facility_type2==`i'
+		local mean3: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
+		
+		local row = `row' + 1
+	}
+
+*	HMIS by managing authority
+local row = 9
+local RowValueLabel : value label sector_new
+levelsof sector_new, local(RowLevels)
+	
+forvalues i = 1/2 {
+		sum hmis_system_yn if sector_new==`i'
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum hmis_report if sector_new==`i'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum hmis_report_monthly if sector_new==`i'
+		local mean3: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
+		
+		local row = `row' + 1
+	}
+		
+*	HMIS by region
+local row = 12
+local RowValueLabel : value label region
+levelsof region, local(RowLevels)
+	
+forvalues i = 1/11 {
+		sum hmis_system_yn if region==`i'
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum hmis_report if region==`i'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum hmis_report_monthly if region==`i'
+		local mean3: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
+		
+		local row = `row' + 1
+	}	
+
+*	HMIS overall
+local row = 23
+sum hmis_system_yn 
+local mean1: disp %3.1f r(mean)*100
+
+sum hmis_report 
+local mean2: disp %3.1f r(mean)*100
+
+sum hmis_report_monthly 
+local mean3: disp %3.1f r(mean)*100
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
+	
+
+/*	Recode yes/no variables as percentages on scale of 0 to 100
 foreach v of varlist hmis_system_yn hmis_report hmis_report_monthly {
 		recode `v' (1 = 100), gen(percent_`v')
 	}
@@ -626,7 +716,7 @@ foreach v of varlist hmis_system_yn hmis_report hmis_report_monthly {
 *	Health management information system (tabout)
 tabout facility_type2 if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none)
 tabout sector if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none)
-tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none)
+tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none) */
 
 
 *********************************************************
