@@ -473,7 +473,123 @@ label var internet_binary "Access to internet"
 label val internet_binary yesno
 ta internet_binary internet_7d, m
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table4") modify
+putexcel A1="Table 4. Availability of basic amenities for client services", bold 
+putexcel B2=("Regular electricity") C2=("Continuous electricity") D2=("Water outlet onsite") E2=("Client toilet") F2=("Internet") G2=("Number of facilities")
+putexcel A3="Type" A8="Managing authority" A11="Region" A23="Total", bold
+
+*	Basic amenities by facility type
+local row = 4
+local RowValueLabel : value label facility_type2
+levelsof facility_type2, local(RowLevels)
+
+forvalues i = 1/4 {
+		sum electricity_regular if facility_type2==`i'
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum electricity_binary if facility_type2==`i'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum water_outlet if facility_type2==`i'
+		local mean3: disp %3.1f r(mean)*100
+		
+		sum toilet_pt if facility_type2==`i'
+		local mean4: disp %3.1f r(mean)*100
+		
+		sum internet_binary if facility_type2==`i'
+		local mean5: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
+		
+		local row = `row' + 1
+	}
+
+*	Basic amenities by managing authority
+gen sector_new = sector + 1
+label define sectorl_new 1 "Public" 2 "Private"
+label values sector_new sectorl_new
+
+local row = 9
+local RowValueLabel : value label sector_new
+levelsof sector_new, local(RowLevels)
+
+forvalues i = 1/2 {
+		sum electricity_regular if sector_new==`i'
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum electricity_binary if sector_new==`i'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum water_outlet if sector_new==`i'
+		local mean3: disp %3.1f r(mean)*100
+		
+		sum toilet_pt if sector_new==`i'
+		local mean4: disp %3.1f r(mean)*100
+		
+		sum internet_binary if sector_new==`i'
+		local mean5: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
+		
+		local row = `row' + 1
+	}
+
+*	Basic amenities by region
+local row = 12
+local RowValueLabel : value label region
+levelsof region, local(RowLevels)
+
+forvalues i = 1/11 {
+		sum electricity_regular if region==`i'
+		local RowValueLabelNum = word("`RowLevels'", `i')
+		local CellContents : label `RowValueLabel' `RowValueLabelNum'
+		local mean1: disp %3.1f r(mean)*100
+		
+		sum electricity_binary if region==`i'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum water_outlet if region==`i'
+		local mean3: disp %3.1f r(mean)*100
+		
+		sum toilet_pt if region==`i'
+		local mean4: disp %3.1f r(mean)*100
+		
+		sum internet_binary if region==`i'
+		local mean5: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N)
+		
+		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
+		
+		local row = `row' + 1
+	}
+
+*	Overall amenities
+local row = 23
+sum electricity_regular 
+local mean1: disp %3.1f r(mean)*100
+
+sum electricity_binary 
+local mean2: disp %3.1f r(mean)*100
+
+sum water_outlet 
+local mean3: disp %3.1f r(mean)*100
+
+sum toilet_pt 
+local mean4: disp %3.1f r(mean)*100
+
+sum internet_binary 
+local mean5: disp %3.1f r(mean)*100
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
+	
+/*	Recode yes/no variables as percentages on scale of 0 to 100
 foreach v of varlist electricity_regular electricity_binary water_outlet toilet_pt internet_binary {
 		recode `v' (1 = 100), gen(percent_`v')
 	}
@@ -481,7 +597,7 @@ foreach v of varlist electricity_regular electricity_binary water_outlet toilet_
 *	Basic amenities by background characteristics (tabout)
 tabout facility_type2 if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none)
 tabout sector if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none)
-tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none)
+tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none) */
 
 
 *********************************************************
