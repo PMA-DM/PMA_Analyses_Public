@@ -125,12 +125,12 @@ if check!=1 {
 
 *	Create a public/private variable
 gen sector=.
-replace sector=0 if managing_authority==1 
-replace sector=1 if managing_authority!=1 & managing_authority!=.
+replace sector=1 if managing_authority==1 
+replace sector=2 if managing_authority!=1 & managing_authority!=.
 ta sector managing_authority, m
 
 *	Label sector variable
-label define sectorl 0 "Public" 1 "Private"
+label define sectorl 1 "Public" 2 "Private"
 label values sector sectorl
 label variable sector "Sector"
 
