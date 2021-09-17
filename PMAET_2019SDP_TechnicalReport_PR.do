@@ -228,56 +228,29 @@ keep if SDP_result==1
 putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table2) modify
 putexcel A1=("Table 2. Distribution of surveyed service delivery points, by facility characteristics"), bold
 putexcel B2="Percent distribution of surveyed SDPs" C2="Number of SDPs" 
-putexcel A3="Type" A9="Managing authority" A12="Region", bold
+putexcel A3="Type" A10="Managing authority" A14="Region", bold
 
-*	Facility type 
-tabulate facility_type2, matcell(freq) matrow(names)
-local rows = rowsof(names)
+*	Facility type , managing authority, and region
 local row = 4
- 
-forvalues i = 1/`rows' {
-        local val = names[`i',1]
-        local val_lab : label (facility_type2) `val'
-        local freq_val = freq[`i',1]
-        local percent_val = `freq_val'/`r(N)'*100
-        local percent_val : display %9.1f `percent_val'
- 
-        putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
-        local row = `row' + 1
-}
-
-*	Managing authority
-tabulate sector, matcell(freq) matrow(names)
-local rows = rowsof(names)
-local row = 10
- 
-forvalues i = 1/`rows' {
-        local val = names[`i',1]
-        local val_lab : label (sector) `val'
-        local freq_val = freq[`i',1]
-        local percent_val = `freq_val'/`r(N)'*100
-        local percent_val : display %9.1f `percent_val'
- 
-        putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
-        local row = `row' + 1
-}
-
-*	Region 
-tabulate region, matcell(freq) matrow(names)
-local rows = rowsof(names)
-local row = 13
- 
-forvalues i = 1/`rows' {
-        local val = names[`i',1]
-        local val_lab : label (region) `val'
-        local freq_val = freq[`i',1]
-        local percent_val = `freq_val'/`r(N)'*100
-        local percent_val : display %9.1f `percent_val'
- 
-        putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
-        local row = `row' + 1
-}
-
+foreach RowVar in facility_type2 sector region {
+	tabulate `RowVar', matcell(freq) matrow(names)
+	local rows = rowsof(names)
+	
+	local RowValueLabel : value label `RowVar'
+	
+	forvalues i = 1/`rows' {
+			local val = names[`i',1]
+			local val_lab : label `RowValueLabel' `val'
+			local freq_val = freq[`i',1]
+			local percent_val = `freq_val'/`r(N)'*100
+			local percent_val : display %9.1f `percent_val'
+	 
+			putexcel A`row'=("`val_lab'") B`row'=(`percent_val') C`row'=(`freq_val'), left
+			local row = `row' + 1
+		}
+	local row=`row'+2
+	}
+	
 putexcel A`row'=("Total"), left bold
 putexcel B`row'=(100.0) C`row'=(r(N)), left
 
@@ -420,101 +393,50 @@ ta internet_binary internet_7d, m
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table4") modify
 putexcel A1="Table 4. Availability of basic amenities for client services", bold 
 putexcel B2=("Regular electricity") C2=("Continuous electricity") D2=("Water outlet onsite") E2=("Client toilet") F2=("Internet") G2=("Number of facilities")
-putexcel A3="Type" A8="Managing authority" A11="Region" A23="Total", bold
+putexcel A3="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
-*	Basic amenities by facility type
+*	Basic amenities by facility type, managing authority, and region
 local row = 4
-local RowValueLabel : value label facility_type2
-levelsof facility_type2, local(RowLevels)
 
-forvalues i = 1/4 {
-		sum electricity_regular if facility_type2==`i'
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum electricity_binary if facility_type2==`i'
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum water_outlet if facility_type2==`i'
-		local mean3: disp %3.1f r(mean)*100
-		
-		sum toilet_pt if facility_type2==`i'
-		local mean4: disp %3.1f r(mean)*100
-		
-		sum internet_binary if facility_type2==`i'
-		local mean5: disp %3.1f r(mean)*100
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
-		
-		local row = `row' + 1
-	}
+foreach RowVar in facility_type2 sector region {
 
-*	Basic amenities by managing authority
-gen sector_new = sector + 1
-label define sectorl_new 1 "Public" 2 "Private"
-label values sector_new sectorl_new
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
 
-local row = 9
-local RowValueLabel : value label sector_new
-levelsof sector_new, local(RowLevels)
+	forvalues i = 1/`RowCount' {
+			sum electricity_regular if `RowVar'==`i'
+			
+			if r(N)!=0 {
+				
+				local RowValueLabelNum = word("`RowLevels'", `i')
+				local CellContents : label `RowValueLabel' `RowValueLabelNum'
+				local mean1: disp %3.1f r(mean)*100
+				
+				sum electricity_binary if `RowVar'==`i'
+				local mean2: disp %3.1f r(mean)*100
+				
+				sum water_outlet if `RowVar'==`i'
+				local mean3: disp %3.1f r(mean)*100
+				
+				sum toilet_pt if `RowVar'==`i'
+				local mean4: disp %3.1f r(mean)*100
+				
+				sum internet_binary if `RowVar'==`i'
+				local mean5: disp %3.1f r(mean)*100
+				if r(N)!=0 local n_1= r(N)
+				
+				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
+				
+				local row = `row' + 1
+				}
+		}
 
-forvalues i = 1/2 {
-		sum electricity_regular if sector_new==`i'
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum electricity_binary if sector_new==`i'
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum water_outlet if sector_new==`i'
-		local mean3: disp %3.1f r(mean)*100
-		
-		sum toilet_pt if sector_new==`i'
-		local mean4: disp %3.1f r(mean)*100
-		
-		sum internet_binary if sector_new==`i'
-		local mean5: disp %3.1f r(mean)*100
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
-		
-		local row = `row' + 1
-	}
-
-*	Basic amenities by region
-local row = 12
-local RowValueLabel : value label region
-levelsof region, local(RowLevels)
-
-forvalues i = 1/11 {
-		sum electricity_regular if region==`i'
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum electricity_binary if region==`i'
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum water_outlet if region==`i'
-		local mean3: disp %3.1f r(mean)*100
-		
-		sum toilet_pt if region==`i'
-		local mean4: disp %3.1f r(mean)*100
-		
-		sum internet_binary if region==`i'
-		local mean5: disp %3.1f r(mean)*100
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
-		
-		local row = `row' + 1
-	}
-
+	local row=`row'+2
+}
+	
 *	Overall amenities
-local row = 23
 sum electricity_regular 
 local mean1: disp %3.1f r(mean)*100
 
@@ -566,79 +488,44 @@ ta hmis_report_freq  hmis_report_monthly if facility_type2!=5, m
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table5") modify
 putexcel A1="Table 5. Health management information system (HMIS)", bold
 putexcel B2=("Functional mechanism for summarizing outcome data") C2=("Produces reports for HMIS") D2=("Produces reports for HMIS monthly or more often") E2=("Number of facilities")
-putexcel A3="Type" A8="Managing authority" A11="Region" A23="Total", bold
+putexcel A3="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
-*	HMIS by facility type
+*	HMIS by facility type, sector, and region
 local row = 4
-local RowValueLabel : value label facility_type2
-levelsof facility_type2, local(RowLevels)
 
-forvalues i = 1/4 {
-		sum hmis_system_yn if facility_type2==`i'
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum hmis_report if facility_type2==`i'
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum hmis_report_monthly if facility_type2==`i'
-		local mean3: disp %3.1f r(mean)*100
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
-		
-		local row = `row' + 1
-	}
+foreach RowVar in facility_type2 sector region {
 
-*	HMIS by managing authority
-local row = 9
-local RowValueLabel : value label sector_new
-levelsof sector_new, local(RowLevels)
-	
-forvalues i = 1/2 {
-		sum hmis_system_yn if sector_new==`i'
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum hmis_report if sector_new==`i'
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum hmis_report_monthly if sector_new==`i'
-		local mean3: disp %3.1f r(mean)*100
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
-		
-		local row = `row' + 1
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+
+		sum hmis_system_yn if `RowVar'==`i'
+		 
+		if r(N)!=0 {
+			
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum hmis_report if `RowVar'==`i'
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum hmis_report_monthly if `RowVar'==`i'
+			local mean3: disp %3.1f r(mean)*100
+			if r(N)!=0 local n_1= r(N)
+			
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
+			
+			local row = `row' + 1
+			}
+		}
+	local row=`row'+2
 	}
-		
-*	HMIS by region
-local row = 12
-local RowValueLabel : value label region
-levelsof region, local(RowLevels)
-	
-forvalues i = 1/11 {
-		sum hmis_system_yn if region==`i'
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum hmis_report if region==`i'
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum hmis_report_monthly if region==`i'
-		local mean3: disp %3.1f r(mean)*100
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
-		
-		local row = `row' + 1
-	}	
 
 *	HMIS overall
-local row = 23
 sum hmis_system_yn 
 local mean1: disp %3.1f r(mean)*100
 
@@ -703,90 +590,47 @@ putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table6") modify
 putexcel A1="Table 6. HMIS feedback and recommendations", bold
 putexcel A2="Among facilities that produce reports, percentages that receive feedback on reports", italic
 putexcel B3=("From facility's leadership team") C3=("From external stakeholders") D3=("From facility leadership and/or external stakeholders") E3="That include recommendations for action to improve quality of care" F3=("Number of facilities")
-putexcel A4="Type" A9="Managing authority" A12="Region" A24="Total", bold
+putexcel A4="Type" A10="Managing authority" A14="Region" A28="Total", bold
 
 *	HMIS feedback and recommendations by facility type
 local row = 5
-local RowValueLabel : value label facility_type2
-levelsof facility_type2, local(RowLevels)
+foreach RowVar in facility_type2 sector region {
 
-forvalues i = 1/4 {
-		sum fb_leadership if facility_type2==`i' & hmis_report==1
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum fb_external if facility_type2==`i' & hmis_report==1
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum fb_any if facility_type2==`i' & hmis_report==1
-		local mean3: disp %3.1f r(mean)*100
-		
-		sum fb_rec_action if facility_type2==`i' & hmis_report==1
-		local mean4: disp %3.1f r(mean)*100
-		count if facility_type2==`i' & hmis_report==1
-		if r(N)!=0 local n_1= r(N)
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
 
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left	
+	forvalues i = 1/`RowCount' {
+		sum fb_leadership if `RowVar'==`i' & hmis_report==1
 		
-		local row = `row' + 1	
-	}
-
-*	HMIS feedback and recommendations by managing authority
-local row = 10
-local RowValueLabel : value label sector_new
-levelsof sector_new, local(RowLevels)
-	
-forvalues i = 1/2 {
-		sum fb_leadership if sector_new==`i' & hmis_report==1
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
+		if r(N)!=0 {
 		
-		sum fb_external if sector_new==`i' & hmis_report==1
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum fb_any if sector_new==`i' & hmis_report==1
-		local mean3: disp %3.1f r(mean)*100
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
 			
-		sum fb_rec_action if sector_new==`i' & hmis_report==1
-		local mean4: disp %3.1f r(mean)*100
-		count if sector_new==`i' & hmis_report==1
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left		
-		local row = `row' + 1
-	}
-		
-*	HMIS feedback and recommendations by region
-local row = 13
-local RowValueLabel : value label region
-levelsof region, local(RowLevels)
-	
-forvalues i = 1/11 {
-		sum fb_leadership if region==`i' & hmis_report==1
-		local RowValueLabelNum = word("`RowLevels'", `i')
-		local CellContents : label `RowValueLabel' `RowValueLabelNum'
-		local mean1: disp %3.1f r(mean)*100
-		
-		sum fb_external if region==`i' & hmis_report==1
-		local mean2: disp %3.1f r(mean)*100
-		
-		sum fb_any if region==`i' & hmis_report==1
-		local mean3: disp %3.1f r(mean)*100
+			sum fb_external if `RowVar'==`i' & hmis_report==1
+			local mean2: disp %3.1f r(mean)*100
 			
-		sum fb_rec_action if region==`i' & hmis_report==1
-		local mean4: disp %3.1f r(mean)*100
-		count if region==`i' & hmis_report==1
-		if r(N)!=0 local n_1= r(N)
-		
-		putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left
-		
-		local row = `row' + 1
-	}	
+			sum fb_any if `RowVar'==`i' & hmis_report==1
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum fb_rec_action if `RowVar'==`i' & hmis_report==1
+			local mean4: disp %3.1f r(mean)*100
+			count if `RowVar'==`i' & hmis_report==1
+			if r(N)!=0 local n_1= r(N)
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=`n_1', left	
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
+	}
 
 *	HMIS feedback and recommendations overall
-local row = 24
+
 sum fb_leadership if hmis_report==1
 local mean1: disp %3.1f r(mean)*100
 
