@@ -355,7 +355,6 @@ mdesc staffing_gyn_tot staffing_neo_tot staffing_ped_tot staffing_phy_tot staffi
 
 summ staffing_gyn_tot staffing_neo_tot staffing_ped_tot staffing_phy_tot staffing_ho_tot staffing_eo_tot staffing_po_tot staffing_anes_tot staffing_otherspec_tot staffing_anestech_tot staffing_nurse_tot staffing_midwife_tot staffing_uhep_tot staffing_hewl3_tot staffing_hewl4_tot staffing_pharmacy_tot staffing_labtech_tot if facility_type2!=5
 
-
 *	Recode 'don't know' (code -88) to missing
 foreach v of varlist staffing_phy_tot staffing_anes_tot staffing_uhep_tot staffing_hewl3_tot staffing_hewl4_tot {
 		replace `v'=. if `v'==-88
@@ -378,10 +377,12 @@ label var staffing_extension "Health extension worker"
 ta staffing_extension facility_type2, m
 
 *   Staffing pattern in survey SDPs, condensed
-putexcel set "PMAET_2019SDP_Analysis_Staff_$date.xls", sheet("Condensed Staffing Pattern") replace
-putexcel A1=("Provider type") B1=("Hospital") C1=("Health center") D1=("Health post") E1=("Health clinic") F1=("Pharmacy/Drug shop")
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table3.1") modify
+putexcel A1="Table 3.1 Staffing pattern in service delivery points: expanded", bold
+putexcel A2="Median number (25th to 75th percentile) of providers who work at facility, by type of provider and type of facility, PMA Ethiopia 2019", italic
+putexcel B3=("Hospital") C3=("Health center") D3=("Health post") E3=("Health clinic") F3=("Pharmacy/Drug shop")
 
-local row=2
+local row=4
 foreach v of varlist staffing_phy_tot staffing_specialist staffing_clinician staffing_nurse_tot staffing_midwife_tot staffing_extension staffing_pharmacy_tot staffing_labtech_tot {
 		sum `v' if facility_type2==1, detail
 		local varlabel: variable label `v'
@@ -407,13 +408,15 @@ foreach v of varlist staffing_phy_tot staffing_specialist staffing_clinician sta
 		putexcel A`row'=("`varlabel'") B`row'=("`med_iqr1'") C`row'=("`med_iqr2'") D`row'=("`med_iqr3'") E`row'=("`med_iqr4'") F`row'=("`med_iqr5'")
 		local row = `row' + 1
 	}
-		putexcel A`row'=("Number of SDPs") B`row'=("`n_1'") C`row'=("`n_2'") D`row'=("`n_3'") E`row'=("`n_4'") F`row'=("`n_5'")
+		putexcel A`row'=("Number of SDPs") B`row'=(`n_1') C`row'=(`n_2') D`row'=(`n_3') E`row'=(`n_4') F`row'=(`n_5'), left
 	
 *	Staffing pattern in survey SDPs, expanded (as defined in the SDP questionnaire)
-putexcel set "PMAET_2019SDP_Analysis_Staff_$date.xls", sheet("Expanded Staffing Pattern") modify
-putexcel A1=("Provider type") B1=("Hospital") C1=("Health center") D1=("Health post") E1=("Health clinic") F1=("Pharmacy/Drug shop")
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table3.2") modify
+putexcel A1="Table 3.2 Staffing pattern in service delivery points: expanded", bold
+putexcel A2="Median number (25th to 75th percentile) of providers who work at facility, by type of provider and type of facility, PMA Ethiopia 2019", italic
+putexcel B3=("Hospital") C3=("Health center") D3=("Health post") E3=("Health clinic") F3=("Pharmacy/Drug shop")
 
-local row=2
+local row=4
 foreach v of varlist staffing_phy_tot staffing_gyn_tot staffing_neo_tot staffing_ped_tot staffing_anes_tot staffing_otherspec_tot staffing_ho_tot staffing_eo_tot staffing_po_tot staffing_anestech_tot staffing_nurse_tot staffing_midwife_tot staffing_uhep_tot staffing_hewl3_tot staffing_hewl4_tot staffing_pharmacy_tot staffing_labtech_tot {
 		sum `v' if facility_type2==1, detail
 		local varlabel: variable label `v'
@@ -439,8 +442,8 @@ foreach v of varlist staffing_phy_tot staffing_gyn_tot staffing_neo_tot staffing
 		putexcel A`row'=("`varlabel'") B`row'=("`med_iqr1'") C`row'=("`med_iqr2'") D`row'=("`med_iqr3'") E`row'=("`med_iqr4'") F`row'=("`med_iqr5'")
 		local row = `row' + 1
 	}
-		putexcel A`row'=("Number of SDPs") B`row'=("`n_1'") C`row'=("`n_2'") D`row'=("`n_3'") E`row'=("`n_4'") F`row'=("`n_5'")
-		
+		putexcel A`row'=("Number of SDPs") B`row'=(`n_1') C`row'=(`n_2') D`row'=(`n_3') E`row'=(`n_4') F`row'=(`n_5'), left
+
 *********************************************************
 ***   Availability of basic amenities
 *********************************************************
