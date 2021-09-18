@@ -145,7 +145,6 @@ ta facility_type2 facility_type, m
 *	Label yes/no response options
 capture label define yesno 0 "No" 1 "Yes"
 
-
 ********************************************************************************
 ***   SECTION 4: RESPONSE RATE
 ********************************************************************************	
@@ -160,7 +159,7 @@ tab1 facility_type2 sector region
 
 *	Set up putexcel
 putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table1) replace
-putexcel A1="Table 1. Response rate of sampled service delivery points, by background characteristics", bold 
+putexcel A1="Table 1. Response rate of sampled service delivery points, by background characteristics", bold underline
 putexcel B2="Completed" C2="Not at facility" D2="Partly completed" E2="Other" F2="Number of SDPs in sample"
 putexcel A3="Type" A10="Managing authority" A14="Region", bold
 
@@ -226,7 +225,7 @@ keep if SDP_result==1
 ********************************************************************************	
 
 putexcel set PMAET_2019SDP_Analysis_$date.xlsx, sheet(Table2) modify
-putexcel A1=("Table 2. Distribution of surveyed service delivery points, by facility characteristics"), bold
+putexcel A1=("Table 2. Distribution of surveyed service delivery points, by facility characteristics"), bold underline
 putexcel B2="Percent distribution of surveyed SDPs" C2="Number of SDPs" 
 putexcel A3="Type" A10="Managing authority" A14="Region", bold
 
@@ -253,15 +252,6 @@ foreach RowVar in facility_type2 sector region {
 	
 putexcel A`row'=("Total"), left bold
 putexcel B`row'=(100.0) C`row'=(r(N)), left
-
-
-/*
-*	Descriptive statistics by background characteristics
-foreach var in facility_type2 sector region {
-		tabout `var' using "PMAET_2019SDP_Analysis_$date.xls", append c(col freq) clab(% n) f(1 0) h2("Distribution of surveyed service delivery points, by background characteristics") show(none)
-	}
-
-*/
 
 *********************************************************
 ***   Staffing pattern
@@ -295,7 +285,7 @@ ta staffing_extension facility_type2, m
 
 *   Staffing pattern in survey SDPs, condensed
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table3.1") modify
-putexcel A1="Table 3.1 Staffing pattern in service delivery points: expanded", bold
+putexcel A1="Table 3.1 Staffing pattern in service delivery points: expanded", bold underline
 putexcel A2="Median number (25th to 75th percentile) of providers who work at facility, by type of provider and type of facility, PMA Ethiopia 2019", italic
 putexcel B3=("Hospital") C3=("Health center") D3=("Health post") E3=("Health clinic") F3=("Pharmacy/Drug shop")
 
@@ -329,8 +319,8 @@ foreach v of varlist staffing_phy_tot staffing_specialist staffing_clinician sta
 	
 *	Staffing pattern in survey SDPs, expanded (as defined in the SDP questionnaire)
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table3.2") modify
-putexcel A1="Table 3.2 Staffing pattern in service delivery points: expanded", bold
-putexcel A2="Median number (25th to 75th percentile) of providers who work at facility, by type of provider and type of facility, PMA Ethiopia 2019", italic
+putexcel A1=("Table 3.2 Staffing pattern in service delivery points: expanded"), bold underline
+putexcel A2=("Median number (25th to 75th percentile) of providers who work at facility, by type of provider and type of facility, PMA Ethiopia 2019"), italic
 putexcel B3=("Hospital") C3=("Health center") D3=("Health post") E3=("Health clinic") F3=("Pharmacy/Drug shop")
 
 local row=4
@@ -390,14 +380,14 @@ label var internet_binary "Access to internet"
 label val internet_binary yesno
 ta internet_binary internet_7d, m
 
+*	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table4") modify
-putexcel A1="Table 4. Availability of basic amenities for client services", bold 
+putexcel A1=("Table 4. Availability of basic amenities for client services"), bold underline
 putexcel B2=("Regular electricity") C2=("Continuous electricity") D2=("Water outlet onsite") E2=("Client toilet") F2=("Internet") G2=("Number of facilities")
 putexcel A3="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
 *	Basic amenities by facility type, managing authority, and region
 local row = 4
-
 foreach RowVar in facility_type2 sector region {
 
 	tab `RowVar'
@@ -406,65 +396,51 @@ foreach RowVar in facility_type2 sector region {
 	levelsof `RowVar', local(RowLevels)
 
 	forvalues i = 1/`RowCount' {
-			sum electricity_regular if `RowVar'==`i'
+		
+		sum electricity_regular if `RowVar'==`i'
 			
-			if r(N)!=0 {
-				
-				local RowValueLabelNum = word("`RowLevels'", `i')
-				local CellContents : label `RowValueLabel' `RowValueLabelNum'
-				local mean1: disp %3.1f r(mean)*100
-				
-				sum electricity_binary if `RowVar'==`i'
-				local mean2: disp %3.1f r(mean)*100
-				
-				sum water_outlet if `RowVar'==`i'
-				local mean3: disp %3.1f r(mean)*100
-				
-				sum toilet_pt if `RowVar'==`i'
-				local mean4: disp %3.1f r(mean)*100
-				
-				sum internet_binary if `RowVar'==`i'
-				local mean5: disp %3.1f r(mean)*100
-				if r(N)!=0 local n_1= r(N)
-				
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
-				
-				local row = `row' + 1
-				}
+		if r(N)!=0 {
+			
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum electricity_binary if `RowVar'==`i'
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum water_outlet if `RowVar'==`i'
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum toilet_pt if `RowVar'==`i'
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum internet_binary if `RowVar'==`i'
+			local mean5: disp %3.1f r(mean)*100
+			if r(N)!=0 local n_1= r(N)
+			
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1'), left
+			
+			local row = `row' + 1
+			
+			}
 		}
-
 	local row=`row'+2
-}
+	}
 	
 *	Overall amenities
 sum electricity_regular 
 local mean1: disp %3.1f r(mean)*100
-
 sum electricity_binary 
 local mean2: disp %3.1f r(mean)*100
-
 sum water_outlet 
 local mean3: disp %3.1f r(mean)*100
-
 sum toilet_pt 
 local mean4: disp %3.1f r(mean)*100
-
 sum internet_binary 
 local mean5: disp %3.1f r(mean)*100
 if r(N)!=0 local n_1= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=`n_1', left
-	
-/*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist electricity_regular electricity_binary water_outlet toilet_pt internet_binary {
-		recode `v' (1 = 100), gen(percent_`v')
-	}
-
-*	Basic amenities by background characteristics (tabout)
-tabout facility_type2 if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none)
-tabout sector if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none)
-tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_electricity_regular mean percent_electricity_binary mean percent_water_outlet mean percent_toilet_pt mean percent_internet_binary) f(1) npos(col) sum append  h2("Availability of basic amenities for client services") show(none) */
-
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1'), left
 
 *********************************************************
 ***   Health management information systems (HMIS)
@@ -486,7 +462,7 @@ ta hmis_report_freq  hmis_report_monthly if facility_type2!=5, m
 
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table5") modify
-putexcel A1="Table 5. Health management information system (HMIS)", bold
+putexcel A1=("Table 5. Health management information system (HMIS)"), bold underline
 putexcel B2=("Functional mechanism for summarizing outcome data") C2=("Produces reports for HMIS") D2=("Produces reports for HMIS monthly or more often") E2=("Number of facilities")
 putexcel A3="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
@@ -528,27 +504,13 @@ foreach RowVar in facility_type2 sector region {
 *	HMIS overall
 sum hmis_system_yn 
 local mean1: disp %3.1f r(mean)*100
-
 sum hmis_report 
 local mean2: disp %3.1f r(mean)*100
-
 sum hmis_report_monthly 
 local mean3: disp %3.1f r(mean)*100
 if r(N)!=0 local n_1= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=`n_1', left
-	
-
-/*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist hmis_system_yn hmis_report hmis_report_monthly {
-		recode `v' (1 = 100), gen(percent_`v')
-	}
-
-*	Health management information system (tabout)
-tabout facility_type2 if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none)
-tabout sector if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none)
-tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_hmis_system_yn mean percent_hmis_report mean percent_hmis_report_monthly) f(1) npos(col) sum append  h2("Health management information systems") show(none) */
-
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`n_1'), left
 
 *********************************************************
 ***   HMIS feedback and recommendations
@@ -587,8 +549,8 @@ misstable patterns fb_leadership fb_external fb_any fb_rec_action if hmis_report
 
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table6") modify
-putexcel A1="Table 6. HMIS feedback and recommendations", bold
-putexcel A2="Among facilities that produce reports, percentages that receive feedback on reports", italic
+putexcel A1=("Table 6. HMIS feedback and recommendations"), bold underline
+putexcel A2=("Among facilities that produce reports, percentages that receive feedback on reports"), italic
 putexcel B3=("From facility's leadership team") C3=("From external stakeholders") D3=("From facility leadership and/or external stakeholders") E3="That include recommendations for action to improve quality of care" F3=("Number of facilities")
 putexcel A4="Type" A10="Managing authority" A14="Region" A28="Total", bold
 
@@ -633,31 +595,18 @@ foreach RowVar in facility_type2 sector region {
 
 sum fb_leadership if hmis_report==1
 local mean1: disp %3.1f r(mean)*100
-
 sum fb_external if hmis_report==1
 local mean2: disp %3.1f r(mean)*100
-
 sum fb_any if hmis_report==1
 local mean3: disp %3.1f r(mean)*100
-
 sum fb_rec_action if hmis_report==1
 local mean4: disp %3.1f r(mean)*100
+
 count if hmis_report==1
 if r(N)!=0 local n_1= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4')  F`row'=`n_1', left
-	
-;
-*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist fb_leadership fb_external fb_any fb_rec_action {
-		recode `v' (1 = 100), gen(percent_`v')
-	}
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4')  F`row'=(`n_1'), left
 
-*   HMIS feedback (tabout)
-tabout facility_type2 if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-tabout sector if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-tabout region if hmis_report==1 & facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_fb_leadership mean percent_fb_external mean percent_fb_any mean percent_fb_rec_action ) f(1) npos(col) sum append  h2("HMIS feedback") show(none)
-;
 *********************************************************
 ***   Type of HMIS recommendations
 *********************************************************	
@@ -671,42 +620,140 @@ foreach var of varlist fb_rec_action review_effort review_facility improv_care r
 		replace `var'=. if `var'==-77 | `var'==-88 | `var'==-99   
 	}
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist review_effort review_facility improv_care resource_allocation resource_advocacy {
-		recode `v' (1 = 100), gen(perc_`v')
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table7") modify
+putexcel A1=("Table 7. Types of action-oriented recommendations made based on HMIS data"), bold underline
+putexcel A2=("Among health facilities that receive feedback that includes action-oriented recommendations, percentages that receive each type of action-oriented recommendation"), italic
+putexcel B3=("Review effort") C3=("Review personnel responsibilities") D3=("Quality of care improvement") E3=("Resource allocation based on comparison by services") F3=("Advocacy for more resources by showing gaps") G3=("Number of facilities")
+putexcel A4="Type" A10="Managing authority" A14="Region" A28="Total", bold
+
+*	Type of HMIS recommendations by facility type
+local row = 5
+foreach RowVar in facility_type2 sector region {
+
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum review_effort if `RowVar'==`i' & hmis_report==1 & fb_rec_action==1
+
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum review_facility if `RowVar'==`i' & hmis_report==1 & fb_rec_action==1
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum improv_care if `RowVar'==`i' & hmis_report==1 & fb_rec_action==1
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum resource_allocation if `RowVar'==`i' & hmis_report==1 & fb_rec_action==1
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum resource_advocacy if `RowVar'==`i' & hmis_report==1 & fb_rec_action==1
+			local mean5: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i' & hmis_report==1 & fb_rec_action==1
+			if r(N)!=0 local n_1= r(N)
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1'), left	
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
 	}
 
-*	HMIS recommendations (tabout)
-tabout facility_type2 if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort mean perc_review_facility mean perc_improv_care mean perc_resource_allocation mean perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
-tabout sector if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort mean perc_review_facility mean perc_improv_care mean perc_resource_allocation mean perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
-tabout region if hmis_report==1 & facility_type2!=5 & fb_rec_action==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean perc_review_effort mean perc_review_facility mean perc_improv_care mean perc_resource_allocation mean perc_resource_advocacy) f(1) npos(col) sum append  h2("Type of HMIS recs") show(none)
+*	HMIS feedback and recommendations overall
 
+sum review_effort if hmis_report==1 & fb_rec_action==1
+local mean1: disp %3.1f r(mean)*100
+sum review_facility if hmis_report==1 & fb_rec_action==1
+local mean2: disp %3.1f r(mean)*100
+sum improv_care if hmis_report==1 & fb_rec_action==1
+local mean3: disp %3.1f r(mean)*100
+sum resource_allocation if hmis_report==1 & fb_rec_action==1
+local mean4: disp %3.1f r(mean)*100
+sum resource_advocacy if hmis_report==1 & fb_rec_action==1
+local mean5: disp %3.1f r(mean)*100
 
+count if hmis_report==1 & fb_rec_action==1
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1'), left
+	
 *********************************************************
 ***   Performance monitoring teams
 *********************************************************	
 
 *	Check completeness
-mdesc pmt pmt_meet pmt_meet_freq if (facility_type2==1 | facility_type2==2) & sector==0
-tab1 pmt pmt_meet pmt_meet_freq if (facility_type2==1 | facility_type2==2) & sector==0
+mdesc pmt pmt_meet pmt_meet_freq if (facility_type2==1 | facility_type2==2) & sector==1
+tab1 pmt pmt_meet pmt_meet_freq if (facility_type2==1 | facility_type2==2) & sector==1
 
 *	Generate variables for facilities with PMT that meets monthly or more often
-gen pmt_meet_monthly = 0 if (facility_type2==1 | facility_type2==2) & sector==0
-replace pmt_meet_monthly = 1 if pmt_meet_freq==5 & (facility_type2==1 | facility_type2==2) & sector==0
-replace pmt_meet_monthly = . if pmt_meet_freq==-88 & (facility_type2==1 | facility_type2==2) & sector==0
+gen pmt_meet_monthly = 0 if (facility_type2==1 | facility_type2==2) & sector==1
+replace pmt_meet_monthly = 1 if pmt_meet_freq==5 & (facility_type2==1 | facility_type2==2) & sector==1
+replace pmt_meet_monthly = . if pmt_meet_freq==-88 & (facility_type2==1 | facility_type2==2) & sector==1
 label var pmt_meet_monthly "Facility has PMT that meets monthly or more often"
 label val pmt_meet_monthly yesno
-ta pmt_meet_monthly if (facility_type2==1 | facility_type2==2) & sector==0, m
+ta pmt_meet_monthly if (facility_type2==1 | facility_type2==2) & sector==1, m
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist pmt pmt_meet_monthly {
-		recode `v' (1 = 100), gen(percent_`v')
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table8") modify
+putexcel A1=("Table 8. Performance monitoring team (PMT)"), bold underline
+putexcel A2=("Among government hospitals and health centers"), italic
+putexcel B3=("Has PMT") C3=("PMT meets monthly or more often") D3=("Number of facilities")
+putexcel A4="Type" A8="Region" A20="Total", bold
+
+*	Performance monitoring teams by facility type, managing authority, and region 
+preserve 
+keep if (facility_type2==1 | facility_type2==2) & sector==1 // restrict to public hospitals and healht centers 
+
+local row = 5
+foreach RowVar in facility_type2 region {
+
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum pmt if `RowVar'==`i'
+		
+		if r(N)!=0 {
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum pmt_meet_monthly if `RowVar'==`i' 
+			local mean2: disp %3.1f r(mean)*100
+
+			count if `RowVar'==`i'
+			if r(N)!=0 local n_1= r(N)
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`n_1'), left	
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+1
 	}
 
-*	PMT (tabout)
-tabout facility_type2 if (facility_type2==1 | facility_type2==2) & sector==0 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_pmt mean percent_pmt_meet_monthly) f(1) npos(col) sum append  h2("PMT") show(none)
-tabout region if (facility_type2==1 | facility_type2==2) & sector==0 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_pmt mean percent_pmt_meet_monthly) f(1) npos(col) sum append  h2("PMT") show(none)
+*	Performance monitoring teams overall
+sum pmt
+local mean1: disp %3.1f r(mean)*100
+sum pmt_meet_monthly
+local mean2: disp %3.1f r(mean)*100
+count
+if r(N)!=0 local n_1= r(N)
 
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`n_1'), left	
+
+restore 
 
 *********************************************************
 ***   Participatory performance reviews
@@ -754,17 +801,74 @@ foreach var of varlist perform_review {
 	}
 mdesc perform_review if (facility_type2==1 | facility_type2==2)
 
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table9") modify
+putexcel A1=("Table 9. Participatory performance review meetings"), bold underline
+putexcel A2=("Among hospital and health centers"), italic
+putexcel B3=("Conduct participatory performance review meetings") C3=("Monthly or more often") D3=("Quality") E3=("Less often") F3=("Not at all") G3=("Number of facilities")
+putexcel A4="Type" A8="Managing authority" A12="Region" A26="Total", bold
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist perform_review perform_review_monthly perform_review_quarterly perform_review_infreq perform_review_none{
-		recode `v' (1 = 100), gen(percent_`v')
+*	Participatory performance reviews by facility type, managing authority, and region 
+preserve 
+keep if facility_type2==1 | facility_type2==2 // restrict to hospitals and health centers
+
+local row = 5
+foreach RowVar in facility_type2 sector region {
+
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum perform_review if `RowVar'==`i'
+
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum perform_review_monthly if `RowVar'==`i' 
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum perform_review_quarterly if `RowVar'==`i' 
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum perform_review_infreq if `RowVar'==`i'
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum perform_review_none if `RowVar'==`i' 
+			local mean5: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i'
+			if r(N)!=0 local n_1= r(N)
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1'), left	
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
 	}
 
-*	Participatory performance review (tabout)
-tabout facility_type2 if (facility_type2==1 | facility_type2==2) using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_perform_review mean percent_perform_review_monthly mean percent_perform_review_quarterly mean percent_perform_review_infreq mean percent_perform_review_none) f(1) npos(col) sum append  h2("Participatory performance review") show(none)
-tabout sector if (facility_type2==1 | facility_type2==2) using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_perform_review mean percent_perform_review_monthly mean percent_perform_review_quarterly mean percent_perform_review_infreq mean percent_perform_review_none) f(1) npos(col) sum append  h2("Participatory performance review") show(none)
-tabout region if (facility_type2==1 | facility_type2==2) using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_perform_review mean percent_perform_review_monthly mean percent_perform_review_quarterly mean percent_perform_review_infreq mean percent_perform_review_none) f(1) npos(col) sum append  h2("Participatory performance review") show(none)
+*	Participatory performance reviews overall 
+sum perform_review 
+local mean1: disp %3.1f r(mean)*100
+sum perform_review_monthly 
+local mean2: disp %3.1f r(mean)*100
+sum perform_review_quarterly 
+local mean3: disp %3.1f r(mean)*100
+sum perform_review_infreq 
+local mean4: disp %3.1f r(mean)*100
+sum perform_review_none 
+local mean5: disp %3.1f r(mean)*100
+count
+if r(N)!=0 local n_1= r(N)
 
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1'), left
+
+restore 
 
 **********************************************************
 ***   Availability of maternal and newborn health services
@@ -789,16 +893,74 @@ label var services_mnh_all "Facility offers all MNH services (ANC, LD, PNC, c-se
 label val services_mnh_all yesno
 ta services_mnh_all facility_type2 if facility_type2!=5, m	
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist antenatal_yn labor_delivery_yn postnatal_yn surgery_yn transfusion_yn neonatal_yn {
-		recode `v' (1 = 100), gen(percent_`v')
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table10") modify
+putexcel A1=("Table 10. Availability of maternal and newborn health services"), bold underline
+putexcel B3=("Antenatal care") C3=("Labor and delivery care") D3=("Postnatal care") E3=("Obstetric surgery") F3=("Blood transfusion") G3=("Neonatal intensive care") H3=("Number of facilities")
+putexcel A4="Type" A10="Managing authority" A14="Region" A28="Total", bold
+
+*	MNH service availability by facility type, managing authority, and region
+local row = 5
+
+foreach RowVar in facility_type2 sector region {
+
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum antenatal_yn if `RowVar'==`i'
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum labor_delivery_yn if `RowVar'==`i'
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum postnatal_yn if `RowVar'==`i' 
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum surgery_yn if `RowVar'==`i' 
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum transfusion_yn if `RowVar'==`i' 
+			local mean5: disp %3.1f r(mean)*100
+			
+			sum neonatal_yn if `RowVar'==`i' 
+			local mean6: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i' & facility_type2!=5
+			if r(N)!=0 local n_1= r(N) 
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`n_1'), left
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
 	}
 
-*	MNH Service Availability (tabout)
-tabout facility_type2 if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_antenatal_yn mean percent_labor_delivery_yn mean percent_postnatal_yn mean percent_surgery_yn mean percent_transfusion_yn mean percent_neonatal_yn ) f(1) npos(col) sum append  h2("Availability of maternal and newborn health services") show(none)
-tabout sector if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_antenatal_yn mean percent_labor_delivery_yn mean percent_postnatal_yn mean percent_surgery_yn mean percent_transfusion_yn mean percent_neonatal_yn ) f(1) npos(col) sum append  h2("Availability of maternal and newborn health services") show(none)
-tabout region if facility_type2!=5 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_antenatal_yn mean percent_labor_delivery_yn mean percent_postnatal_yn mean percent_surgery_yn mean percent_transfusion_yn mean percent_neonatal_yn ) f(1) npos(col) sum append  h2("Availability of maternal and newborn health services") show(none)
+*	MNH service availability overall 
+sum antenatal_yn
+local mean1: disp %3.1f r(mean)*100
+sum labor_delivery_yn 
+local mean2: disp %3.1f r(mean)*100
+sum postnatal_yn 
+local mean3: disp %3.1f r(mean)*100
+sum surgery_yn 
+local mean4: disp %3.1f r(mean)*100
+sum transfusion_yn 
+local mean5: disp %3.1f r(mean)*100
+sum neonatal_yn 
+local mean6: disp %3.1f r(mean)*100
+count if facility_type2!=5
+if r(N)!=0 local n_1= r(N)
 
+putexcel B`row'=(`mean1') C`row'=(`mean2')  D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`n_1'), left
 
 *********************************************************
 ***   ANC equipment, diagnostic capacity, commodities, and amenities
@@ -873,16 +1035,85 @@ misstable pattern se_bpdevice_obs se_fetal_either_obs se_dipstick_obs hiv_rapid_
 *	Shorten variable name
 rename se_bpdevice_obs bp_apparatus_obs 
 
-*	Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist bp_apparatus_obs se_fetal_either_obs se_dipstick_obs hiv_rapid_obs outdr_syphilis_obs outdr_iron_obs vax_tt_obs anc_privacy  {
-		recode `v' (1 = 100), gen(percent_`v')
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table11") modify
+putexcel A1=("Table 11. Equipment, diagnostic capacity, commodities, and amenities for antenatal care (ANC)"), bold underline
+putexcel A2=("Among facilities offering delivery services"), italic
+putexcel B3=("Blood pressure apparatus") C3=("Fetal stethoscope and/or fetal scope") D3=("Urine dipstick") E3=("HIV rapid test") F3=("Syphilis testing (VDRL)") G3=("Iron and/or folic acid tablets") H3=("Tetanus toxoid vaccines") I3=("Visual privacy in ANC room") J3=("Number of facilities")
+putexcel A4="Type" A9="Managing authority" A13="Region" A26="Total", bold
+
+*	 ANC equipment, diagnostic capacity, commodities, and amenities by facility type, managing authority, and region
+local row = 5
+foreach RowVar in hospital sector region {
+
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum bp_apparatus_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum se_fetal_either_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum se_dipstick_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum hiv_rapid_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum outdr_syphilis_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean5: disp %3.1f r(mean)*100
+			
+			sum outdr_iron_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean6: disp %3.1f r(mean)*100
+			
+			sum vax_tt_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean7: disp %3.1f r(mean)*100
+			
+			sum anc_privacy if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean8: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			if r(N)!=0 local n_1= r(N) 
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_1'), left
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
 	}
 
-*	ANC equipment, diagnostic capacity, commodities, and amenities (tabout)
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_bp_apparatus_obs mean percent_se_fetal_either_obs mean percent_se_dipstick_obs mean percent_hiv_rapid_obs mean percent_outdr_syphilis_obs mean percent_outdr_iron_obs mean percent_vax_tt_obs mean percent_anc_privacy ) f(1) npos(col) sum append  h2("ANC equipment") show(none)
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_bp_apparatus_obs mean percent_se_fetal_either_obs mean percent_se_dipstick_obs mean percent_hiv_rapid_obs mean percent_outdr_syphilis_obs mean percent_outdr_iron_obs mean percent_vax_tt_obs mean percent_anc_privacy ) f(1) npos(col) sum append  h2("ANC equipment") show(none)
-tabout region if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_bp_apparatus_obs mean percent_se_fetal_either_obs mean percent_se_dipstick_obs mean percent_hiv_rapid_obs mean percent_outdr_syphilis_obs mean percent_outdr_iron_obs mean percent_vax_tt_obs mean percent_anc_privacy ) f(1) npos(col) sum append  h2("ANC equipment") show(none)
+*	ANC equipment, diagnostic capacity, commodities, and amenities overall
+sum bp_apparatus_obs if labor_delivery_yn==1 & hospital!=.
+local mean1: disp %3.1f r(mean)*100
+sum se_fetal_either_obs if labor_delivery_yn==1 & hospital!=.
+local mean2: disp %3.1f r(mean)*100
+sum se_dipstick_obs if labor_delivery_yn==1 & hospital!=.
+local mean3: disp %3.1f r(mean)*100
+sum hiv_rapid_obs if labor_delivery_yn==1 & hospital!=.
+local mean4: disp %3.1f r(mean)*100
+sum outdr_syphilis_obs if labor_delivery_yn==1 & hospital!=.
+local mean5: disp %3.1f r(mean)*100
+sum outdr_iron_obs if labor_delivery_yn==1 & hospital!=.
+local mean6: disp %3.1f r(mean)*100
+sum vax_tt_obs if labor_delivery_yn==1 & hospital!=.
+local mean7: disp %3.1f r(mean)*100
+sum anc_privacy if labor_delivery_yn==1 & hospital!=.
+local mean8: disp %3.1f r(mean)*100
 
+count if labor_delivery_yn==1 & hospital!=.
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_1'), left
 
 *********************************************************
 ***   Staffing, guidelines, equipment for delivery
@@ -992,20 +1223,90 @@ label variable rm_delivery_privacy "Visual privacy in delivery room"
 label define rm_delivery_privacy 0 "No visual privacy" 1 "Visual privacy"
 label val rm_delivery_privacy rm_delivery_privacy
 
-*   Check missingness
-mdesc skilled_ba proc_fmoh_ob_obs se_clamp_scissors_obs se_suction_either se_forceps_vac_obs se_dc_mva_obs se_resus_bag_masks ivkit rm_delivery_privacy if labor_delivery_yn==1 & facility_type2!=5
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table12") modify
+putexcel A1=("Table 12. Staffing, guidelines, equipment, and amenities for delivery care"), bold underline
+putexcel A2=("Among facilities offering delivery services"), italic
+putexcel B3=("Skilled birth attendant 24 hours/day") C3=("Management Protocol on Obstetric Topics") D3=("Delivery pack") E3=("Suction apparatus") F3=("Obstetric forceps and/or vacuum extractor") G3=("MVA and/or D&C kit") H3=("Neonatal bag and masks") I3=("Intravenous fluids with infusion set") J3=("Visual privacy in delivery room") K3=("Number of facilities")
+putexcel A4="Type" A9="Managing authority" A13="Region" A26="Total", bold
 
-*   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist skilled_ba proc_fmoh_ob_obs se_clamp_scissors_obs se_suction_either 	///
-		se_forceps_vac_obs se_dc_mva_obs se_resus_bag_masks ivkit rm_delivery_privacy  {
-			recode `v' (1 = 100), gen(percent_`v')
+*	 Staffing, guidelines, equipment for delivery by facility type, managing authority, and region
+local row = 5
+foreach RowVar in hospital sector region {
+
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum skilled_ba if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum proc_fmoh_ob_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum se_clamp_scissors_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum se_suction_either if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum se_forceps_vac_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean5: disp %3.1f r(mean)*100
+			
+			sum se_dc_mva_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean6: disp %3.1f r(mean)*100
+			
+			sum se_resus_bag_masks if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean7: disp %3.1f r(mean)*100
+			
+			sum ivkit if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean8: disp %3.1f r(mean)*100
+			
+			sum rm_delivery_privacy if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean9: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			if r(N)!=0 local n_1= r(N) 
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`mean9') K`row'=(`n_1'), left
+			
+			local row = `row' + 1	
+			}
 		}
+	local row=`row'+2
+	}
 
-*   Staffing, guidelines, equipment for delivery(tabout)
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_skilled_ba mean percent_proc_fmoh_ob_obs mean percent_se_clamp_scissors_obs mean percent_se_suction_either mean percent_se_forceps_vac_obs mean percent_se_dc_mva_obs mean percent_se_resus_bag_masks mean percent_ivkit mean percent_rm_delivery_privacy) f(1) npos(col) sum append  h2("Delivery staffing and equipment") show(none)
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_skilled_ba mean percent_proc_fmoh_ob_obs mean percent_se_clamp_scissors_obs mean percent_se_suction_either mean percent_se_forceps_vac_obs mean percent_se_dc_mva_obs mean percent_se_resus_bag_masks mean percent_ivkit mean percent_rm_delivery_privacy) f(1) npos(col) sum append  h2("Delivery staffing and equipment") show(none)
-tabout region if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_skilled_ba mean percent_proc_fmoh_ob_obs mean percent_se_clamp_scissors_obs mean percent_se_suction_either mean percent_se_forceps_vac_obs mean percent_se_dc_mva_obs mean percent_se_resus_bag_masks mean percent_ivkit mean percent_rm_delivery_privacy) f(1) npos(col) sum append  h2("Delivery staffing and equipment") show(none)
+*	ANC equipment, diagnostic capacity, commodities, and amenities overall	    
+sum skilled_ba if labor_delivery_yn==1 & hospital!=.
+local mean1: disp %3.1f r(mean)*100
+sum proc_fmoh_ob_obs if labor_delivery_yn==1 & hospital!=.
+local mean2: disp %3.1f r(mean)*100
+sum se_clamp_scissors_obs if labor_delivery_yn==1 & hospital!=.
+local mean3: disp %3.1f r(mean)*100
+sum se_suction_either if labor_delivery_yn==1 & hospital!=.
+local mean4: disp %3.1f r(mean)*100
+sum se_forceps_vac_obs if labor_delivery_yn==1 & hospital!=.
+local mean5: disp %3.1f r(mean)*100
+sum se_dc_mva_obs if labor_delivery_yn==1 & hospital!=.
+local mean6: disp %3.1f r(mean)*100
+sum se_resus_bag_masks if labor_delivery_yn==1 & hospital!=.
+local mean7: disp %3.1f r(mean)*100
+sum ivkit if labor_delivery_yn==1 & hospital!=.
+local mean8: disp %3.1f r(mean)*100
+sum rm_delivery_privacy if labor_delivery_yn==1 & hospital!=.
+local mean9: disp %3.1f r(mean)*100
 
+count if labor_delivery_yn==1 & hospital!=.
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`mean9') K`row'=(`n_1'), left
 
 *********************************************************
 ***  Availability of life-saving maternal and reproductive health medicines
@@ -1060,19 +1361,75 @@ rename outdr_inj_ampicillin_obs inj_ampicillin_obs
 rename outdr_inj_gentamicin_obs inj_gentamicin_obs
 rename outdr_inj_metro_obs inj_metronidazole_obs
 
-*   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist inj_ampicillin_obs outdr_azithromycin_obs outdr_benzathine_obs dexamethasone_obs inj_cagluc_obs outdr_cefixime_obs inj_gentamicin_obs hydralazine_obs inj_mgso4_obs outdr_methyldopa_obs inj_metronidazole_obs mife_obs miso_obs nifedipine_obs inj_oxt_obs ivsoln_obs indr_dexamethasone_obs indr_inj_cagluc_obs indr_hydralazine_obs indr_inj_mgso4_obs indr_mife_obs indr_miso_obs indr_nifedipine_obs indr_inj_oxt_obs indr_ivsoln_obs  {
-		recode `v' (1 = 100), gen(percent_`v')
+
+
+*   Staffing pattern in survey SDPs, condensed
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table13") modify
+putexcel A1=("Table 13. Availability of life-saving maternal and reproductive health medicines"), bold underline
+putexcel A2=("Among facilities offering delivery sevices"), italic
+putexcel B3=("Hospital") C3=("Health center") D3=("Public") E3=("Private") F3=("Total")
+putexcel A4=("Priority medicines observed in facility") A22=("Priority medicines observed in delivery room or nurse/staff station"), bold
+
+*	Priority medicines observed in facility
+local row=5
+foreach v of varlist inj_ampicillin_obs outdr_azithromycin_obs outdr_benzathine_obs dexamethasone_obs inj_cagluc_obs outdr_cefixime_obs inj_gentamicin_obs hydralazine_obs inj_mgso4_obs outdr_methyldopa_obs inj_metronidazole_obs mife_obs miso_obs nifedipine_obs inj_oxt_obs ivsoln_obs vax_tt_obs {
+		sum `v' if hospital==1 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean1: disp %3.1f r(mean)*100
+
+		sum `v' if hospital==2 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean2: disp %3.1f r(mean)*100
+		
+		sum `v' if sector==1 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean3: disp %3.1f r(mean)*100
+		
+		sum `v' if sector==2 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean4: disp %3.1f r(mean)*100
+			
+		sum `v' if labor_delivery_yn==1 & hospital!=.
+		local total: disp %3.1f r(mean)*100
+		
+		putexcel A`row'=("`varlabel'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`total'), left
+		
+		local row = `row' + 1
+	}
+	
+*	Priority medicines observed in delivery room or nurse/staff station
+local row = 23
+foreach v of varlist indr_dexamethasone_obs indr_inj_cagluc_obs indr_hydralazine_obs indr_inj_mgso4_obs indr_mife_obs indr_miso_obs indr_nifedipine_obs indr_inj_oxt_obs indr_ivsoln_obs {
+		sum `v' if hospital==1 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean1: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_1= r(N) 
+
+		sum `v' if hospital==2 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean2: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_2= r(N) 
+		
+		sum `v' if sector==1 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean3: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_3= r(N) 
+		
+		sum `v' if sector==2 & labor_delivery_yn==1 & hospital!=.
+		local varlabel: variable label `v'
+		local mean4: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_4= r(N) 
+			
+		sum `v' if labor_delivery_yn==1 & hospital!=.
+		local total: disp %3.1f r(mean)*100
+		if r(N)!=0 local n_5= r(N) 
+		
+		putexcel A`row'=("`varlabel'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`total'), left
+		
+		local row = `row' + 1
 	}
 
-*   Availability of life-saving meds (tabout)
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_inj_ampicillin_obs mean percent_outdr_azithromycin_obs mean percent_outdr_benzathine_obs mean percent_dexamethasone_obs mean percent_inj_cagluc_obs mean percent_outdr_cefixime_obs mean percent_inj_gentamicin_obs mean percent_hydralazine_obs mean percent_inj_mgso4_obs mean percent_outdr_methyldopa_obs mean percent_inj_metronidazole_obs mean percent_mife_obs mean percent_miso_obs mean percent_nifedipine_obs mean percent_inj_oxt_obs mean percent_ivsoln_obs mean percent_vax_tt_obs) f(1) npos(col) sum append  h2("Availability of life-saving medicines") show(none)
-
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_inj_ampicillin_obs mean percent_outdr_azithromycin_obs mean percent_outdr_benzathine_obs mean percent_dexamethasone_obs mean percent_inj_cagluc_obs mean percent_outdr_cefixime_obs mean percent_inj_gentamicin_obs mean percent_hydralazine_obs mean percent_inj_mgso4_obs mean percent_outdr_methyldopa_obs mean percent_inj_metronidazole_obs mean percent_mife_obs mean percent_miso_obs mean percent_nifedipine_obs mean percent_inj_oxt_obs mean percent_ivsoln_obs mean percent_vax_tt_obs) f(1) npos(col) sum append  h2("Availability of life-saving medicines") show(none)
-
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_indr_dexamethasone_obs mean percent_indr_inj_cagluc_obs mean percent_indr_hydralazine_obs mean percent_indr_inj_mgso4_obs mean percent_indr_mife_obs mean percent_indr_miso_obs mean percent_indr_nifedipine_obs mean percent_indr_inj_oxt_obs mean percent_indr_ivsoln_obs) f(1) npos(col) sum append  h2("Availability of priority medicines in delivery room") show(none)
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_indr_dexamethasone_obs mean percent_indr_inj_cagluc_obs mean percent_indr_hydralazine_obs mean percent_indr_inj_mgso4_obs mean percent_indr_mife_obs mean percent_indr_miso_obs mean percent_indr_nifedipine_obs mean percent_indr_inj_oxt_obs mean percent_indr_ivsoln_obs) f(1) npos(col) sum append  h2("Availability of priority medicines in delivery room") show(none)
-
+putexcel A`row'=("Number of SDPs") B`row'=(`n_1') C`row'=(`n_2') D`row'=(`n_3') E`row'=(`n_4') F`row'=(`n_5'), left
 
 *********************************************************
 ***  Count: Availability of life-saving maternal and reproductive health medicines
@@ -1123,16 +1480,64 @@ label define  meds17 0 "not observed" 1 "observed"
 label val meds17 meds17
 ta meds_count meds17 if labor_delivery_yn==1 & hospital!=., m	
 
-*   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist both_oxt_mgso4 meds7 meds14 meds17 {
-		recode `v' (1 = 100), gen(percent_`v')
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table14") modify
+putexcel A1=("Table 14. Summary of available life-saving maternal and reproductive health medicines"), bold underline
+putexcel A2=("Among facilities offering delivery services"), italic
+putexcel B3=("Both observed: oxytocin and magnesium sulfate") C3=("At least 7 priority medicines, including oxytocin and magnesium sulfate") D3=("At least 14 priority medicines, including oxytocin and magnesium sulfate") E3=("All 17 priority medicines") F3=("Number of facilities")
+putexcel A4="Type" A8="Managing authority" A12="Region" A26="Total", bold
+
+*	 Availability of life-saving maternal and reproductive health medicines by facility type, managing authority, and region
+local row = 5
+foreach RowVar in hospital sector region {
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum both_oxt_mgso4 if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum meds7 if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum meds14 if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum meds17 if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean4: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			if r(N)!=0 local n_1= r(N) 
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`n_1'), left
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
 	}
 
-*   Count of life-saving medicines (tabout)
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_both_oxt_mgso4 mean percent_meds7 mean percent_meds14 mean percent_meds17) f(1) npos(col) sum append  h2("Count of life-saving medicines") show(none)
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_both_oxt_mgso4 mean percent_meds7 mean percent_meds14 mean percent_meds17) f(1) npos(col) sum append  h2("Count of life-saving medicines") show(none)
-tabout region if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_both_oxt_mgso4 mean percent_meds7 mean percent_meds14 mean percent_meds17) f(1) npos(col) sum append  h2("Count of life-saving medicines") show(none)
+*	 Overall availability of life-saving maternal and reproductive health medicines 
+sum both_oxt_mgso4 if labor_delivery_yn==1 & hospital!=.
+local mean1: disp %3.1f r(mean)*100
+sum meds7 if labor_delivery_yn==1 & hospital!=.
+local mean2: disp %3.1f r(mean)*100
+sum meds14 if labor_delivery_yn==1 & hospital!=.
+local mean3: disp %3.1f r(mean)*100
+sum meds17 if labor_delivery_yn==1 & hospital!=.
+local mean4: disp %3.1f r(mean)*100
 
+count if labor_delivery_yn==1 & hospital!=.
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`n_1'), left
 
 *********************************************************
 ***   Infection control precautions
@@ -1185,16 +1590,95 @@ misstable pattern se_sharps_obs se_waste_obs se_cl_obs se_syringe_obs se_soap_wa
 rename se_mask_obs mask_delivery_obs
 rename se_gown_obs gown_delivery_obs
 
-*   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist se_sharps_obs se_waste_obs se_cl_obs se_syringe_obs se_soap_water se_etoh_scrub_obs se_gloves_obs mask_delivery_obs gown_delivery_obs se_goggles_obs {
-		recode `v' (1 = 100), gen(percent_`v')
-	}
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table15") modify
+putexcel A1=("Table 15. Standard precautions for infection control"), bold underline
+putexcel A2=("Among facilities offering delivery services"), italic
+putexcel B3=("Sharp container") C3=("Waste receptacle with lid and plastic line") D3=("Already mixed decontam-inating solution") E3=("Syringes and needle") F3=("Soap and water") G3=("Alcohol-based hand scrub") H3=("Sterile gloves") I3=("Medical mask") J3=("Delivery gown") K3=("Eye/face protection goggles") L3=("Number of facilities")
+putexcel A4="Type" A8="Managing authority" A12="Region" A26="Total", bold
 
-*   Infection prevention (tabout)
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_se_sharps_obs mean percent_se_waste_obs mean percent_se_cl_obs mean percent_se_syringe_obs mean percent_se_soap_water mean percent_se_etoh_scrub_obs mean percent_se_gloves_obs mean percent_mask_delivery_obs mean percent_gown_delivery_obs mean percent_se_goggles_obs) f(1) npos(col) sum append  h2("Infection control procedures") show(none)
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_se_sharps_obs mean percent_se_waste_obs mean percent_se_cl_obs mean percent_se_syringe_obs mean percent_se_soap_water mean percent_se_etoh_scrub_obs mean percent_se_gloves_obs mean percent_mask_delivery_obs mean percent_gown_delivery_obs mean percent_se_goggles_obs) f(1) npos(col) sum append  h2("Infection control procedures") show(none)
-tabout region if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_se_sharps_obs mean percent_se_waste_obs mean percent_se_cl_obs mean percent_se_syringe_obs mean percent_se_soap_water mean percent_se_etoh_scrub_obs mean percent_se_gloves_obs mean percent_mask_delivery_obs mean percent_gown_delivery_obs mean percent_se_goggles_obs) f(1) npos(col) sum append  h2("Infection control procedures") show(none)
+*	Infection control precautions by facility type, managing authority, and region
+local row = 5
+foreach RowVar in hospital sector region {
+	
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
 
+	forvalues i = 1/`RowCount' {
+		sum se_sharps_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum se_waste_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum se_cl_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum se_syringe_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum se_soap_water if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean5: disp %3.1f r(mean)*100
+			
+			sum se_etoh_scrub_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean6: disp %3.1f r(mean)*100
+			
+			sum se_gloves_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean7: disp %3.1f r(mean)*100
+			
+			sum mask_delivery_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean8: disp %3.1f r(mean)*100
+			
+			sum gown_delivery_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean9: disp %3.1f r(mean)*100
+			
+			sum se_goggles_obs if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean10: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			if r(N)!=0 local n_1= r(N) 
+
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`mean9') K`row'=(`mean10') L`row'=(`n_1'), left
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
+	}   
+	
+*	Infection control precautions overall 
+sum se_sharps_obs if labor_delivery_yn==1 & hospital!=.
+local mean1: disp %3.1f r(mean)*100
+sum se_waste_obs if labor_delivery_yn==1 & hospital!=.
+local mean2: disp %3.1f r(mean)*100
+sum se_cl_obs if labor_delivery_yn==1 & hospital!=.
+local mean3: disp %3.1f r(mean)*100
+sum se_syringe_obs if labor_delivery_yn==1 & hospital!=.
+local mean4: disp %3.1f r(mean)*100
+sum se_soap_water if labor_delivery_yn==1 & hospital!=.
+local mean5: disp %3.1f r(mean)*100
+sum se_etoh_scrub_obs if labor_delivery_yn==1 & hospital!=.
+local mean6: disp %3.1f r(mean)*100
+sum se_gloves_obs if labor_delivery_yn==1 & hospital!=.
+local mean7: disp %3.1f r(mean)*100
+sum mask_delivery_obs if labor_delivery_yn==1 & hospital!=.
+local mean8: disp %3.1f r(mean)*100
+sum gown_delivery_obs if labor_delivery_yn==1 & hospital!=.
+local mean9: disp %3.1f r(mean)*100
+sum se_goggles_obs if labor_delivery_yn==1 & hospital!=.
+local mean10: disp %3.1f r(mean)*100
+
+count if labor_delivery_yn==1 & hospital!=.
+if r(N)!=0 local n_1= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`mean9') K`row'=(`mean10') L`row'=(`n_1') , left
 
 *********************************************************
 ***   Sterilization and disinfection equipment
@@ -1253,15 +1737,65 @@ label value disinfect_any_obs disinfect_any_obs
 
 mdesc ster_any_obs disinfect_any_obs if surgery_yn==1 & facility_type2!=5
 
-*   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist ster_any_obs disinfect_any_obs {
-		recode `v' (1 = 100), gen(percent_`v')
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table16") modify
+putexcel A1=("Table 16. Sterilization and high-level disinfection equipment"), bold underline
+putexcel A2=("Among hospitals offering obstetric surgery"), italic
+putexcel B3=("Sterilization equipment") C3=("Equipment for high-level disinfection") D3=("Number of facilities")
+putexcel A4="Managing authority" A8="Region" A22="Total", bold
+
+*	 Sterilization and disinfection equipment by managing authority and region
+local row = 5
+
+preserve
+keep if surgery_yn==1 & hospital==1
+
+foreach RowVar in sector region {
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
+
+	forvalues i = 1/`RowCount' {
+		sum ster_any_obs if `RowVar'==`i'
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum disinfect_any_obs if `RowVar'==`i'
+			local mean2: disp %3.1f r(mean)*100
+			
+			count if `RowVar'==`i'
+			if r(N)!=0 local n_1= r(N) 
+			
+			*	Suppress output where N<5
+			if `n_1' >=5 {
+				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1'), left
+				} 
+				else {
+					putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--") D`row'=("--"), left
+					}
+					
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
 	}
 
-*   Sterilization and disinfection equipment (tabout)
-tabout sector if surgery_yn==1 & hospital==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_ster_any_obs mean percent_disinfect_any_obs ) f(1) npos(col) sum append  h2("Sterilization and disinfection") show(none)
-tabout region if surgery_yn==1 & hospital==1 using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_ster_any_obs mean percent_disinfect_any_obs ) f(1) npos(col) sum append  h2("Sterilization and disinfection") show(none)
+*	 Sterilization and disinfection equipment overall 
+sum ster_any_obs
+local mean1: disp %3.1f r(mean)*100
+sum disinfect_any_obs 
+local mean2: disp %3.1f r(mean)*100
+count
+if r(N)!=0 local n_1= r(N)
 
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1'), left
+
+restore
 
 *********************************************************
 ***   Signal functions
@@ -1273,20 +1807,97 @@ tab1 medservice_abx obh_ut_3mo aed_3mo medservice_assist medservice_man_plac med
 misstable pattern medservice_abx obh_ut_3mo aed_3mo medservice_assist medservice_man_plac medservice_resus medservice_cortisteroids medservice_csection if labor_delivery_yn==1 & hospital!=., freq
 mdesc medservice_transfuse if labor_delivery_yn==1 & hospital!=. & transfusion_yn==1
 
-*   Recode yes/no variables as percentages on scale of 0 to 100
-foreach v of varlist medservice_abx obh_ut_3mo aed_3mo medservice_assist medservice_man_plac medservice_resus medservice_cortisteroids medservice_csection medservice_transfuse  {
-		recode `v' (1 = 100), gen(percent_`v')
-	}
+*	Set up putexcel
+putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table17") modify
+putexcel A1=("Table 17. Performance of emergency obstetric and neonatal signal functions"), bold underline
+putexcel A2=("Among facilities offering delivery services"), italic
+putexcel B3=("Percentage that provided in past three months:") F3=("Percentage that performed in past three months:") 
+putexcel K3=("Percentage:"), border(bottom) 
+putexcel (B3:E3), merge hcenter vcenter border(bottom) txtwrap
+putexcel (F3:I3), merge hcenter vcenter border(bottom) txtwrap
+putexcel B4=("Parenteral antibiotics for infections") C4=("Uterotonics to prevent or treat postpartum hemorrhage") D4=("Parenteral anticonvulsants to manage high blood pressure in pregnancy") E4=("Antenatal corticosteroids for fetal lung maturation") F4=("Instrument/ assisted vaginal delivery") G4=("Manual removal of placenta") H4=("Neonatal resuscitation") I4=("Caesarean section") J4=("Number of facilities") K4=("Blood transfusion for maternity care") L4=("Number of facilities")
+putexcel A5="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
-*   Signal functions (tabout)
-tabout hospital if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_medservice_abx mean percent_obh_ut_3mo mean percent_aed_3mo mean percent_medservice_cortisteroids mean percent_medservice_assist mean percent_medservice_man_plac mean percent_medservice_resus  mean percent_medservice_csection ) f(1) npos(col) sum append  h2("Signal functions") show(none)
-tabout sector if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_medservice_abx mean percent_obh_ut_3mo mean percent_aed_3mo mean percent_medservice_cortisteroids mean percent_medservice_assist mean percent_medservice_man_plac mean percent_medservice_resus  mean percent_medservice_csection ) f(1) npos(col) sum append  h2("Signal functions") show(none)
-tabout region if labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_medservice_abx mean percent_obh_ut_3mo mean percent_aed_3mo mean percent_medservice_cortisteroids mean percent_medservice_assist mean percent_medservice_man_plac mean percent_medservice_resus  mean percent_medservice_csection ) f(1) npos(col) sum append  h2("Signal functions") show(none)
+*	Signal function by facility type, managing authority, and region
+local row = 6
+foreach RowVar in hospital sector region {
+         
+	tab `RowVar'
+	local RowCount=`r(r)'
+	local RowValueLabel : value label `RowVar'
+	levelsof `RowVar', local(RowLevels)
 
-tabout hospital if transfusion_yn==1 & labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_medservice_transfuse) f(1) npos(col) sum append  h2("Transfusion") show(none)
-tabout sector if transfusion_yn==1 & labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_medservice_transfuse) f(1) npos(col) sum append  h2("Transfusion") show(none)
-tabout region if transfusion_yn==1 & labor_delivery_yn==1 & hospital!=. using "PMAET_2019SDP_Analysis_$date.xls", c(mean percent_medservice_transfuse) f(1) npos(col) sum append  h2("Transfusion") show(none)
+	forvalues i = 1/`RowCount' {
+		sum medservice_abx if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+		
+		if r(N)!=0 {
+		
+			local RowValueLabelNum = word("`RowLevels'", `i')
+			local CellContents : label `RowValueLabel' `RowValueLabelNum'
+			local mean1: disp %3.1f r(mean)*100
+			
+			sum obh_ut_3mo if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean2: disp %3.1f r(mean)*100
+			
+			sum aed_3mo if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean3: disp %3.1f r(mean)*100
+			
+			sum medservice_assist if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean4: disp %3.1f r(mean)*100
+			
+			sum medservice_man_plac if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean5: disp %3.1f r(mean)*100
+			
+			sum medservice_resus if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean6: disp %3.1f r(mean)*100
+			
+			sum medservice_cortisteroids if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean7: disp %3.1f r(mean)*100
+			
+			sum medservice_csection if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			local mean8: disp %3.1f r(mean)*100
+			
+			sum medservice_transfuse if `RowVar'==`i' & transfusion_yn==1 & labor_delivery_yn==1 & hospital!=. 
+			local mean9: disp %3.1f r(mean)*100
+			if r(N)!=0 local n_1= r(N) 
+			
+			count if `RowVar'==`i' & labor_delivery_yn==1 & hospital!=.
+			if r(N)!=0 local n_2= r(N) 
 
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') K`row'=(`mean9') L`row'=(`n_1'), left
+			
+			local row = `row' + 1	
+			}
+		}
+	local row=`row'+2
+	}   
+         
+*	Overall signal function 
+sum medservice_abx if labor_delivery_yn==1 & hospital!=.
+local mean1: disp %3.1f r(mean)*100
+sum obh_ut_3mo if labor_delivery_yn==1 & hospital!=.
+local mean2: disp %3.1f r(mean)*100
+sum aed_3mo if labor_delivery_yn==1 & hospital!=.
+local mean3: disp %3.1f r(mean)*100
+sum medservice_assist if labor_delivery_yn==1 & hospital!=.
+local mean4: disp %3.1f r(mean)*100
+sum medservice_man_plac if labor_delivery_yn==1 & hospital!=.
+local mean5: disp %3.1f r(mean)*100
+sum medservice_resus if labor_delivery_yn==1 & hospital!=.
+local mean6: disp %3.1f r(mean)*100
+sum medservice_cortisteroids if labor_delivery_yn==1 & hospital!=.
+local mean7: disp %3.1f r(mean)*100
+sum medservice_csection if labor_delivery_yn==1 & hospital!=.
+local mean8: disp %3.1f r(mean)*100
+sum medservice_transfuse if transfusion_yn==1 & labor_delivery_yn==1 & hospital!=. 
+local mean9: disp %3.1f r(mean)*100
+if r(N)!=0 local n_1= r(N)
+
+count if labor_delivery_yn==1 & hospital!=.
+if r(N)!=0 local n_2= r(N)
+
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') K`row'=(`mean9') L`row'=(`n_1'), left
+;
 
 *********************************************************
 ***   Referral readiness
