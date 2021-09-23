@@ -707,7 +707,7 @@ putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table8") modify
 putexcel A1=("Table 8. Performance monitoring team (PMT)"), bold underline
 putexcel A2=("Among government hospitals and health centers, percentages that have a Performance monitoring team (PMT) and percentages that have a PMT that meets monthly or more often"), italic
 putexcel B3=("Has PMT") C3=("PMT meets monthly or more often") D3=("Number of facilities")
-putexcel A4="Type" A8="Region" A20="Total", bold
+putexcel A4="Type" A8="Region" A22="Total", bold
 
 *	Performance monitoring teams by facility type, managing authority, and region 
 preserve 
@@ -740,7 +740,7 @@ foreach RowVar in facility_type2 region {
 			local row = `row' + 1	
 			}
 		}
-	local row=`row'+1
+	local row=`row'+2
 	}
 
 *	Performance monitoring teams overall
@@ -1040,7 +1040,7 @@ putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table11") modify
 putexcel A1=("Table 11. Equipment, diagnostic capacity, commodities, and amenities for antenatal care (ANC)"), bold underline
 putexcel A2=("Among facilities offering delivery services, percentages that have indicated items observed on the day of the survey"), italic
 putexcel B3=("Blood pressure apparatus") C3=("Fetal stethoscope and/or fetal scope") D3=("Urine dipstick") E3=("HIV rapid test") F3=("Syphilis testing (VDRL)") G3=("Iron and/or folic acid tablets") H3=("Tetanus toxoid vaccines") I3=("Visual privacy in ANC room") J3=("Number of facilities")
-putexcel A4="Type" A9="Managing authority" A13="Region" A26="Total", bold
+putexcel A4="Type" A8="Managing authority" A12="Region" A26="Total", bold
 
 *	 ANC equipment, diagnostic capacity, commodities, and amenities by facility type, managing authority, and region
 local row = 5
@@ -1228,7 +1228,7 @@ putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table12") modify
 putexcel A1=("Table 12. Staffing, guidelines, equipment, and amenities for delivery care"), bold underline
 putexcel A2=("Among facilities offering delivery services, percentages that have indicated items observed on the day of the survey"), italic
 putexcel B3=("Skilled birth attendant 24 hours/day") C3=("Management Protocol on Obstetric Topics") D3=("Delivery pack") E3=("Suction apparatus") F3=("Obstetric forceps and/or vacuum extractor") G3=("MVA and/or D&C kit") H3=("Neonatal bag and masks") I3=("Intravenous fluids with infusion set") J3=("Visual privacy in delivery room") K3=("Number of facilities")
-putexcel A4="Type" A9="Managing authority" A13="Region" A26="Total", bold
+putexcel A4="Type" A8="Managing authority" A12="Region" A26="Total", bold
 
 *	 Staffing, guidelines, equipment for delivery by facility type, managing authority, and region
 local row = 5
@@ -1395,7 +1395,7 @@ putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table13") modify
 putexcel A1=("Table 13. Availability of life-saving maternal and reproductive health medicines"), bold underline
 putexcel A2=("Among facilities offering delivery sevices, percentages with indicated priority medicines observed on the day of the survey, by facility characteristics"), italic
 putexcel B3=("Hospital") C3=("Health center") D3=("Public") E3=("Private") F3=("Total")
-putexcel A4=("Priority medicines observed in facility") A22=("Priority medicines observed in delivery room or nurse/staff station"), bold
+putexcel A4=("Priority medicines observed in facility") A23=("Priority medicines observed in delivery room or nurse/staff station"), bold
 
 *	Priority medicines observed in facility
 local row=5
@@ -1425,7 +1425,7 @@ foreach v of varlist inj_ampicillin_obs outdr_azithromycin_obs outdr_benzathine_
 	}
 	
 *	Priority medicines observed in delivery room or nurse/staff station
-local row = 23
+local row = 24
 foreach v of varlist indr_dexamethasone_obs indr_inj_cagluc_obs indr_hydralazine_obs indr_inj_mgso4_obs indr_mife_obs indr_miso_obs indr_nifedipine_obs indr_inj_oxt_obs indr_ivsoln_obs {
 		sum `v' if hospital==1 & labor_delivery_yn==1 & hospital!=.
 		local varlabel: variable label `v'
@@ -1456,6 +1456,7 @@ foreach v of varlist indr_dexamethasone_obs indr_inj_cagluc_obs indr_hydralazine
 		local row = `row' + 1
 	}
 
+local row = `row' + 1	
 putexcel A`row'=("Number of SDPs") B`row'=(`n_1') C`row'=(`n_2') D`row'=(`n_3') E`row'=(`n_4') F`row'=(`n_5'), left
 
 *********************************************************
@@ -1839,10 +1840,10 @@ putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table17") modify
 putexcel A1=("Table 17. Performance of emergency obstetric and neonatal signal functions"), bold underline
 putexcel A2=("Among facilities offering delivery services, percentages reporting performance of indicated signal function at least once during the past three months"), italic
 putexcel B3=("Percentage that provided in past three months:") F3=("Percentage that performed in past three months:") 
-putexcel K3=("Percentage:"), border(bottom) 
+putexcel L3=("Percentage:"), border(bottom) 
 putexcel (B3:E3), merge hcenter vcenter border(bottom) txtwrap
 putexcel (F3:I3), merge hcenter vcenter border(bottom) txtwrap
-putexcel B4=("Parenteral antibiotics for infections") C4=("Uterotonics to prevent or treat postpartum hemorrhage") D4=("Parenteral anticonvulsants to manage high blood pressure in pregnancy") E4=("Antenatal corticosteroids for fetal lung maturation") F4=("Instrument/ assisted vaginal delivery") G4=("Manual removal of placenta") H4=("Neonatal resuscitation") I4=("Caesarean section") J4=("Number of facilities") K4=("Blood transfusion for maternity care") L4=("Number of facilities")
+putexcel B4=("Parenteral antibiotics for infections") C4=("Uterotonics to prevent or treat postpartum hemorrhage") D4=("Parenteral anticonvulsants to manage high blood pressure in pregnancy") E4=("Antenatal corticosteroids for fetal lung maturation") F4=("Instrument/ assisted vaginal delivery") G4=("Manual removal of placenta") H4=("Neonatal resuscitation") I4=("Caesarean section") J4=("Number of facilities") L4=("Blood transfusion for maternity care") M4=("Number of facilities")
 putexcel A5="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
 *	Signal function by facility type, managing authority, and region
@@ -1892,11 +1893,11 @@ foreach RowVar in hospital sector region {
 			if r(N)!=0 local n_2= r(N) 
 			
 			if `n_1' >=5 {
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') K`row'=(`mean9') L`row'=(`n_1'), left
+				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') L`row'=(`mean9') M`row'=(`n_1'), left
 				}
 				
 			if `n_1' < 5 {
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') K`row'=("--") L`row'=("--"), left
+				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') L`row'=("--") M`row'=("--"), left
 			}
 			
 			local row = `row' + 1	
@@ -1929,7 +1930,7 @@ if r(N)!=0 local n_1= r(N)
 count if labor_delivery_yn==1 & hospital!=.
 if r(N)!=0 local n_2= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') K`row'=(`mean9') L`row'=(`n_1'), left
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6') H`row'=(`mean7') I`row'=(`mean8') J`row'=(`n_2') L`row'=(`mean9') M`row'=(`n_1'), left
 
 *********************************************************
 ***   Referral readiness
@@ -1993,9 +1994,9 @@ rename refer_report_recode refer_report_recode
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table18") modify
 putexcel A1=("Table 18. Referral readiness for maternal and newborn health services"), bold underline
 putexcel A2=("Among facilities offering maternal and newborn services, percentages that make referrals and percentages that have referral infrastructure and systems"), italic
-putexcel D3=("Among facilities that make referrals, percentage that have:")
-putexcel (D3:G3), merge hcenter vcenter border(bottom) txtwrap
-putexcel B4=("Provides referrals for pregnant, laboring, or postpartum women and/or newborns") C4=("Number of facilities") D4=("Communication equipment") E4=("Emergency transport") F4=("Patient referral form") G4=("Functional mechanism for recording and sharing outcomes of cases referred in and out") H4=("Number of facilities")
+putexcel E3=("Among facilities that make referrals, percentage that have:")
+putexcel (E3:H3), merge hcenter vcenter border(bottom) txtwrap
+putexcel B4=("Provides referrals for pregnant, laboring, or postpartum women and/or newborns") C4=("Number of facilities") E4=("Communication equipment") F4=("Emergency transport") G4=("Patient referral form") H4=("Functional mechanism for recording and sharing outcomes of cases referred in and out") I4=("Number of facilities")
 putexcel A5="Type" A11="Managing authority" A15="Region" A29="Total", bold
 
 *	Referral readiness by facility type, managing authority, and region
@@ -2032,7 +2033,7 @@ foreach RowVar in facility_type2 sector region {
 			count if `RowVar'==`i' & facility_type2!=5 & (antenatal_yn==1 | labor_delivery_yn==1 | postnatal_yn==1 | surgery_yn==1) & refer_out==1 
 			if r(N)!=0 local n_2= r(N) 
 
-			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`mean5') H`row'=(`n_2'), left
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1') E`row'=(`mean2') F`row'=(`mean3') G`row'=(`mean4') H`row'=(`mean5') I`row'=(`n_2'), left
 			
 			local row = `row' + 1	
 			}
@@ -2055,7 +2056,7 @@ local mean5: disp %3.1f r(mean)*100
 count if facility_type2!=5 & (antenatal_yn==1 | labor_delivery_yn==1 | postnatal_yn==1 | surgery_yn==1) & refer_out==1
 if r(N)!=0 local n_2= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`n_1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`mean5') H`row'=(`n_2'), left
+putexcel B`row'=(`mean1') C`row'=(`n_1') E`row'=(`mean2') F`row'=(`mean3') G`row'=(`mean4') H`row'=(`mean5') I`row'=(`n_2'), left
 
 *********************************************************
 ***   Maternal death review
@@ -2082,8 +2083,8 @@ mdesc review_death_recode if (facility_type2==1 |  facility_type2==2) & (antenat
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table19") modify
 putexcel A1=("Table 19. Systems for reporting and review of maternal deaths"), bold underline
 putexcel A2=("Among facilities offering maternal and newborn health services, percentages that report data on maternal deaths and review maternal deaths at facility"), italic
-putexcel B3=("Functional mechanism for reporting data on maternal deaths to the MPDSR") C3=("Number of hospitals, health centers, and health posts") D3=("Maternal deaths reviewed by providers at facility") E3=("Number of hospitals and health centers")
-putexcel A4="Type" A10="Managing authority" A13="Region" A27="Total", bold
+putexcel B3=("Functional mechanism for reporting data on maternal deaths to the MPDSR") C3=("Number of hospitals, health centers, and health posts") E3=("Maternal deaths reviewed by providers at facility") F3=("Number of hospitals and health centers")
+putexcel A4="Type" A9="Managing authority" A13="Region" A27="Total", bold
 
 *	Maternal deaths review by facility type, managing authority, and region
 local row = 5
@@ -2109,7 +2110,7 @@ foreach RowVar in facility_type2 sector region {
 			count if `RowVar'==`i' & (facility_type2==1 | facility_type2==2) & (antenatal_yn==1 | labor_delivery_yn==1 | postnatal_yn==1 | surgery_yn==1)
 			if r(N)!=0 local n_2= r(N) 
 			
-			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1') D`row'=(`mean2') E`row'=(`n_2'), left
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1') E`row'=(`mean2') F`row'=(`n_2'), left
 			
 			local row = `row' + 1	
 			}
@@ -2128,8 +2129,8 @@ local mean2: disp %3.1f r(mean)*100
 count if (facility_type2==1 | facility_type2==2) & (antenatal_yn==1 | labor_delivery_yn==1 | postnatal_yn==1 | surgery_yn==1)
 if r(N)!=0 local n_2= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`n_1') D`row'=(`mean2') E`row'=(`n_2'), left
-putexcel D7=("n/a") E7=("n/a")
+putexcel B`row'=(`mean1') C`row'=(`n_1') E`row'=(`mean2') F`row'=(`n_2'), left
+putexcel E7=("n/a") F7=("n/a")
 
 *********************************************************
 ***   Routine newborn care equipment and supplies
@@ -2279,9 +2280,9 @@ misstable pattern adolescents_counseled_r adolescents_provided_r adolescents_pre
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table21") modify
 putexcel A1=("Table 21. Availability of family planning services"), bold underline
 putexcel A2=("Percentage of SDPs offering family planning services, and percentage offering indicated family planning services to unmarried adolescents aged 10-19"), italic
-putexcel B3=("Among all SDPs") D3=("Among SDPs offering family planning, percentages that offer:"), border(bottom)
-putexcel (D3:F3), merge hcenter vcenter border(bottom) txtwrap
-putexcel B4=("Famil planning") C4=("Number of SDPs") D4=("Counseling to unmarried adolescents aged 10-19") E4=("Provision of contraceptive methods to unmarried adolescents aged 10-19") F4=("Prescription/ referrals to unmarried adolescents aged 10-19") G4=("Number of SDPs")
+putexcel B3=("Among all SDPs") E3=("Among SDPs offering family planning, percentages that offer:"), border(bottom)
+putexcel (E3:G3), merge hcenter vcenter border(bottom) txtwrap
+putexcel B4=("Family planning") C4=("Number of SDPs") E4=("Counseling to unmarried adolescents aged 10-19") F4=("Provision of contraceptive methods to unmarried adolescents aged 10-19") G4=("Prescription/ referrals to unmarried adolescents aged 10-19") H4=("Number of SDPs")
 putexcel A5="Type" A12="Managing authority" A16="Region" A30="Total", bold
 
 *	Family planning servie by facility type, managing authority, and region
@@ -2315,7 +2316,7 @@ foreach RowVar in facility_type2 sector region {
 			count if `RowVar'==`i' & fp_offered_yn==1
 			if r(N)!=0 local n_2= r(N) 
 
-			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`n_2'), left
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1') E`row'=(`mean2') F`row'=(`mean3') G`row'=(`mean4') H`row'=(`n_2'), left
 			
 			local row = `row' + 1	
 			}
@@ -2338,7 +2339,7 @@ local mean4: disp %3.1f r(mean)*100
 count if fp_offered_yn==1
 if r(N)!=0 local n_2= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`n_1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`n_2'), left
+putexcel B`row'=(`mean1') C`row'=(`n_1') E`row'=(`mean2') F`row'=(`mean3') G`row'=(`mean4') H`row'=(`n_2'), left
 
 *********************************************************
 ***   Provision of contraceptive methods
@@ -2714,13 +2715,13 @@ ta impl_deep_neither impl_deep_cat if provided_implants==1 & (stock_implants==1 
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table25") modify
 putexcel A1=("Table 25. Provision of implant and IUD services"), bold underline
-putexcel B2=("Among SDPs that provide implants and have implants in stock, percentages with:") H2=("Among SDPs that provide IUDs, percentages that have:"), border(bottom)
-putexcel B3=("Standard implants (palpable)") D3=("Non-palpable implants") H3=("IUDs") , bold border(bottom)
+putexcel B2=("Among SDPs that provide implants and have implants in stock, percentages with:") I2=("Among SDPs that provide IUDs, percentages that have:"), border(bottom)
+putexcel B3=("Standard implants (palpable)") D3=("Non-palpable implants") I3=("IUDs") , bold border(bottom)
 putexcel (B2:F2), merge hcenter txtwrap border(bottom)
 putexcel (B3:C3), merge hcenter txtwrap border(bottom)
 putexcel (D3:F3), merge hcenter txtwrap border(bottom)
 
-putexcel B4=("Ability to insert an implant on day of interview") C4=("Ability to remove an implant on day of interview") D4=("Ability to remove non-palpable implants on day of interview") E4=("Awareness of where to refer for off-site removal of non-palpable implants") F4=("No ability to remove non-palpable implants nor awareness of where to refer") G4=("Number of SDPs") H4=("Trained personnel to remove IUDs") I4=("Number of SDPs")
+putexcel B4=("Ability to insert an implant on day of interview") C4=("Ability to remove an implant on day of interview") D4=("Ability to remove non-palpable implants on day of interview") E4=("Awareness of where to refer for off-site removal of non-palpable implants") F4=("No ability to remove non-palpable implants nor awareness of where to refer") G4=("Number of SDPs") I4=("Trained personnel to remove IUDs") J4=("Number of SDPs")
 putexcel A5="Type" A11="Managing authority" A15="Region" A29="Total", bold
 
 *	Implant and IUD services by facility type, managing authority, and region
@@ -2761,7 +2762,7 @@ foreach RowVar in facility_type2 sector region {
 			count if `RowVar'==`i' & provided_iud==1
 			if r(N)!=0 local n_2= r(N) 
 
-			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1') H`row'=(`mean6') I`row'=(`n_2'), left
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1') I`row'=(`mean6') J`row'=(`n_2'), left
 			
 			local row = `row' + 1	
 			}
@@ -2788,7 +2789,7 @@ if r(N)!=0 local n_1= r(N)
 count if provided_iud==1
 if r(N)!=0 local n_2= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1') H`row'=(`mean6') I`row'=(`n_2'), left
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`n_1') I`row'=(`mean6') J`row'=(`n_2'), left
 
 *********************************************************
 ***   Availability of SA & PAC
@@ -2803,11 +2804,11 @@ bys facility_type2: tab1 abt_couns abt_refer
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table26") modify
 putexcel A1=("Table 26. Availability of safe abortion and post-abortion care"), bold underline
-putexcel B3=("Among health facilities, percentages that offer:") E3=("Among hospitals, health centers, and clinics, percentages that offer:"), border(bottom)
+putexcel B3=("Among health facilities, percentages that offer:") F3=("Among hospitals, health centers, and clinics, percentages that offer:"), border(bottom)
 putexcel (B3:C3), merge hcenter txtwrap border(bottom)
-putexcel (E3:F3), merge hcenter txtwrap border(bottom)
+putexcel (F3:G3), merge hcenter txtwrap border(bottom)
 
-putexcel B4=("Counseling on safe abortion care") C4=("Referals for safe abortion care") D4=("Number of facilities") E4=("Safe abortion care") F4=("Postabortion care") G4=("Number of facilities") 
+putexcel B4=("Counseling on safe abortion care") C4=("Referals for safe abortion care") D4=("Number of facilities") F4=("Safe abortion care") G4=("Postabortion care") H4=("Number of facilities") 
 putexcel A5="Type" A11="Managing authority" A15="Region" A29="Total", bold
 
 *	Availability of SA & PAC by facility type, managing authority, and region
@@ -2842,7 +2843,7 @@ foreach RowVar in facility_type2 sector region {
 			count if `RowVar'==`i' & (facility_type2==1 | facility_type2==2 | facility_type2==4)
 			if r(N)!=0 local n_2= r(N) 
 
-			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`n_2'), left
+			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1') F`row'=(`mean3') G`row'=(`mean4') H`row'=(`n_2'), left
 			
 			local row = `row' + 1	
 			}
@@ -2865,8 +2866,8 @@ if r(N)!=0 local n_1= r(N)
 count if (facility_type2==1 | facility_type2==2 | facility_type2==4)
 if r(N)!=0 local n_2= r(N)
 
-putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`n_2'), left
-putexcel E8=("n/a") F8=("n/a") G8=("n/a")
+putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1') F`row'=(`mean3') G`row'=(`mean4') H`row'=(`n_2'), left
+putexcel F8=("n/a") G8=("n/a") H8=("n/a")
 
 *********************************************************
 ***   Medicines and equipment for safe abortion and PAC
@@ -3041,6 +3042,7 @@ misstable pattern infantcare_yn immunization_yn lab_yn if facility_type2!=5, fre
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table29") modify
 putexcel A1=("Table 29. Availability of child health services"), bold underline
+putexcel A2=("Percentages of health facilities that offer indicated services"), italic
 putexcel B3=("Sick child care") C3=("Immunization") D3=("Laboratory testing") E3=("Number of facilities") 
 putexcel A5="Type" A11="Managing authority" A15="Region" A29="Total", bold
    
