@@ -7,7 +7,7 @@
 *
 *
 *   If you have any questions on how to use this .do files, please contact 
-*	XXX (I'm happy to be the point of contact, but let me know what you think! - Ellie)
+*	Ellie Qian at jqian@jhu.edu.
 *******************************************************************************/
 
 
@@ -20,7 +20,6 @@
 *	DATA IN:		PMA Ethiopia's 2019 publicly released SDP dataset
 *	DATA OUT: 		PMAET_2019SDP_Analysis_PR_DATE.dta
 *   FILE OUT: 		PMAET_2019SDP_Analysis_DATE.xls
-*					PMAET_2019SDP_Analysis_Staff_DATE.xls
 *   LOG FILE OUT: 	PMAET_2019SDP_Analysis_DATE.log
 *
 *******************************************************************************/
@@ -30,10 +29,7 @@
 *   
 *   INSTRUCTIONS:
 *   Please update directories in SECTION 2 to set up and run the .do file
-*
-*	NOTE:
-*	All indicators except for staffing pattern is output into PMAET_2019SDP_Analysis_DATE.xls
-*	Tables on staffing pattern are saved into PMAET_2019SDP_Analysis_Staff_DATE.xls
+
 *******************************************************************************/
 
 
@@ -44,13 +40,11 @@
 *		move, update or delete
 *******************************************************************************
 
-
 clear
 clear matrix
 clear mata
 capture log close
 set more off
-
 
 ********************************************************************************
 ***   SECTION 1: CREATE MACRO FOR DATE
@@ -63,7 +57,6 @@ set more off
 local today=c(current_date)
 local c_today= "`today'"
 global date=subinstr("`c_today'", " ", "",.)
-
 
 ********************************************************************************
 ***   SECTION 2: SET DIRECTORIES AND DATASET AND OUTPUT 
