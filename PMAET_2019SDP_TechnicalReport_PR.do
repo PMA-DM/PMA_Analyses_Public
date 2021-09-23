@@ -2462,12 +2462,11 @@ ta methods_4  if fp_offered_yn==1 & (facility_type2==3), m
 
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table23") modify
-putexcel A1=("Table 23. Provision of a mix of contraceptive methods in previous month") A30=("Table 23. Provision of a mix of contraceptive methods in previous month"), bold underline
-putexcel A2=("Among health facilities offering family planning services, percentages which provided a mix of methods in previous month") A31=("Among health facilities offering family planning services, percentages which provided a mix of methods in previous month"), italic
+putexcel A1=("Table 23. Provision of a mix of contraceptive methods in previous month"), bold underline
+putexcel A2=("Among health facilities offering family planning services, percentages which provided a mix of methods in previous month"), italic
 
-putexcel B4=("Among hospitals and health centers/clinics, percentages providing two long-acting and three short-acting family planning method") C4=("Number of facilities") B33=("Among health posts, percentages providing at least four family planning methods") C33=("Number of facilities")
-putexcel A5="Type" A10="Managing authority" A14="Region" A28="Total", bold
-putexcel A34="Type" A37="Managing authority" A40="Region" A53="Total", bold
+putexcel B4=("Among hospitals and health centers/clinics, percentages providing two long-acting and three short-acting family planning method") C4=("Number of facilities") E4=("Among health posts, percentages providing at least four family planning methods") F4=("Number of facilities")
+putexcel A5="Type" A11="Managing authority" A15="Region" A29="Total", bold
 
 *	Among hospitals and health centers/clinics, percentages providing two long-acting and three short-acting family planning methods, by facility type, managing authority, and region 
 
@@ -2483,25 +2482,33 @@ foreach RowVar in facility_type2 sector region {
 	levelsof `RowVar', local(RowLevels)
       
 	forvalues i = 1/`RowCount' {
-		sum methods_5 if `RowVar'==`i' & (facility_type2==1 | facility_type2==2 | facility_type2==4)
 		
-		if r(N)!=0 {
-		
-			local RowValueLabelNum = word("`RowLevels'", `i')
-			local CellContents : label `RowValueLabel' `RowValueLabelNum'
-			local mean1: disp %3.1f r(mean)*100
-
-			count if `RowVar'==`i' & (facility_type2==1 | facility_type2==2 | facility_type2==4)
-			if r(N)!=0 local n_1= r(N) 
-
-			if `n_1' >= 5 {
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1'), left
-				}
-			if `n_1' < 5 {
-				putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--"), left
-				}	
-			local row = `row' + 1	
+		if "`RowVar'"=="facility_type2" &  `i'==3 {
+			putexcel A`row'=("Health post") B`row'= ("n/a") C`row'= ("n/a")
+			local row = `row' + 1
 			}
+		else {
+			sum methods_5 if `RowVar'==`i' & (facility_type2==1 | facility_type2==2 | facility_type2==4)
+				
+			if r(N)!=0 {
+			
+				local RowValueLabelNum = word("`RowLevels'", `i')
+				local CellContents : label `RowValueLabel' `RowValueLabelNum'
+				local mean1: disp %3.1f r(mean)*100
+
+				count if `RowVar'==`i' & (facility_type2==1 | facility_type2==2 | facility_type2==4)
+				if r(N)!=0 local n_1= r(N) 
+
+				if `n_1' >= 5 {
+					putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1'), left
+					}
+				if `n_1' < 5 {
+					putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--"), left
+					}	
+			local row = `row' + 1
+				}
+			}
+				
 		}
 	local row=`row'+2
 	}   
@@ -2520,33 +2527,36 @@ if `n_1' < 5 {
 	}
 	
 *	Among health posts, percentages providing at least four family planning methods, by region
-local row = 35
+local row = 6
 foreach RowVar in facility_type2 sector region {
                
 	tab `RowVar'
 	local RowCount=`r(r)'
-	local RowValueLabel : value label `RowVar'
-	levelsof `RowVar', local(RowLevels)
       
 	forvalues i = 1/`RowCount' {
-		sum methods_4 if `RowVar'==`i' & facility_type2==3
 		
-		if r(N)!=0 {
-		
-			local RowValueLabelNum = word("`RowLevels'", `i')
-			local CellContents : label `RowValueLabel' `RowValueLabelNum'
-			local mean1: disp %3.1f r(mean)*100
-		
-			count if `RowVar'==`i' & facility_type2==3
-			if r(N)!=0 local n_1= r(N) 
-
-			if `n_1' >= 5 {
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`n_1'), left
-				}
-			if `n_1' < 5 {
-				putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--"), left
-				}
+		if ("`RowVar'"=="facility_type2" & (`i'<=2| `i'==4)) | ("`RowVar'"=="sector" & `i'==2) | ("`RowVar'"=="region" & `i'==10) {
+			putexcel E`row'=("n/a") F`row'=("n/a")	
 			local row = `row' + 1	
+			}
+		else {
+			sum methods_4 if `RowVar'==`i' & facility_type2==3
+			
+			if r(N)!=0 {
+			
+				local mean1: disp %3.1f r(mean)*100
+			
+				count if `RowVar'==`i' & facility_type2==3
+				if r(N)!=0 local n_1= r(N) 
+
+				if `n_1' >= 5 {
+					putexcel E`row'=(`mean1') F`row'=(`n_1'), left
+					}
+				if `n_1' < 5 {
+					putexcel E`row'=("--") F`row'=("--"), left
+					}
+				local row = `row' + 1
+				}
 			}
 		}
 	local row=`row'+2
@@ -2560,10 +2570,10 @@ count if facility_type2==3
 if r(N)!=0 local n_1= r(N)	
 
 if `n_1' >= 5 {
-	putexcel B`row'=(`mean1') C`row'=(`n_1'), left
+	putexcel E`row'=(`mean1') F`row'=(`n_1'), left
 	}
 if `n_1' < 5 {
-	putexcel B`row'=("--") C`row'=("--"), left
+	putexcel E`row'=("--") F`row'=("--"), left
 	}
 	
 restore 
@@ -3276,15 +3286,14 @@ mdesc iccm_2mo_obs iccm_5y_obs if facility_type2==3  & sector==0  & infantcare_y
 
 *	Set up putexcel
 putexcel set "PMAET_2019SDP_Analysis_$date.xlsx", sheet("Table31") modify
-putexcel A1=("Table 31. Registration books to assess and treat sick children") A30=("Table 31. Registration books to assess and treat sick children"), bold underline
-putexcel A2=("Among government facilities that offer sick child care (0-59 mos), percentages that use IMNCI registration books to assess and treat sick infants and children") A31=("Among government facilities that offer sick child care (0-59 mos), percentages that use iCCM registration books to assess and treat sick infants and children"), italic
-putexcel B3=("Among government hospitals and health centers, percentages that are currently using:") B32=("Among government health posts, percentages that are currently using:")
+putexcel A1=("Table 31. Registration books to assess and treat sick children") , bold underline
+putexcel A2=("Among government facilities that offer sick child care (0-59 mos), percentages that use IMNCI registration books to assess and treat sick infants and children"), italic
+putexcel B3=("Among government hospitals and health centers, percentages that are currently using:") F3=("Among government health posts, percentages that are currently using:")
 putexcel (B3:C3), merge border(bottom) txtwrap hcenter
-putexcel (B32:C32), merge border(bottom) txtwrap hcenter
+putexcel (F3:G3), merge border(bottom) txtwrap hcenter
 
-putexcel B4=("IMNCI registration book to assess and treat sick young infants (0-2 mos)") C4=("IMNCI registration book to assess and treat sick children (2-59 mos)") B4=("Number of facilities") B33=("iCCM registration book to assess and treat sick young infants (0-2 mos)") C33=("iCCM registration book to assess and treat sick children (2-59 mos)") D33=("Number of facilities")
-putexcel A5="Type" A9="Region" A23="Total", bold
-putexcel A34="Type" A37="Region" A50="Total", bold
+putexcel B4=("IMNCI registration book to assess and treat sick young infants (0-2 mos)") C4=("IMNCI registration book to assess and treat sick children (2-59 mos)") D4=("Number of facilities") F4=("iCCM registration book to assess and treat sick young infants (0-2 mos)") G4=("iCCM registration book to assess and treat sick children (2-59 mos)") H4=("Number of facilities")
+putexcel A5="Type" A10="Region" A24="Total", bold
 
 *	IMNCI among hospitals and health centers by facility type and region
 preserve
@@ -3299,27 +3308,33 @@ foreach RowVar in facility_type2 region {
 	levelsof `RowVar', local(RowLevels)
       
 	forvalues i = 1/`RowCount' {
-		sum imnci_2mo_obs if `RowVar'==`i' & (facility_type2==1 | facility_type2==2)
-		
-		if r(N)!=0 {
-		
-			local RowValueLabelNum = word("`RowLevels'", `i')
-			local CellContents : label `RowValueLabel' `RowValueLabelNum'
-			local mean1: disp %3.1f r(mean)*100
-			
-			sum imnci_5y_obs if `RowVar'==`i' & (facility_type2==1 | facility_type2==2) 
-			local mean2: disp %3.1f r(mean)*100
-
-			count if `RowVar'==`i' & (facility_type2==1 | facility_type2==2) & sector==1
-			if r(N)!=0 local n_1= r(N) 
-
-			if `n_1' >= 5 {
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1'), left
-				}
-			if `n_1' < 5 {
-				putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--") D`row'=("--"), left
-				}	
+		if "`RowVar'"=="facility_type2" & `i'==3 {
+			putexcel A`row'="Health post" B`row'="n/a" C`row'="n/a" D`row'="n/a"
 			local row = `row' + 1	
+			}
+		else {
+			sum imnci_2mo_obs if `RowVar'==`i' & (facility_type2==1 | facility_type2==2)
+			
+			if r(N)!=0 {
+			
+				local RowValueLabelNum = word("`RowLevels'", `i')
+				local CellContents : label `RowValueLabel' `RowValueLabelNum'
+				local mean1: disp %3.1f r(mean)*100
+				
+				sum imnci_5y_obs if `RowVar'==`i' & (facility_type2==1 | facility_type2==2) 
+				local mean2: disp %3.1f r(mean)*100
+
+				count if `RowVar'==`i' & (facility_type2==1 | facility_type2==2) & sector==1
+				if r(N)!=0 local n_1= r(N) 
+
+				if `n_1' >= 5 {
+					putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1'), left
+					}
+				if `n_1' < 5 {
+					putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--") D`row'=("--"), left
+					}	
+				local row = `row' + 1	
+				}
 			}
 		}
 	local row=`row'+2
@@ -3341,7 +3356,7 @@ if `n_1' < 5 {
 	}
 	
 *	iCCM among host posts by facility type and region 
-local row = 35
+local row = 6
 foreach RowVar in facility_type2 region {
                
 	tab `RowVar'
@@ -3350,27 +3365,33 @@ foreach RowVar in facility_type2 region {
 	levelsof `RowVar', local(RowLevels)
       
 	forvalues i = 1/`RowCount' {
-		sum iccm_2mo_obs if `RowVar'==`i' & facility_type2==3
-		
-		if r(N)!=0 {
-		
-			local RowValueLabelNum = word("`RowLevels'", `i')
-			local CellContents : label `RowValueLabel' `RowValueLabelNum'
-			local mean1: disp %3.1f r(mean)*100
-			
-			sum iccm_5y_obs if `RowVar'==`i' & facility_type2==3
-			local mean2: disp %3.1f r(mean)*100
-		
-			count if `RowVar'==`i' & facility_type2==3
-			if r(N)!=0 local n_1= r(N) 
-
-			if `n_1' >= 5 {
-				putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1'), left
-				}
-			if `n_1' < 5 {
-				putexcel A`row'=("`CellContents'") B`row'=("--") C`row'=("--") D`row'=("--"), left
-				}
+		if ("`RowVar'"=="facility_type2" & `i'<=2) |("`RowVar'"=="region" & `i'==10) {
+			putexcel F`row'="n/a" G`row'="n/a" H`row'="n/a"
 			local row = `row' + 1	
+			}
+		else {
+			sum iccm_2mo_obs if `RowVar'==`i' & facility_type2==3
+			
+			if r(N)!=0 {
+			
+				local RowValueLabelNum = word("`RowLevels'", `i')
+				local CellContents : label `RowValueLabel' `RowValueLabelNum'
+				local mean1: disp %3.1f r(mean)*100
+				
+				sum iccm_5y_obs if `RowVar'==`i' & facility_type2==3
+				local mean2: disp %3.1f r(mean)*100
+			
+				count if `RowVar'==`i' & facility_type2==3
+				if r(N)!=0 local n_1= r(N) 
+
+				if `n_1' >= 5 {
+					putexcel F`row'=(`mean1') G`row'=(`mean2') H`row'=(`n_1'), left
+					}
+				if `n_1' < 5 {
+					putexcel F`row'=("--") G`row'=("--") H`row'=("--"), left
+					}
+				local row = `row' + 1	
+				}
 			}
 		}
 	local row=`row'+2
@@ -3386,10 +3407,10 @@ count if facility_type2==3
 if r(N)!=0 local n_1= r(N)	
 
 if `n_1' >= 5 {
-	putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`n_1'), left
+	putexcel F`row'=(`mean1') G`row'=(`mean2') H`row'=(`n_1'), left
 	}
 if `n_1' < 5 {
-	putexcel B`row'=("--") C`row'=("--") D`row'=("--"), left
+	putexcel F`row'=("--") G`row'=("--") H`row'=("--"), left
 	}
 	
 restore 
