@@ -1623,11 +1623,11 @@ putexcel set "PMAET_Cohort1_6W_MNHAnalysis_$date.xlsx", sheet("Table12") modify
 putexcel A1=("Table 12. Place of Delivery"), bold underline
 putexcel A2=("Percent distribution of women's place of delivery and the percentage of women who delivered at a health facility, among all women, by background characteristics and number of ANC visits, PMA Ethiopia 2019-2021 Cohort"), italic
 putexcel A3=("Background characteristics") B3=("Home") C3=("Government hospital") D3=("Government HC or lower") E3=("Private sector") F3=("NGO and others") G3=("Percentage delivered in a health facility") H3=("Number of women (weighted)")
-putexcel A4=("Age") A12=("Education") A18=("Parity") A24=("Region") A32=("Residence") A36=("Wealth") A44=("Overall"), bold
+putexcel A4=("Age") A12=("Education") A18=("Parity") A24=("Region") A32=("Residence") A36=("Wealth") A43=("Number of ANC visits") A49=("Overall"), bold
 
 *	Place of delivery by background characteristics
 local row = 5
-foreach RowVar in age_recode education_recode parity_recode region_recode urban_recode wealthquintile {
+foreach RowVar in age_recode education_recode parity_recode region_recode urban_recode wealthquintile total_anc {
         
 	tab `RowVar'
 	local RowCount=`r(r)'
@@ -1732,11 +1732,11 @@ putexcel set "PMAET_Cohort1_6W_MNHAnalysis_$date.xlsx", sheet("Table13") modify
 putexcel A1=("Table 13. Skilled Birth Attendant"), bold underline
 putexcel A2=("Percent distribution of women's birth attendant and the percentage of women who delivered with a skilled birth attendant, among all women, by background characteristics, number of ANC visits, and delivery location, PMA Ethiopia 2019-2021 Cohort"), italic
 putexcel A3=("Background characteristics" )B3=("No one assisted") C3=("Doctor") D3=("Health officer") E3=("Nurse/Midwife") F3=("Skilled attendant can't distinguish	")G3=("Health extension worker") H3=("Traditional birth attendant") I3=("Family member") J3=("Other") K3=("Skilled birth attendant") L3=("Number of women (weighted)")
-putexcel A4=("Age") A12=("Education") A18=("Parity") A24=("Region") A32=("Residence") A36=("Wealth") A43=("Delivery location") A52=("Overall") , bold
+putexcel A4=("Age") A12=("Education") A18=("Parity") A24=("Region") A32=("Residence") A36=("Wealth") A43=("Number of ANC visits") A48=("Delivery location") A57=("Overall") , bold
 
 *	Birth attendant by background characteristics
 local row = 5
-foreach RowVar in age_recode education_recode parity_recode region_recode urban_recode wealthquintile delivery_location1 {
+foreach RowVar in age_recode education_recode parity_recode region_recode urban_recode wealthquintile total_anc delivery_location1 {
         
 	tab `RowVar'
 	local RowCount=`r(r)'
