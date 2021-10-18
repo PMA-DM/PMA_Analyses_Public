@@ -134,7 +134,7 @@ if _rc!=0 {
 	}
 	
 if check!=1 {
-		di in smcl as error "The dataset you are using is not the PMA Ethiopia Cohort1 baseline dataset. This .do file is to generate the .xlsx files for PMA Ethiopia Cohort1 6-Week Maternal and Newborn Health Technical Report only. Please use a the Cohort1 baseline dataset and rerun the .do file"
+		di in smcl as error "The dataset you are using is not the PMA Ethiopia Cohort1 baseline dataset. This .do file is to generate the .xlsx files for PMA Ethiopia Cohort1 6-Week Maternal and Newborn Health Technical Report only. Please use the Cohort1 baseline dataset and rerun the .do file"
 		exit
 	}
 	drop check
@@ -287,7 +287,7 @@ local tot_precovid = r(N)
 local mean_precovid = string(r(mean), "%4.1f")
 
 *** Output to Excel
-putexcel A7=("Mean time to interview"), bold
+putexcel A7=("Mean number of weeks postpartum at time of interview"), bold
 putexcel (A7:D7), merge hcenter vcenter 
 putexcel B8=("Number of women") C8=("Number of weeks postpartum"), hcenter
 putexcel A9=("Overall") A10=("Pre-COVID") A11=("During COVID"), left
@@ -696,7 +696,7 @@ label var SWanc_nd_info_deworm "Received de-worming medication counseling at ANC
 
 *	Set up putexcel
 putexcel set "PMAET_Cohort1_6W_MNHAnalysis_$date.xlsx", sheet("Table6") modify
-putexcel A1=("Table 6. Content of ANC - Nutritional Counselling (all women)"), bold underline
+putexcel A1=("Table 6. Content of ANC - Nutritional Counseling (all women)"), bold underline
 putexcel A2=("Percent distribution of respondents who received general nutrition counseling and counseling on taking iron/folate supplements and deworming medications, by background characteristics, PMA Ethiopia 2019-2021 Cohort"), italic
 putexcel B3=("General nutrition counseling") C3=("Iron and folate counseling") D3=("Deworming medication counseling") E3=("Number of women (weighted)") 
 putexcel A4=("Age") A12=("Education") A18=("Parity") A24=("Region") A32=("Residence") A36=("Wealth") A44=("Overall"), bold
@@ -1095,7 +1095,7 @@ putexcel B`row'=(`mean1') C`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') H`r
 putexcel D`row'=(`n_1') G`row'=(`n_2') J`row'=(`n_3'), left nformat(number_sep)			
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *** 1to5 meeting *** 
 
@@ -1824,7 +1824,7 @@ putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`r
 putexcel L`row'=(`n_1'), left nformat(number_sep)	
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *** Caesarean delivery *** 
 replace SWdeliv_csection=deliv_csection if baseline_status==3
@@ -1894,7 +1894,7 @@ putexcel B`row'=(`mean1')  D`row'=(`mean2'), left nformat(0.0)
 putexcel C`row'=(`n_1') E`row'=(`n_2'), left nformat(number_sep)	
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *** Delivery complications *** 
 gen any_delivprob=0
@@ -2079,7 +2079,7 @@ putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`r
 putexcel G`row'=(`n_1'), left nformat(number_sep)
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 ********************************************************************************
 **							PNC INDICATORS          	           		**   
@@ -2269,7 +2269,7 @@ putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`r
 putexcel G`row'=(`n_1') I`row'=(`n_2'), left nformat(number_sep)
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *** PPFP, EBF, immunization, infant feeding, and infant growth counseling *** 
 *	Recode missing, DNK, and NR to 0
@@ -2292,7 +2292,7 @@ replace pnc_none_facility=1 if SWpnc_couns_breastfeed!=.
 putexcel set "PMAET_Cohort1_6W_MNHAnalysis_$date.xlsx", sheet("Table19") modify
 putexcel A1=("Table 19. Counseling at PNC"), bold underline
 putexcel A2=("Percent distribution of respondents who reported receiving postpartum family planning counseling at PNC among women with facility delivery who had PNC, and the proportion of women who reported receiving exclusive breastfeeding, immunization, infant feeding, and infant growth counseling at PNC among women who reported PNC outside the health facility, by background characteristics, PMA Ethiopia 2019-2021 Cohort"), italic
-putexcel A3=("Background characteristics" ) B3=("Postpartum family planning") C3=("Number of women with facility delivery") D3=("Postpartum family planning") E3=("Number of women with any PNC") F3=("Exclusive breastfeeding") G3=("Immunization") H3=("Infant feeding") I3=("Infant growth") J3=("Number of women (weighed)")
+putexcel A3=("Background characteristics" ) B3=("Postpartum family planning") C3=("Number of women with facility delivery") D3=("Postpartum family planning") E3=("Number of women with any PNC") F3=("Exclusive breastfeeding") G3=("Immunization") H3=("Infant feeding") I3=("Infant growth") J3=("Number of women (weighted)")
 putexcel A4=("Age") A12=("Education") A18=("Parity") A24=("Region") A32=("Residence") A36=("Wealth") A44=("Overall"), bold
 
 *	Counseling at PNC by background characteristics
@@ -2397,7 +2397,7 @@ putexcel B`row'=(`mean1') D`row'=(`mean2') F`row'=(`mean3') G`row'=(`mean4') H`r
 putexcel C`row'=(`n_1') E`row'=(`n_2') J`row'=(`n_3'), left nformat(number_sep)
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *** PPFP (use of modern contraception) ***
 replace SWcurrent_methodnum=current_methodnum if baseline_status==3
@@ -2484,7 +2484,7 @@ putexcel C`row'=(`n_1') E`row'=(`n_2'), left nformat(number_sep)
 putexcel D44=("-") D45=("-") D46=("-") E44=("-") E45=("-") E46=("-") E47=("")
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *******************************************************************************
 **						NEONATES-RELATED INDICATORS               		**   
@@ -2706,7 +2706,7 @@ putexcel B`row'=(`mean1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`r
 putexcel C`row'=(`n_1') I`row'=(`n_2'), left nformat(number_sep)
 
 local row=`row'+2
-putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parathesis in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
+putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported inside parentheses in the report. Estimates based on less than 25 unweighted samples are suppressed."), italic
 
 *** Care of umbilical cord *** 
 
