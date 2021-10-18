@@ -2907,6 +2907,6 @@ putexcel A`row'=("Note: Due to COVID-19, 825 women were interviewed 9 weeks or m
 restore 
 
 *	Save data
-save "`datadir'/PMAET_`COHORT'_6W_MNHAnalysis_PR_$date.dta", replace  
+save "`outputdir'/PMAET_`COHORT'_6W_MNHAnalysis_PR_$date.dta", replace  
 
 log close 
