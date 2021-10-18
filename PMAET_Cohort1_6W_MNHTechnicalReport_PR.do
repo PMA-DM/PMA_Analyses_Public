@@ -2491,119 +2491,30 @@ putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported
 *******************************************************************************
 
 *	Changing the data into long format to handle twins data
-*	Rename data for reshaping 
-rename SWbirth1_outcome_cc SWpregnancy_outcome1
-rename SWbirth2_outcome_cc SWpregnancy_outcome2
-rename birth1_outcome birth_outcome1
-rename birth2_outcome birth_outcome2
-rename SWbaby1_alive SWstill_alive1 
-rename SWbaby2_alive SWstill_alive2
-rename baby1_alive baby_alive1
-rename baby2_alive baby_alive2
-rename SWbaby1_cry SWbaby_cry1
-rename SWbaby2_cry SWbaby_cry2
-rename baby1_cry baby_cry1 
-rename baby2_cry baby_cry2
 
-rename baby1_normalcry baby_normalcry1
-rename baby1_wrapped baby_wrapped1
-rename baby1_wrapped_min baby_wrapped_min1
-rename baby1_placednaked baby_placednaked1
-rename baby1_firstbreast_timing baby_firstbreast1
-rename baby1_firstbreast_timing_val baby_firstbreast_time1
-rename baby1_vax_bcg vaccine_bcg1
-rename baby1_vax_polio_oral vaccine_polio1
-rename baby1_fed_breastmilk babyfed_breastmilk1
-rename baby1_fed_vitamins babyfed_vitamins1
-rename baby1_fed_water babyfed_water1
-rename baby1_fed_juice babyfed_juice1
-rename baby1_fed_ors babyfed_ors1
-rename baby1_fed_formula babyfed_formula1
-rename baby1_fed_milk babyfed_milk1
-rename baby1_fed_tonic babyfed_tonic1
-rename baby1_fed_otherliquid babyfed_otherliquid1
-rename baby1_fed_else babyfed_anythingelse1
-
-rename baby2_normalcry baby_normalcry2
-rename baby2_wrapped baby_wrapped2
-rename baby2_wrapped_min baby_wrapped_min2
-rename baby2_placednaked baby_placednaked2
-rename baby2_firstbreast_timing baby_firstbreast2
-rename baby2_firstbreast_timing_val baby_firstbreast_time2
-rename baby2_vax_bcg vaccine_bcg2
-rename baby2_vax_polio_oral vaccine_polio2
-rename baby2_fed_breastmilk babyfed_breastmilk2
-rename baby2_fed_vitamins babyfed_vitamins2
-rename baby2_fed_water babyfed_water2
-rename baby2_fed_juice babyfed_juice2
-rename baby2_fed_ors babyfed_ors2
-rename baby2_fed_formula babyfed_formula2
-rename baby2_fed_milk babyfed_milk2
-rename baby2_fed_tonic babyfed_tonic2
-rename baby2_fed_otherliquid babyfed_otherliquid2
-rename baby2_fed_else babyfed_anythingelse2
-
-rename SWbaby1_normalcry SWbaby_normalcry1
-rename SWbaby1_wrapped SWbaby_wrapped1
-rename SWbaby1_wrapped_min SWbaby_wrapped_min1
-rename SWbaby1_placednaked SWbaby_placednaked1
-rename SWbaby1_firstbreast_timing SWbaby_firstbreast1
-rename SWbaby1_firstbreast_timing_val SWbaby_firstbreast_time1
-rename SWbaby1_vax_bcg SWvaccine_bcg1
-rename SWbaby1_vax_polio_oral SWvaccine_polio1
-rename SWbaby1_fed_breastmilk SWbabyfed_breastmilk1
-rename SWbaby1_fed_vitamins SWbabyfed_vitamins1
-rename SWbaby1_fed_water SWbabyfed_water1
-rename SWbaby1_fed_juice SWbabyfed_juice1
-rename SWbaby1_fed_ors SWbabyfed_ors1
-rename SWbaby1_fed_formula SWbabyfed_formula1
-rename SWbaby1_fed_milk SWbabyfed_milk1
-rename SWbaby1_fed_tonic SWbabyfed_tonic1
-rename SWbaby1_fed_otherliquid SWbabyfed_otherliquid1
-rename SWbaby1_fed_else SWbabyfed_anythingelse1
-
-rename SWbaby2_normalcry SWbaby_normalcry2
-rename SWbaby2_wrapped SWbaby_wrapped2
-rename SWbaby2_wrapped_min SWbaby_wrapped_min2
-rename SWbaby2_placednaked SWbaby_placednaked2
-rename SWbaby2_firstbreast_timing SWbaby_firstbreast2
-rename SWbaby2_firstbreast_timing_val SWbaby_firstbreast_time2
-rename SWbaby2_vax_bcg SWvaccine_bcg2
-rename SWbaby2_vax_polio_oral SWvaccine_polio2
-rename SWbaby2_fed_breastmilk SWbabyfed_breastmilk2
-rename SWbaby2_fed_vitamins SWbabyfed_vitamins2
-rename SWbaby2_fed_water SWbabyfed_water2
-rename SWbaby2_fed_juice SWbabyfed_juice2
-rename SWbaby2_fed_ors SWbabyfed_ors2
-rename SWbaby2_fed_formula SWbabyfed_formula2
-rename SWbaby2_fed_milk SWbabyfed_milk2
-rename SWbaby2_fed_tonic SWbabyfed_tonic2
-rename SWbaby2_fed_otherliquid SWbabyfed_otherliquid2
-rename SWbaby2_fed_else SWbabyfed_anythingelse2
-
-replace SWpregnancy_outcome1=birth_outcome1 if baseline_status==3
-replace SWpregnancy_outcome2=birth_outcome2 if baseline_status==3
-replace SWpregnancy_type=pregnancy_type if baseline_status==3
-replace SWstill_alive1=baby_alive1 if baseline_status==3
-replace SWstill_alive2=baby_alive2 if baseline_status==3
-replace SWbaby_cry1=baby_cry1 if baseline_status==3
-replace SWbaby_cry2=baby_cry2 if baseline_status==3
-replace SWbaby_cry1=baby_cry1 if baseline_status==3
-
-foreach var in applied_cord_yn applied_cord cord_cut_used cord_cut_boiled baby_normalcry1 baby_wrapped1 baby_wrapped_min1 baby_placednaked1 baby_firstbreast1 baby_firstbreast_time1 vaccine_bcg1 vaccine_polio1 babyfed_breastmilk1 babyfed_vitamins1 babyfed_water1 babyfed_juice1 babyfed_ors1 babyfed_formula1 babyfed_milk1 babyfed_tonic1 babyfed_otherliquid1 babyfed_anythingelse1 baby_normalcry2 baby_wrapped2 baby_wrapped_min2 baby_placednaked2 baby_firstbreast2 baby_firstbreast_time2 vaccine_bcg2 vaccine_polio2 babyfed_breastmilk2 babyfed_vitamins2 babyfed_water2 babyfed_juice2 babyfed_ors2 babyfed_formula2 babyfed_milk2 babyfed_tonic2 babyfed_otherliquid2 babyfed_anythingelse2 {
+*Replace 6-week variables with data from baseline for 5-9 weeks postpartum at baseline women
+foreach var of varlist pregnancy_type deliv_baby_weighed applied_cord_yn applied_cord cord_cut_used ///
+ cord_cut_boiled birth*_outcome baby*_alive baby*_cry baby*_normalcry baby*_wrapped baby*_wrapped_min ///
+ baby*_placednaked baby*_firstbreast_timing baby*_firstbreast_timing_val baby*_vax_bcg baby*_vax_polio_oral /// 
+ baby*_fed_breastmilk baby*_fed_vitamins baby*_fed_water baby*_fed_juice baby*_fed_ors baby*_fed_formula ///
+ baby*_fed_milk baby*_fed_tonic baby*_fed_otherliquid baby*_fed_else  {
 		replace SW`var'=`var' if baseline_status==3
 		}
 		
-replace SWdeliv_baby_weighed=deliv_baby_weighed if baseline_status==3
-
 
 preserve
-keep SWpregnancy_outcome1 SWpregnancy_outcome2 SWpregnancy_type SWstill_alive1 SWstill_alive2 SWbaby_cry1 SWbaby_cry2 SWbaby_normalcry1 SWbaby_wrapped1 SWbaby_wrapped_min1  SWbaby_placednaked1 SWbaby_firstbreast1 SWbaby_firstbreast_time1 SWvaccine_bcg1 SWvaccine_polio1 SWbabyfed_breastmilk1 SWbabyfed_vitamins1 SWbabyfed_water1 SWbabyfed_juice1 SWbabyfed_ors1 SWbabyfed_formula1 SWbabyfed_milk1 SWbabyfed_tonic1 SWbabyfed_otherliquid1 SWbabyfed_anythingelse1 SWbaby_normalcry2 SWbaby_wrapped2 SWbaby_wrapped_min2 SWbaby_placednaked2 SWbaby_firstbreast2 SWbaby_firstbreast_time2 SWvaccine_bcg2 SWvaccine_polio2 SWbabyfed_breastmilk2 SWbabyfed_vitamins2 SWbabyfed_water2 SWbabyfed_juice2 SWbabyfed_ors2 SWbabyfed_formula2 SWbabyfed_milk2 SWbabyfed_tonic2 SWbabyfed_otherliquid2 SWbabyfed_anythingelse2 baseline_status SWapplied_cord_yn SWapplied_cord SWcord_cut_used SWcord_cut_boiled age_recode education_recode parity_recode region_recode urban_recode wealthquintile delivery_location SWweight SWdeliv_baby_weighed FQmetainstanceID SWmetainstanceID facility_deliv pp_9 SWQREversion
+
+keep SWpregnancy_type SWdeliv_baby_weighed SWapplied_cord_yn SWapplied_cord SWcord_cut_used ///
+ SWcord_cut_boiled SWbirth*_outcome_cc SWbaby*_alive SWbaby*_cry SWbaby*_normalcry SWbaby*_wrapped SWbaby*_wrapped_min ///
+ SWbaby*_placednaked SWbaby*_firstbreast_timing SWbaby*_firstbreast_timing_val SWbaby*_vax_bcg SWbaby*_vax_polio_oral /// 
+ SWbaby*_fed_breastmilk SWbaby*_fed_vitamins SWbaby*_fed_water SWbaby*_fed_juice SWbaby*_fed_ors SWbaby*_fed_formula ///
+ SWbaby*_fed_milk SWbaby*_fed_tonic SWbaby*_fed_otherliquid SWbaby*_fed_else baseline_status age_recode /// 
+ education_recode parity_recode region_recode urban_recode wealthquintile delivery_location SWweight ///
+ FQmetainstanceID SWmetainstanceID facility_deliv pp_9 SWQREversion
 
 *	Reshape data 
-unab kid_var : SWpregnancy_outcome1-SWvaccine_polio1
-local stubs: subinstr local kid_var "1" "", all
-local stubs: subinstr local stubs "polio_" "polio1_", all
+unab kid_var : SWbirth1_outcome_cc-SWbaby1_vax_polio_oral
+local stubs: subinstr local kid_var "1" "@", all
 gen mother_ID=FQmetainstanceID
 replace mother_ID=SWmetainstanceID if mother_ID==""
 
@@ -2615,7 +2526,7 @@ recode SWdeliv_baby_weighed (-88=0)
 
 *	Baby wrapped within 5 minutes after birth 
 recode SWbaby_wrapped(-88=0)
-gen wrapped_5min=0 if SWpregnancy_outcome==1
+gen wrapped_5min=0 if SWbirth_outcome_cc==1
 replace wrapped_5min=1 if SWbaby_wrapped_min <= 5
 
 *	Cried normally recode 
@@ -2625,8 +2536,8 @@ recode SWbaby_normalcry (-88 -99=0)
 recode SWbaby_placednaked(-88 -99=0)
 
 *	Skin-to-skin contact within 1 hour 
-gen skin_1hr=0 if SWpregnancy_outcome==1
-replace skin_1hr=1 if SWbaby_firstbreast==1 | (SWbaby_firstbreast==2 & SWbaby_firstbreast_time<=1)
+gen skin_1hr=0 if SWbirth_outcome_cc==1
+replace skin_1hr=1 if SWbaby_firstbreast_timing==1 | (SWbaby_firstbreast_timing==2 & SWbaby_firstbreast_timing_val<=1)
 
 *	Set up putexcel
 putexcel set "PMAET_Cohort1_6W_MNHAnalysis_$date.xlsx", sheet("Table21") modify
@@ -2647,7 +2558,7 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	
 	tabulate `RowVar' [aw=SWweight] if facility_deliv==1, matcell(a)
 	putexcel C`row'=matrix(a), left nformat(number_sep)
-	tabulate `RowVar' [aw=SWweight] if SWpregnancy_outcome==1, matcell(a)
+	tabulate `RowVar' [aw=SWweight] if SWbirth_outcome_cc==1, matcell(a)
 	putexcel I`row'=matrix(a), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
@@ -2659,19 +2570,19 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
 			
-			sum SWbaby_wrapped if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum SWbaby_wrapped if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
 			
-			sum wrapped_5min if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum wrapped_5min if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean3: disp %3.1f r(mean)*100
 			
-			sum SWbaby_normalcry if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum SWbaby_normalcry if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean4: disp %3.1f r(mean)*100
 			
-			sum SWbaby_placednaked if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum SWbaby_placednaked if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean5: disp %3.1f r(mean)*100
 						
-			sum skin_1hr if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum skin_1hr if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean6: disp %3.1f r(mean)*100
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`mean5') H`row'=(`mean6'), left nformat(0.0)	
@@ -2688,18 +2599,18 @@ local mean1: disp %3.1f r(mean)*100
 count if facility_deliv==1
 if r(N)!=0 local n_1= r(N)
 
-sum SWbaby_wrapped [aw=SWweight] if SWpregnancy_outcome==1
+sum SWbaby_wrapped [aw=SWweight] if SWbirth_outcome_cc==1
 local mean2: disp %3.1f r(mean)*100
-sum wrapped_5min [aw=SWweight] if SWpregnancy_outcome==1
+sum wrapped_5min [aw=SWweight] if SWbirth_outcome_cc==1
 local mean3: disp %3.1f r(mean)*100
-sum SWbaby_normalcry [aw=SWweight] if SWpregnancy_outcome==1
+sum SWbaby_normalcry [aw=SWweight] if SWbirth_outcome_cc==1
 local mean4: disp %3.1f r(mean)*100
-sum SWbaby_placednaked [aw=SWweight] if SWpregnancy_outcome==1
+sum SWbaby_placednaked [aw=SWweight] if SWbirth_outcome_cc==1
 local mean5: disp %3.1f r(mean)*100
-sum skin_1hr [aw=SWweight] if SWpregnancy_outcome==1
+sum skin_1hr [aw=SWweight] if SWbirth_outcome_cc==1
 local mean6: disp %3.1f r(mean)*100
 
-count if SWpregnancy_outcome==1
+count if SWbirth_outcome_cc==1
 if r(N)!=0 local n_2= r(N)
 
 putexcel B`row'=(`mean1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`mean5') H`row'=(`mean6'), left nformat(0.0)	
@@ -2711,17 +2622,17 @@ putexcel A`row'=("NOTE: Estimates based on 25-49 unweighted samples are reported
 *** Care of umbilical cord *** 
 
 *	Generate binary variables for instrument used to cut cord 
-gen surg_blade=0 if SWpregnancy_outcome==1 // surgical blade 
+gen surg_blade=0 if SWbirth_outcome_cc==1 // surgical blade 
 replace surg_blade=1 if SWcord_cut_used==1 
-gen razor_blade=0 if SWpregnancy_outcome==1 // razor blade
+gen razor_blade=0 if SWbirth_outcome_cc==1 // razor blade
 replace razor_blade=1 if SWcord_cut_used==2
-gen bamboo=0 if SWpregnancy_outcome==1 //bamboo
+gen bamboo=0 if SWbirth_outcome_cc==1 //bamboo
 replace bamboo=1 if SWcord_cut_used==3
-gen scissors=0 if SWpregnancy_outcome==1 // scissors
+gen scissors=0 if SWbirth_outcome_cc==1 // scissors
 replace scissors=1 if SWcord_cut_used==4
-gen cord_ins_other=0 if SWpregnancy_outcome==1 // other 
+gen cord_ins_other=0 if SWbirth_outcome_cc==1 // other 
 replace cord_ins_other=1 if SWcord_cut_used==96
-gen cord_ins_dnk=0 if SWpregnancy_outcome==1 //DNK
+gen cord_ins_dnk=0 if SWbirth_outcome_cc==1 //DNK
 replace cord_ins_dnk=1 if SWcord_cut_used==-88
 
 *	Set up putexcel
@@ -2741,11 +2652,11 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	local RowValueLabel : value label `RowVar'
 	levelsof `RowVar', local(RowLevels)
 	
-	tabulate `RowVar' [aw=SWweight] if SWpregnancy_outcome==1, matcell(a)
+	tabulate `RowVar' [aw=SWweight] if SWbirth_outcome_cc==1, matcell(a)
 	putexcel H`row'=matrix(a), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
-		sum surg_blade if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+		sum surg_blade if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 		
 		if r(N)!=0 {
 		
@@ -2753,19 +2664,19 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
 			
-			sum razor_blade if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum razor_blade if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
 			
-			sum bamboo if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum bamboo if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean3: disp %3.1f r(mean)*100
 			
-			sum scissors if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum scissors if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean4: disp %3.1f r(mean)*100
 			
-			sum cord_ins_other if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum cord_ins_other if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean5: disp %3.1f r(mean)*100
 						
-			sum cord_ins_dnk if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum cord_ins_dnk if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean6: disp %3.1f r(mean)*100
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6'), left nformat(0.0)	
@@ -2777,20 +2688,20 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	}
 
 *	Instrument used to cut cord overall
-sum surg_blade [aw=SWweight] if SWpregnancy_outcome==1
+sum surg_blade [aw=SWweight] if SWbirth_outcome_cc==1
 local mean1: disp %3.1f r(mean)*100
-sum razor_blade [aw=SWweight] if SWpregnancy_outcome==1
+sum razor_blade [aw=SWweight] if SWbirth_outcome_cc==1
 local mean2: disp %3.1f r(mean)*100
-sum bamboo [aw=SWweight] if SWpregnancy_outcome==1
+sum bamboo [aw=SWweight] if SWbirth_outcome_cc==1
 local mean3: disp %3.1f r(mean)*100
-sum scissors [aw=SWweight] if SWpregnancy_outcome==1
+sum scissors [aw=SWweight] if SWbirth_outcome_cc==1
 local mean4: disp %3.1f r(mean)*100
-sum cord_ins_other [aw=SWweight] if SWpregnancy_outcome==1
+sum cord_ins_other [aw=SWweight] if SWbirth_outcome_cc==1
 local mean5: disp %3.1f r(mean)*100
-sum cord_ins_dnk [aw=SWweight] if SWpregnancy_outcome==1
+sum cord_ins_dnk [aw=SWweight] if SWbirth_outcome_cc==1
 local mean6: disp %3.1f r(mean)*100
 
-count if SWpregnancy_outcome==1
+count if SWbirth_outcome_cc==1
 if r(N)!=0 local n_1= r(N)
 
 putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') G`row'=(`mean6'), left nformat(0.0)	
@@ -2828,11 +2739,11 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	local RowValueLabel : value label `RowVar'
 	levelsof `RowVar', local(RowLevels)
 	
-	tabulate `RowVar' [aw=SWweight] if SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1 ), matcell(a)
+	tabulate `RowVar' [aw=SWweight] if SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1 ), matcell(a)
 	putexcel F`row'=matrix(a), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
-		sum boiled_yes if `RowVar'==`i' & SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
+		sum boiled_yes if `RowVar'==`i' & SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
 		
 		if r(N)!=0 {
 		
@@ -2840,13 +2751,13 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
 			
-			sum boiled_no if `RowVar'==`i' & SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
+			sum boiled_no if `RowVar'==`i' & SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
 			
-			sum boiled_new if `RowVar'==`i' & SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
+			sum boiled_new if `RowVar'==`i' & SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
 			local mean3: disp %3.1f r(mean)*100
 			
-			sum boiled_dnk if `RowVar'==`i' & SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
+			sum boiled_dnk if `RowVar'==`i' & SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
 			local mean4: disp %3.1f r(mean)*100
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4'), left nformat(0.0)	
@@ -2858,16 +2769,16 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	}
 
 *	Instrument boiled before use overall
-sum boiled_yes [aw=SWweight] if SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
+sum boiled_yes [aw=SWweight] if SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
 local mean1: disp %3.1f r(mean)*100
-sum boiled_no [aw=SWweight] if SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
+sum boiled_no [aw=SWweight] if SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
 local mean2: disp %3.1f r(mean)*100
-sum boiled_new [aw=SWweight] if SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
+sum boiled_new [aw=SWweight] if SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
 local mean3: disp %3.1f r(mean)*100
-sum boiled_dnk [aw=SWweight] if SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
+sum boiled_dnk [aw=SWweight] if SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
 local mean4: disp %3.1f r(mean)*100
 
-count if SWpregnancy_outcome==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
+count if SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1 )
 if r(N)!=0 local n_1= r(N)
 
 putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4'), left nformat(0.0)	
@@ -2879,8 +2790,8 @@ putexcel F`row'=(`n_1'), left nformat(number_sep)
 *******************************************************************************
 
 *** Infant vaccination ***
-recode SWvaccine_bcg (-88 -99=0)
-recode SWvaccine_polio (-88 -99=0)
+recode SWbaby_vax_bcg (-88 -99=0)
+recode SWbaby_vax_polio_oral (-88 -99=0)
 
 *	Set up putexcel
 putexcel set "PMAET_Cohort1_6W_MNHAnalysis_$date.xlsx", sheet("Table24") modify
@@ -2899,18 +2810,18 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	local RowValueLabel : value label `RowVar'
 	levelsof `RowVar', local(RowLevels)
 	
-	tabulate `RowVar' [aw=SWweight] if SWpregnancy_outcome==1, matcell(a)
+	tabulate `RowVar' [aw=SWweight] if SWbirth_outcome_cc==1, matcell(a)
 	putexcel D`row'=matrix(a), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
-		sum SWvaccine_bcg [aw=SWweight] if `RowVar'==`i' & SWpregnancy_outcome==1 
+		sum SWbaby_vax_bcg [aw=SWweight] if `RowVar'==`i' & SWbirth_outcome_cc==1 
 		if r(N)!=0 {
 		
 			local RowValueLabelNum = word("`RowLevels'", `i')
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
 			
-			sum SWvaccine_polio if `RowVar'==`i' & SWpregnancy_outcome==1 [aw=SWweight]
+			sum SWbaby_vax_polio_oral if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2'), left nformat(0.0)	
@@ -2922,12 +2833,12 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	}
 
 *	Infant vaccination overall
-sum SWvaccine_bcg [aw=SWweight] if SWpregnancy_outcome==1
+sum SWbaby_vax_bcg [aw=SWweight] if SWbirth_outcome_cc==1
 local mean1: disp %3.1f r(mean)*100
-sum SWvaccine_polio [aw=SWweight] if SWpregnancy_outcome==1 
+sum SWbaby_vax_polio_oral [aw=SWweight] if SWbirth_outcome_cc==1 
 local mean2: disp %3.1f r(mean)*100
 
-count if SWpregnancy_outcome==1
+count if SWbirth_outcome_cc==1
 if r(N)!=0 local n_1= r(N)
 
 putexcel B`row'=(`mean1') C`row'=(`mean2'), left nformat(0.0)	
@@ -2935,11 +2846,11 @@ putexcel D`row'=(`n_1'), left nformat(number_sep)
 
 
 *** Exclusive breastfeeding (among those <9 weeks postpartum at interview) *** 
-recode SWbabyfed* (-88 -99=0)  
-egen babyfed_count=rowtotal(SWbabyfed*) 
+recode SWbaby_fed* (-88 -99=0)  
+egen babyfed_count=rowtotal(SWbaby_fed*) 
  
-gen exclusive_bf=0 if SWstill_alive==1 
-replace exclusive_bf=1 if babyfed_count==1 & SWbabyfed_breastmilk==1 
+gen exclusive_bf=0 if SWbaby_alive==1 
+replace exclusive_bf=1 if babyfed_count==1 & SWbaby_fed_breastmilk==1 
 label var exclusive_bf "Was the baby exclusively breastfed in the last 24 hrs" 
 label val exclusive_bf yes_no_list 
 tab exclusive_bf [aw=SWweight] if pp_9==0
@@ -2961,11 +2872,11 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	local RowValueLabel : value label `RowVar'
 	levelsof `RowVar', local(RowLevels)
 	
-	tabulate `RowVar' [aw=SWweight] if SWstill_alive==1 & pp_9==0, matcell(a)
+	tabulate `RowVar' [aw=SWweight] if SWbaby_alive==1 & pp_9==0, matcell(a)
 	putexcel C`row'=matrix(a), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
-		sum exclusive_bf if `RowVar'==`i' & SWstill_alive==1 & pp_9==0  [aw=SWweight]
+		sum exclusive_bf if `RowVar'==`i' & SWbaby_alive==1 & pp_9==0  [aw=SWweight]
 		if r(N)!=0 {
 		
 			local RowValueLabelNum = word("`RowLevels'", `i')
@@ -2981,10 +2892,10 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	}
 
 *	EBF overall
-sum exclusive_bf [aw=SWweight] if SWstill_alive==1 & pp_9==0
+sum exclusive_bf [aw=SWweight] if SWbaby_alive==1 & pp_9==0
 local mean1: disp %3.1f r(mean)*100
 
-count if SWstill_alive==1 & pp_9==0
+count if SWbaby_alive==1 & pp_9==0
 if r(N)!=0 local n_1= r(N)
 
 putexcel B`row'=(`mean1'), left nformat(0.0)	
