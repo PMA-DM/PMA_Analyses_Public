@@ -2358,10 +2358,10 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			if `n_1'<25 {
 				putexcel B`row'=("*")
 				}
-			if `n_1'<25 {
+			if `n_2'<25 {
 				putexcel D`row'=("*")
 				}
-			if `n_1'<25 {
+			if `n_3'<25 {
 				putexcel F`row'=("*") G`row'=("*") H`row'=("*") I`row'=("*")
 				}
 				
