@@ -1846,7 +1846,7 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	local RowValueLabel : value label `RowVar'
 	levelsof `RowVar', local(RowLevels)
 	
-	tabulate `RowVar' if SWdeliv_place>2 [aw=SWweight], matcell(a)
+	tabulate `RowVar' if facility_deliv==1 [aw=SWweight], matcell(a)
 	putexcel C`row'=matrix(a), left nformat(number_sep)
 	tabulate `RowVar' [aw=SWweight], matcell(b)
 	putexcel E`row'=matrix(b), left nformat(number_sep)
@@ -1883,7 +1883,7 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 *	C-section overall
 sum SWdeliv_csection if facility_deliv==1 [aw=SWweight]
 local mean1: disp %3.1f r(mean)*100
-count if SWdeliv_place>2
+count if facility_deliv==1
 if r(N)!=0 local n_1= r(N)
 
 sum SWdeliv_csection [aw=SWweight]
@@ -2200,7 +2200,7 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	
 	tabulate `RowVar' [aw=SWweight], matcell(a)
 	putexcel G`row'=matrix(a), left nformat(number_sep)
-	tabulate `RowVar' [aw=SWweight] if SWdeliv_place>2 , matcell(b)
+	tabulate `RowVar' [aw=SWweight] if facility_deliv==1 , matcell(b)
 	putexcel I`row'=matrix(b), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
@@ -2224,10 +2224,10 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			sum anypnc if `RowVar'==`i' [aw=SWweight]
 			local mean5: disp %3.1f r(mean)*100
 			
-			sum SWpnc_mother_check if `RowVar'==`i' & SWdeliv_place>2 [aw=SWweight]
+			sum SWpnc_mother_check if `RowVar'==`i' & facility_deliv==1 [aw=SWweight]
 			local mean6: disp %3.1f r(mean)*100
 			
-			count if `RowVar'==`i' & SWdeliv_place>2
+			count if `RowVar'==`i' & facility_deliv==1
 			local n_1=r(N)
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') H`row'=(`mean6') , left nformat(0.0)	
@@ -2257,12 +2257,12 @@ sum SWpnc_seek_phcp_yn [aw=SWweight]
 local mean4: disp %3.1f r(mean)*100
 sum anypnc [aw=SWweight]
 local mean5: disp %3.1f r(mean)*100
-sum SWpnc_mother_check [aw=SWweight] if SWdeliv_place>2
+sum SWpnc_mother_check [aw=SWweight] if facility_deliv==1
 local mean6: disp %3.1f r(mean)*100
 
 count
 if r(N)!=0 local n_1= r(N)
-count if SWdeliv_place>2
+count if facility_deliv==1
 if r(N)!=0 local n_2= r(N)
 
 putexcel B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4') F`row'=(`mean5') H`row'=(`mean6'), left nformat(0.0)	
@@ -2443,25 +2443,43 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	local RowValueLabel : value label `RowVar'
 	levelsof `RowVar', local(RowLevels)
 	
-	tabulate `RowVar' [aw=SWweight] if SWdeliv_place>2, matcell(a)
+	tabulate `RowVar' [aw=SWweight] if facility_deliv==1, matcell(a)
 	putexcel C`row'=matrix(a), left nformat(number_sep)
 	tabulate `RowVar' [aw=SWweight] if pp_9==0, matcell(a)
 	putexcel E`row'=matrix(a), left nformat(number_sep)
 
 	forvalues i = 1/`RowCount' {
-		sum any_mcp if `RowVar'==`i' & SWdeliv_place>2 [aw=SWweight]
+		sum any_mcp if `RowVar'==`i' & facility_deliv==1 [aw=SWweight]
 		
 		if r(N)!=0 {
 		
 			local RowValueLabelNum = word("`RowLevels'", `i')
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
+			count if `RowVar'==`i' & facility_deliv==1 
+			if r(N)!=0 local n_1= r(N)
 			
 			sum modern if `RowVar'==`i' & pp_9==0 [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
+			count if `RowVar'==`i' & pp_9==0  
+			if r(N)!=0 local n_2= r(N)
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') D`row'=(`mean2'), left nformat(0.0)	
 			
+			if `n_1'>=25 & `n_1'<=49 {
+				putexcel B`row'=("(`mean1')"), left nformat(0.0)
+				}
+			if `n_2'>=25 & `n_1'<=49 {
+				putexcel D`row'=("(`mean2')"), left nformat(0.0) 
+				}
+				
+			if `n_1'<25 {
+				putexcel B`row'=("*")
+				}
+			if `n_2'<25 {
+				putexcel D`row'=("*")
+				}
+				
 			local row = `row' + 1	
 			}
 		}
@@ -2469,9 +2487,9 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 	}
 
 *	PPFP overall
-sum any_mcp [aw=SWweight] if SWdeliv_place>2
+sum any_mcp [aw=SWweight] if facility_deliv==1
 local mean1: disp %3.1f r(mean)*100
-count if SWdeliv_place>2
+count if facility_deliv==1
 if r(N)!=0 local n_1= r(N)
 
 sum modern [aw=SWweight] if pp_9==0
