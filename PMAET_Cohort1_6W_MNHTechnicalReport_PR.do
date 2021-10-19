@@ -2581,12 +2581,13 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 
 	forvalues i = 1/`RowCount' {
 		sum SWdeliv_baby_weighed if `RowVar'==`i' & facility_deliv==1 [aw=SWweight]
-		
 		if r(N)!=0 {
 		
 			local RowValueLabelNum = word("`RowLevels'", `i')
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
+			count if `RowVar'==`i' & facility_deliv==1
+			if r(N)!=0 local n_1= r(N)
 			
 			sum SWbaby_wrapped if `RowVar'==`i' & SWbirth_outcome_cc==1 [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
@@ -2604,7 +2605,14 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local mean6: disp %3.1f r(mean)*100
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') D`row'=(`mean2') E`row'=(`mean3') F`row'=(`mean4') G`row'=(`mean5') H`row'=(`mean6'), left nformat(0.0)	
-			
+						
+			if `n_1'>=25 & `n_1'<=49 {
+				putexcel B`row'=("(`mean1')"), left nformat(0.0)
+				}
+			if `n_1'<25 {
+				putexcel B`row'=("*"), left nformat(0.0)
+				}
+				
 			local row = `row' + 1	
 			}
 		}
@@ -2768,6 +2776,8 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local RowValueLabelNum = word("`RowLevels'", `i')
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
+			count if `RowVar'==`i' & SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1)
+			local n_1=r(N)
 			
 			sum boiled_no if `RowVar'==`i' & SWbirth_outcome_cc==1 & (surg_blade==1 | razor_blade==1 | scissors==1) [aw=SWweight]
 			local mean2: disp %3.1f r(mean)*100
@@ -2779,6 +2789,13 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local mean4: disp %3.1f r(mean)*100
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1') C`row'=(`mean2') D`row'=(`mean3') E`row'=(`mean4'), left nformat(0.0)	
+			
+			if `n_1'>=25 & `n_1'<=49 {
+				putexcel B`row'="(`mean1')" C`row'="(`mean2')" D`row'="(`mean3')" E`row'="(`mean4')", left nformat(0.0)
+				}
+			if `n_1'<25 {
+				putexcel B`row'=("*") C`row'=("*") D`row'=("*") E`row'=("*"), left nformat(0.0)
+				}	
 			
 			local row = `row' + 1	
 			}
@@ -2900,10 +2917,20 @@ foreach RowVar in age_recode education_recode parity_recode region_recode urban_
 			local RowValueLabelNum = word("`RowLevels'", `i')
 			local CellContents : label `RowValueLabel' `RowValueLabelNum'
 			local mean1: disp %3.1f r(mean)*100
+			count if `RowVar'==`i' & SWbaby_alive==1 & pp_9==0
+			local n_1=r(N)
 			
 			putexcel A`row'=("`CellContents'") B`row'=(`mean1'), left nformat(0.0)	
-			
+				
+			if `n_1'>=25 & `n_1'<=49 {
+				putexcel B`row'="(`mean1')", left nformat(0.0)
+				}
+			if `n_1'<25 {
+				putexcel B`row'=("*"), left nformat(0.0)
+				}	
+				
 			local row = `row' + 1	
+			
 			}
 		}
 	local row=`row'+2
