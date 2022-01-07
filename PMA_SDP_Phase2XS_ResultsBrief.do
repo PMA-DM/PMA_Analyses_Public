@@ -68,7 +68,7 @@ numlabel, add
 *		  local datadir "/User/ealarson/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "C:\Users\annro\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "/Users/Beth/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Prelim100/BFP2_SDP_Clean_Data_with_checks_14Apr2021.dta"
+local datadir "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Final_PublicRelease/SQ/PMA2021_BFP2_SQ_v1.0_7Oct2021/PMA2021_BFP2_SQ_v1.0_7Oct2021.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -76,7 +76,7 @@ local datadir "/Users/Beth/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datase
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/Beth/Documents/PMA/Burkina Faso/PublicRelease"
+local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2"
 
 
 *******************************************************************************
@@ -395,7 +395,7 @@ rename stockout_why_ stockout_why_
 label var stockout_why "Reason for stockout among all methods" 
 
 tabout stockout_why sector ///
-	using "`tabout''", append c(freq col) ptotal(none) npos(row) ///
+	using "`tabout'", append c(freq col) ptotal(none) npos(row) ///
 	h1("Reasons for stock out - Among episodes of stockout")
 
 restore
@@ -431,7 +431,7 @@ tabout iud_supplies_personnel sector ///
 
 * Distribution by facility type
 tabout facility_type sector ///
-	using "`tabout''", append cells(freq col) ///
+	using "`tabout'", append cells(freq col) ///
 	h1("Facility type by public/private among all facilities")
 
 * Distribution of facilities that offer FP
