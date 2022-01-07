@@ -68,7 +68,7 @@ numlabel, add
 *		  local datadir "/User/ealarson/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "C:\Users\annro\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "/Users/Beth/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Prelim100/BFP2_WealthWeightAll_7Jun2021.dta"
+local datadir "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -76,7 +76,7 @@ local datadir "/Users/Beth/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datase
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/Beth/Documents/PMA/Burkina Faso/PublicRelease"
+local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2"
 
 
 *******************************************************************************
@@ -109,8 +109,8 @@ local country "Burkina"
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
-local subnational_yn "no"
-local subnational ""
+local subnational_yn "yes"
+local subnational "centre"
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -130,7 +130,7 @@ local weight "FQweight"
 *		begin with "wealth" in the dataset
 *		- For example (Nigeria): wealth_National
 *		- For example (Burkina Faso): wealth
-local wealth "wealth"
+local wealth "wealthtertile"
 
 *	4. The education macros correspond to the coding of the school variable for
 *	    each designated education level. In the briefs, PMA codes education as: 
@@ -246,8 +246,6 @@ gen subnational_yn="`subnational_yn'"
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
 				exit		
 				}
-		di in smcl as error "The sub-national estimates are not yet available for Burkina Faso, we will update the .do file once they become available. If you would like Burkina Faso-related estimates, please update the .do file to generate national-level estimates"
-		exit
 		local country `country'_`subnational'
 		drop subnational region_string subnational_keep subnational_keep1 check
 		}	
@@ -307,7 +305,6 @@ local dataset "PMA_`country'_Phase2_XS_HHQFQ_Analysis_`date'.dta"
 
 * Only keep the cross-sectional sample
 keep if xs_sample==1
-drop metatag
 
 preserve
 	
@@ -567,7 +564,7 @@ label variable totaldemand_sat "Contraceptive demand satisfied by modern method"
 
 * Generate female controlled method
 gen fc_mcp = 0 if current_user == 1
-replace fc_mcp=1 if mcp==1 & current_methodnumEC!=2 & current_methodnumEC!=9
+replace fc_mcp=1 if mcp==1 & current_methodnum_rc!=2 & current_methodnum_rc!=9
 label var fc_mcp "Current contraceptive use - female controlled method"
 	
 ****************************************
@@ -616,12 +613,6 @@ recode fp_told_other_methods -88 -99=.
 recode fp_side_effects -88 -99=.
 recode fp_side_effects_instructions -88 -99=.
 recode fp_told_switch -88=. -99=.
-
-* Combine fp_provider_rw variables
-gen fp_provider_rw=fp_provider_rw_kn
-	replace fp_provider_rw=fp_provider_rw_nr if fp_provider_rw==.
-	label val fp_provider_rw providers_list
-	label var fp_provider_rw "Where did you and your partner get METHOD at the time" 
 
 * Generate method information index variable
 gen mii = 0
@@ -1108,9 +1099,9 @@ tabout partner_overall [aw=`weight'] ///
 	*	1) Age
 	*	2) Education
 	foreach var in age_cat education {
-		tabout partner_overall `var' if fc_mcp==1 [aw=`weight'] ///
+		tabout partner_overall `var' [aw=`weight'] ///
 			using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
-			h1("Joint decision making around contraceptive use by `var' (weighted) - female-controlled method users")
+			h1("Joint decision making around contraceptive use by `var' (weighted) - all contraceptive users")
 	}	
 	
 * Percent of women who agree with the following statement,
@@ -1124,9 +1115,9 @@ tabout why_not_decision [aw=`weight'] ///
 	*	1) Age
 	*	2) Education
 	foreach var in age_cat education {
-		tabout why_not_decision `var' if fc_mcp==1 [aw=`weight'] ///
+		tabout why_not_decision `var' [aw=`weight'] ///
 			using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
-			h1("Joint decision making around non-use of contraception by `var' (weighted) - female-controlled method users")
+			h1("Joint decision making around non-use of contraception by `var' (weighted) - all non-contraceptive users")
 	}	
 	
 *******************************************************************************
