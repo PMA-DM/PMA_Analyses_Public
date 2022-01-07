@@ -9,7 +9,7 @@
 *   PMA_Analyses_Public repository
 *
 * This .do file does not contain the cross sectional estimates or the 
-*   discontinuation rates. You can find those .do files in the
+*   mCPR Annual Percent Change. You can find those .do files in the
 *   PMA_Analyses_Public repository
 *
 * If you have any questions on how to use this or any of the other .do files in
@@ -179,15 +179,6 @@ local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMAB
 * Dates of Data Collection for Dataset 2
 local PMAdataset2dates "11/2019-01/2020"
 
-
-***** THIRD DATASET *****
-* Dataset 3 Directory
-local PMAdataset3 "/Users/ealarson/Dropbox (Gates Institute)/13 Nigeria/PMANG_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA_NGP1_Kano_Lagos_HQFQ_v1.1_15Feb2020/PMA_NGP1_Kano_HQFQ_v1.1_15Feb2021.dta"
-
-* Dates of Data Collection for Dataset 3
-local PMAdataset3dates "11/2019-01/2020"
-
-
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
 *
@@ -276,7 +267,7 @@ global level1 `subnational'
 cd "`briefdir'"
 
 * Open dataset
-use "`PMAdataset1'",clear
+use "`PMAdataset2'",clear
 
 * Confirm that correct variables were chosen for locals
 
@@ -397,13 +388,13 @@ gen subnational_yn="`subnational_yn'"
 		}
 		
 * Start log file
-log using "`briefdir'/PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_Log_`date'.log", replace		
+log using "`briefdir'/PMA_`country'_Phase2_XS_HHQFQ_ContraceptiveTrends_Log_`date'.log", replace		
 
 * Set local for xls file
-local excel "PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_`date'.xls"
+local excel "PMA_`country'_Phase2_XS_HHQFQ_ContraceptiveTrends_`date'.xls"
 
 * Set local for dataset
-local dataset "PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_`date'.dta"
+local dataset "PMA_`country'_Phase2_XS_HHQFQ_ContraceptiveTrends_`date'.dta"
 
 *******************************************************************************
 * SECTION 5: TRENDS IN METHOD USE
