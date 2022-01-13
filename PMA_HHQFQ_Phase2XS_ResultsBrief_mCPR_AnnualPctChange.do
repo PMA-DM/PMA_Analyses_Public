@@ -68,13 +68,13 @@ numlabel, add
 *		be the number.
 *		- For example: local PMA2020dataset_count 4
 *		- For example: local PMA2020dataset_count 7
-local PMA2020dataset_count 7
+local PMA2020dataset_count 6
 
 *	1b. Total number of PMA datasets to include in the analysis. The local should 
 *		be the number.
 *		- For example: local PMAdataset_count 1
 *		- For example: local PMAdataset_count 3
-local PMAdataset_count 1
+local PMAdataset_count 2
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -82,7 +82,7 @@ local PMAdataset_count 1
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/DRC/PublicRelease"
+local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2/untitled folder"
 
 ************** DATASETS & DATES *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -107,59 +107,59 @@ local briefdir "/Users/ealarson/Documents/PMA/DRC/PublicRelease"
 * PMA2020 DATASETS
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMA2020dataset1 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round1/Final_PublicRelease/HHQ/PMA2013_CDR1_Kinshasa_HHQFQ_v3_26Nov2018/PMA2013_CDR1_Kinshasa_HHQFQ_v3_26Nov2018.dta"
+local PMA2020dataset1 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_BFR1_HHQFQ_v3_6Nov2018/PMA2014_BFR1_HHQFQ_v3_6Nov2018.dta"
 
-local datasetyear1 "2013"
+local datasetyear1 "2014"
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMA2020dataset2 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round2/Final_PublicRelease/HHQ/PMA2014_CDR2_Kinshasa_HHQFQ_v2_26Nov2018/PMA2014_CDR2_Kinshasa_HHQFQ_v2_26Nov2018.dta" 
+local PMA2020dataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round2/Final_PublicRelease/HHQ/PMA2015_BFR2_HHQFQ_v3_6Nov2018/PMA2015_BFR2_HHQFQ_v3_6Nov2018.dta" 
 
-local datasetyear2 "2014"
+local datasetyear2 "2015"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMA2020dataset3 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round3/Final_PublicRelease/HHQ/PMA2015_CDR3_Kinshasa_HHQFQ_v4_17May2019/PMA2015_CDR3_Kinshasa_HHQFQ_v4_17May2019.dta"
+local PMA2020dataset3 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round3/Final_PublicRelease/HHQ/PMA2016_BFR3_HHQFQ_v3_6Nov2018/PMA2016_BFR3_HHQFQ_v3_6Nov2018.dta"
 
-local datasetyear3 "2015"
+local datasetyear3 "2016"
 
 ***** FOURTH DATASET *****
 * Dataset 4 Directory
-local PMA2020dataset4 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round4/Final_PublicRelease/HHQ/PMA2015_CDR4_Kinshasa_KongoCentral_HHQFQ_v3_26Nov2018/PMA2015_CDR4_Kinshasa_HHQFQ_v3_26Nov2018.dta"
+local PMA2020dataset4 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round4/Final_PublicRelease/HHQ/PMA2016_BFR4_HHQFQ_v4_6Nov2018/PMA2016_BFR4_HHQFQ_v4_6Nov2018.dta"
 
-local datasetyear4 "2015"
+local datasetyear4 "2016"
 
 ***** FIFTH DATASET *****
 * Dataset 5 Directory
-local PMA2020dataset5 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round5/Final_PublicRelease/HHQ/PMA2016_CDR5_Kinshasa_KongoCentral_HHQFQ_v3_26Nov2018/PMA2016_CDR5_Kinshasa_HHQFQ_v3_26Nov2018.dta"
+local PMA2020dataset5 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round5/Final_PublicRelease/HHQFQ/PMA2017_BFR5_HHQFQ_v1_26Aug2018/PMA2017_BFR5_HHQFQ_v1_26Aug2018.dta"
 
-local datasetyear5 "2016"
+local datasetyear5 "2017"
 
 ***** SIXTH DATASET *****
 * Dataset 6 Directory
-local PMA2020dataset6 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2017_CDR6_Kinshasa_KongoCentral_HHQFQ_v2_26Nov2018/PMA2017_CDR6_Kinshasa_HHQFQ_v2_26Nov2018.dta"
+local PMA2020dataset6 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2019_BFR6_HHQFQ_v1_17May2019/PMA2019_BFR6_HHQFQ_v1_20May2019.dta"
 
-local datasetyear6 "2017"
+local datasetyear6 "2018"
 
 ***** SEVENTH DATASET *****
 * Dataset 7 Directory
-local PMA2020dataset7 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Round7/Final_PublicRelease/HHQFQ/PMA2018_CDR7_Kinshasa_KongoCentral_HHQFQ_v3_2Dec2019/PMA2018_CDR7_Kinshasa_HHQFQ_v3_2Dec2019.dta"
+local PMA2020dataset7 ""
 
-local datasetyear7 "2018"
+local datasetyear7 ""
 
 ***********************************************
 * PMA DATASETS
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Phase1/Final_PublicRelease/HQFQ/Old version released/PMA_CDP1_HQFQ_Baseline_v1.1_15Feb2021/PMA_CDP1_Kinshasa_HQFQ_Baseline_v1.1_15Feb2021.dta"
+local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_BFP1_HQFQ_v2.0_1Oct2021/PMA2020_BFP1_HQFQ_v2.0_1Oct2021.dta"
 
-local datasetyear8 "2020"
+local datasetyear8 "2019"
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 ""
+local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
 
-local datasetyear9 ""
+local datasetyear9 "2020"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -175,7 +175,7 @@ local datasetyear9 ""
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "DRC"
+local country "Burkina"
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -199,7 +199,7 @@ local PSU "EA_ID"
 *		dataset.
 *		- For example (Kenya): strata
 *		- For example (DRC): nothing (there is no strata variable in DRC)
-local strata ""
+local strata "strata"
 
 *	5. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -214,15 +214,15 @@ local strata ""
 *		 and subnational macros empty ("")
 *		 - For example (No subnational estimate):
 *		   local subnational_yn "no"
-*		   local subnational_unit ""
+*		   local subnational_unit 
 *		   local subnational ""
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational_unit county
 *		   local subnational "kericho"
-local subnational_yn "yes"
-local subnational_unit province
-local subnational "kinshasa"
+local subnational_yn "no"
+local subnational_unit region
+local subnational ""
 
 
 *******************************************************************************
@@ -599,7 +599,7 @@ save `country'_IR_pooled, replace
 
 capture putdocx clear 
 putdocx begin
-putdocx save `CCPX'_AnnualPctChange_`country'_$date.docx, replace
+putdocx save "PMA_`country'_Phase2_AnnualPctChange_`date'.docx", replace
 
 clear
 set obs 1
@@ -657,19 +657,19 @@ use `country'_IR_pooled, clear
 		}
 	
 	* Change locals if fewer than 7 PMA2020 rounds
-	gen roundcount=`roundcount'
+	gen roundcount=`roundcount' 
 	if roundcount<9 {
 	gen PMAdataset_count=`PMAdataset_count'
 		if PMAdataset_count==2 {
 			forval i=8/9 {
 				local round_update = `i'-`roundcount'
-				local new_dataset_num = `PMA2020dataset_count'+`round_update'
+				local new_dataset_num = `PMA2020dataset_count'+`round_update'+1
 				local datasetyear`new_dataset_num' = `datasetyear`i''
 				}
 			}
 		else if PMAdataset_count==1 {
-			local round_update = 8-`roundcount'-1
-			local new_dataset_num = `PMA2020dataset_count'+`round_update'
+			local round_update = 8-`roundcount'
+			local new_dataset_num = `PMA2020dataset_count'+`round_update'+1
 			local datasetyear`new_dataset_num' = `datasetyear8'
 			}
 		}
@@ -841,12 +841,6 @@ putdocx paragraph
 	
 	drop country
 	gen country="`country'"
-	replace country="Burkina Faso" if country=="Burkina Faso"
-    replace country="Niger: Niamey" if country=="NigerNiamey"
-    replace country="Nigeria: Lagos" if country=="NigeriaLagos"
-    replace country="Nigeria: Kano" if country=="NigeriaKano"
-    replace country="DR Congo: Kinshasa" if country=="DRCKinshasa"
-    replace country="Cote d'Ivoire'" if country=="CoteDIvoire"
 	
 	local Country=country
 	local ylab=ylab
@@ -870,6 +864,14 @@ putdocx paragraph
 	restore
 
 
+preserve
+
+label define round 1 "R1" 2 "R2" 3 "R3" 4 "R4" 5 "R5" 6 "R6" 7 "R7" 8 "R8" 9 "R9"
+label val round round 
+
+label define mpc_use 0 "No mCPR Use" 1 "mCPR Use"
+label val mcp mpc_use
+
 putdocx paragraph
 putdocx text ("mCPR by round"), linebreak
 svy: prop mcp, over(round)
@@ -882,6 +884,7 @@ putdocx image graph.png
 
 capture drop p1 p2 
 
+restore
 
 * BELOW is for the summary table
 keep if _n==1
@@ -917,7 +920,7 @@ putdocx table stable(2,4)=(s2)
    append using ratechange
    save ratechange, replace
 		
-putdocx save `CCPX'_AnnualPctChange_`country'_$date.docx, append
+putdocx save "PMA_`country'_Phase2_AnnualPctChange_`date'.docx", append
 
 
 ** ERASE TEMPORARY DATASETS
