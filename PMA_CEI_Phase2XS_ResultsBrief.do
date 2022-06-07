@@ -65,7 +65,7 @@ numlabel, add
 *		  local datadir "/User/ealarson/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "C:\Users\annro\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/Phase1/Final_PublicRelease/CQ/PMA_CDP1_CQ_Baseline_v1_5Sep2020/PMA_CDP1_CQ_Baseline_v1_5Sep2020.dta"
+local datadir "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/CQ/PMA2020_KEP2_CQ_v1.0_25Aug2021/PMA2020_KEP2_CQ_Baseline_v1.0_25Aug2021.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -73,7 +73,7 @@ local datadir "/Users/ealarson/Dropbox (Gates Institute)/7 DRC/PMADRC_Datasets/P
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/DRC/PublicRelease"
+local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease/Phase 2/West Pokot"
 
 
 *******************************************************************************
@@ -90,7 +90,7 @@ local briefdir "/Users/ealarson/Documents/PMA/DRC/PublicRelease"
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "DRC"
+local country "Kenya"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -107,7 +107,7 @@ local country "DRC"
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
 local subnational_yn "yes"
-local subnational "bas_congo"
+local subnational "WEST_POKOT"
 
 *******************************************************************************
 * SECTION 3: CREATE MACRO FOR DATE, XLS and Dataset
@@ -133,26 +133,6 @@ cd "`briefdir'"
 * Open dataset
 use "`datadir'",clear
 
-* Confirm that it is phase 1 data
-if country=="Burkina" {
-	gen check=(phase=="Phase2")
-	}
-else if country=="DRC" {
-	gen check=(phase==2)
-	}
-else if country=="Kenya" {
-	gen phase==1
-	gen check=(phase==2)
-	}
-else if country=="Nigeria" {
-	gen check=(phase=="2")
-	}
-if check!=1 {
-	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
-	exit
-	}
-	drop check
-
 * Confirm that correct variables were chosen for locals
 
 *	Country Variable
@@ -163,6 +143,25 @@ if check!=1 {
 		exit
 		}
 	drop countrycheck check
+	
+* Confirm that it is phase 2 data
+if country=="Burkina" {
+	gen check=(phase==2)
+	}
+else if country=="DRC" {
+	gen check=(phase==2)
+	}
+else if country=="Kenya" {
+	gen check=(phase==2)
+	}
+else if country=="Nigeria" {
+	gen check=(phase=="2")
+	}
+if check!=1 {
+	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
+	exit
+	}
+	drop check
 
 * Subnational estimates
 gen subnational_yn="`subnational_yn'"
@@ -314,13 +313,13 @@ pause off
 * Percent distribution of community agreement with the following statement as reported as FP clients,
 *	1) Women are treated respectfully at the clinic
 tabout qoc_comm_respect ///
-	using "`tabou'", append c(col) npos(row) ///
+	using "`tabout'", append c(col) npos(row) ///
 	h2("FP clients who thought the community felt that women are treated respectfully at facility ")
 	
 * Percent distribution of community agreement with the following statement as reported as FP clients,
 *	1) Women will be able to receive the FP method of their choice at this facility	
 tabout qoc_comm_preferfp ///
-	using "`tabout''", append c(col) npos(row) ///
+	using "`tabout'", append c(col) npos(row) ///
 	h2("Women clients who thought the community felt that women will be able to receive FP method of their choice at this facility")
 	
 * Percent distribution of community agreement with the following statement as reported as FP clients,
