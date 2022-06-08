@@ -9,7 +9,7 @@
 *   PMA_Analyses_Public repository
 *
 * This .do file does not contain the cross sectional estimates or the 
-*   discontinuation rates. You can find those .do files in the
+*   mCPR Annual Percent Change. You can find those .do files in the
 *   PMA_Analyses_Public repository
 *
 * If you have any questions on how to use this or any of the other .do files in
@@ -68,7 +68,7 @@ numlabel, add
 *		be the number.
 *		- For example: local PMA2020dataset_count 4
 *		- For example: local PMA2020dataset_count 7
-local PMA2020dataset_count 7
+local PMA2020dataset_count 6
 
 *	1b. Total number of PMA datasets to include in the analysis. The local should 
 *		be the number.
@@ -82,7 +82,7 @@ local PMAdataset_count 2
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease"
+local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2/National"
 
 ************** DATASETS & DATES *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -110,57 +110,57 @@ local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease"
 * PMA2020 DATASETS
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMA2020dataset1 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_KER1_HHQFQ_v4_22Oct2018/PMA2014_KER1_HHQFQ_v4_22Oct2018.dta"
+local PMA2020dataset1 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_BFR1_HHQFQ_v3_6Nov2018/PMA2014_BFR1_HHQFQ_v3_6Nov2018.dta"
 
 * Dates of Data Collection for Dataset 1
-local PMA2020dataset1dates "5-7/2014"
+local PMA2020dataset1dates "11/2014-1/2015"
 
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMA2020dataset2 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round2/Final_PublicRelease/HHQ/PMA2014_KER2_HHQFQ_v3_2May2019/PMA2014_KER2_HHQFQ_v3_2May2019.dta" 
+local PMA2020dataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round2/Final_PublicRelease/HHQ/PMA2015_BFR2_HHQFQ_v3_6Nov2018/PMA2015_BFR2_HHQFQ_v3_6Nov2018.dta" 
 
 * Dates of Data Collection for Dataset 2
-local PMA2020dataset2dates "11-12/2014"
+local PMA2020dataset2dates "4-6/2015"
 
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMA2020dataset3 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round3/Final_PublicRelease/HHQ/PMA2015_KER3_HHQFQ_v3_2May2019/PMA2015_KER3_HHQFQ_v3_2May2019.dta"
+local PMA2020dataset3 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round3/Final_PublicRelease/HHQ/PMA2016_BFR3_HHQFQ_v3_6Nov2018/PMA2016_BFR3_HHQFQ_v3_6Nov2018.dta"
 
 * Dates of Data Collection for Dataset 3
-local PMA2020dataset3dates "6-7/2015"
+local PMA2020dataset3dates "3-5/2015"
 
 ***** FOURTH DATASET *****
 * Dataset 4 Directory
-local PMA2020dataset4 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round4/Final_PublicRelease/HHQ/PMA2015_KER4_HHQFQ_v3_2May2019/PMA2015_KER4_HHQFQ_v3_2May2019.dta"
+local PMA2020dataset4 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round4/Final_PublicRelease/HHQ/PMA2016_BFR4_HHQFQ_v4_6Nov2018/PMA2016_BFR4_HHQFQ_v4_6Nov2018.dta"
 
 * Dates of Data Collection for Dataset 4
-local PMA2020dataset4dates "11-12/2015"
+local PMA2020dataset4dates "11/2-16-2/2016"
 
 
 ***** FIFTH DATASET *****
 * Dataset 5 Directory
-local PMA2020dataset5 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round5/Final_PublicRelease/HHQ/PMA2016_KER5_HHQFQ_v2_22Oct2018/PMA2016_KER5_HHQFQ_v2_22Oct2018.dta"
+local PMA2020dataset5 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round5/Final_PublicRelease/HHQFQ/PMA2017_BFR5_HHQFQ_v1_26Aug2018/PMA2017_BFR5_HHQFQ_v1_26Aug2018.dta"
 
 * Dates of Data Collection for Dataset 5
-local PMA2020dataset5dates "11-12/2016"
+local PMA2020dataset5dates "11/2017-1/2018"
 
 
 ***** SIXTH DATASET *****
 * Dataset 6 Directory
-local PMA2020dataset6 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2017_KER6_HHQFQ_v1_28Aug2018/PMA2017_KER6_HHQFQ_v1_28Aug2018.dta"
+local PMA2020dataset6 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2019_BFR6_HHQFQ_v1_17May2019/PMA2019_BFR6_HHQFQ_v1_20May2019.dta"
 
 * Dates of Data Collection for Dataset 6
-local PMA2020dataset6dates "11-12/2017"
+local PMA2020dataset6dates "12/2018-1/2019"
 
 
 ***** SEVENTH DATASET *****
 * Dataset 7 Directory
-local PMA2020dataset7 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round7/Final_PublicRelease/HHQFQ/PMA2018_KER7_HHQFQ_v2_2Dec2019/PMA2018_KER7_HHQFQ_v2_2Dec2019.dta"
+local PMA2020dataset7 ""
 
 * Dates of Data Collection for Dataset 7
-local PMA2020dataset7dates "11-12/2018"
+local PMA2020dataset7dates ""
 
 ***********************************************
 * PMA DATASETS
@@ -178,15 +178,6 @@ local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMAB
 
 * Dates of Data Collection for Dataset 2
 local PMAdataset2dates "11/2019-01/2020"
-
-
-***** THIRD DATASET *****
-* Dataset 3 Directory
-local PMAdataset3 "/Users/ealarson/Dropbox (Gates Institute)/13 Nigeria/PMANG_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA_NGP1_Kano_Lagos_HQFQ_v1.1_15Feb2020/PMA_NGP1_Kano_HQFQ_v1.1_15Feb2021.dta"
-
-* Dates of Data Collection for Dataset 3
-local PMAdataset3dates "11/2019-01/2020"
-
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -276,7 +267,7 @@ global level1 `subnational'
 cd "`briefdir'"
 
 * Open dataset
-use "`PMAdataset1'",clear
+use "`PMAdataset2'",clear
 
 * Confirm that correct variables were chosen for locals
 
@@ -397,13 +388,13 @@ gen subnational_yn="`subnational_yn'"
 		}
 		
 * Start log file
-log using "`briefdir'/PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_Log_`date'.log", replace		
+log using "`briefdir'/PMA_`country'_Phase2_XS_HHQFQ_ContraceptiveTrends_Log_`date'.log", replace		
 
 * Set local for xls file
-local excel "PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_`date'.xls"
+local excel "PMA_`country'_Phase2_XS_HHQFQ_ContraceptiveTrends_`date'.xls"
 
 * Set local for dataset
-local dataset "PMA_`country'_Phase1_XS_HHQFQ_ContraceptiveTrends_`date'.dta"
+local dataset "PMA_`country'_Phase2_XS_HHQFQ_ContraceptiveTrends_`date'.dta"
 
 *******************************************************************************
 * SECTION 5: TRENDS IN METHOD USE
