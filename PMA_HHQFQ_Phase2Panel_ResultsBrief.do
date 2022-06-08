@@ -66,17 +66,17 @@ numlabel, add
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2"
+local briefdir "/Users/ealarson/Documents/PMA/Nigeria/PublicRelease/Phase2/Kano"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_BFP1_HQFQ_v2.0_1Oct2021/PMA2020_BFP1_HQFQ_v2.0_1Oct2021.dta"
+local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/13 Nigeria/PMANG_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_NGP1_Kano_Lagos_HQFQ_v2.0_15Sep2021/PMA2020_NGP1_Kano_HQFQ_v2.0_15Sep2021.dta"
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
+local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/13 Nigeria/PMANG_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_NGP2_HQFQ_v1.0_24Sep2021/PMA2021_NGP2_Kano_HQFQ_v1.0_24Sep2021.dta"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -92,7 +92,7 @@ local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMAB
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "Burkina"
+local country "Nigeria"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -108,8 +108,8 @@ local country "Burkina"
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
-local subnational_yn "no"
-local subnational ""
+local subnational_yn "yes"
+local subnational "kano"
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -129,7 +129,7 @@ local weight "FQweight"
 *		begin with "wealth" in the dataset
 *		- For example (Nigeria): wealth_National
 *		- For example (Burkina Faso): wealth
-local wealth "wealth"
+local wealth "wealthquintile"
 
 *	4. The education macros correspond to the coding of the school variable for
 *	    each designated education level. In the briefs, PMA codes education as: 
@@ -141,14 +141,14 @@ local wealth "wealth"
 *		the macros correctly
 
 local none_primary_education "(school==0| school==1)"
-local secondary_education "(school==2 | school==3)"
-local tertiary_education  "(school==4 | school==5)"
+local secondary_education "(school==2)"
+local tertiary_education  "(school==3)"
 
 *	5. The level1 macro corresponds to the highest geographical level in the
 *	    the dataset. This is likely county, state, region, or province
 *		- For example (Kenya): county
 *		- For example (Burkina Faso) region
-local level1 region
+local level1 state
 
 
 *******************************************************************************
@@ -249,18 +249,16 @@ gen subnational_yn="`subnational_yn'"
 *	Nigeria
 	if country=="Nigeria" & subnational_yn=="yes" {
 		gen subnational="`subnational'"
-		decode state, gen(state_string)
-		gen subnational_keep=substr(state_string,4,.)
-		gen subnational_keep1=subinstr(subnational_keep," ","",.)
-		gen check=(subnational_keep1==subnational)
+		gen check=(state==subnational)
 		keep if check==1
-		capture quietly regress check state
+		encode state, gen(state_num)
+		capture quietly regress check state_num
 			if _rc==2000 {
 				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
 				exit
 				}
 		local country `country'_`subnational'
-		drop subnational state_string subnational_keep subnational_keep1 check
+		drop subnational check
 		}	
 		
 *	Countries without national analysis
@@ -691,11 +689,6 @@ tabout contraceptive_dynamics parity_P1 [aw=P2FUweight] ///
 * Other Dynamics 
 *******************************************************************************
 *Contraceptive discontinuation
-	capture confirm var unmettot, exact
-	if _rc!=0 {
-		di as error "Use the WealthWeightAll dataset instead of ECRecode"
-		exit
-	}
 	tabout stopped_use if unmettot==1 [aw=P2FUweight] ///
 		using `tabout', append	c(col) f(1) clab(%) npos(row)  ///
 		h2("Women who stopped using a method between Phase 1 and Phase 2  - Women with unmet need at P2 Weighted")

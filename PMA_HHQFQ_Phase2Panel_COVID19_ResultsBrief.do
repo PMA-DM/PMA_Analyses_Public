@@ -66,20 +66,20 @@ numlabel, add
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2"
+local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease/Phase 2/Bungoma"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
-* Dataset 1 Directory
-local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_BFP1_HQFQ_v2.0_1Oct2021/PMA2020_BFP1_HQFQ_v2.0_1Oct2021.dta"
+* Dataset 1 (Phase 1) Directory
+local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2019_KEP1_HQFQ_v2.0_25Aug2021/PMA2019_KEP1_HQFQ_v2.0_25Aug2021.dta"
 
 ***** SECOND DATASET *****
-* Dataset 2 Directory
-local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
+* Dataset 2 (Phase 2) Directory
+local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
 
 ***** COVID-19 DATASET *****
-local COVID19dataset "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Covid_FQFU/Final_PublicRelease/PMA_BFP1_Covid19_FQFU_v1.1_28Feb2021/PMA2020_BFP1_COVID19_FQFU_v1.1_28Feb2021.dta"
+local COVID19dataset "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Covid19_FQFU/Final_PublicRelease/PMA2020_KEP1_Covid19_FQFU_v2.0_13Aug2021/PMA_KEP1_COVID19_FQFU_v2.0_13Aug2021.dta"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -95,7 +95,7 @@ local COVID19dataset "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/P
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "Burkina"
+local country "Kenya"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -111,8 +111,8 @@ local country "Burkina"
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
-local subnational_yn "no"
-local subnational ""
+local subnational_yn "yes"
+local subnational "BUNGOMA"
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -132,7 +132,7 @@ local weight "FQweight"
 *		begin with "wealth" in the dataset
 *		- For example (Nigeria): wealth_National
 *		- For example (Burkina Faso): wealth
-local wealth "wealthtertile"
+local wealth "wealthquintile"
 
 *	4. The education macros correspond to the coding of the school variable for
 *	    each designated education level. In the briefs, PMA codes education as: 
@@ -151,7 +151,7 @@ local tertiary_education  "(school==4 | school==5)"
 *	    the dataset. This is likely county, state, region, or province
 *		- For example (Kenya): county
 *		- For example (Burkina Faso) region
-local level1 region
+local level1 county
 
 
 *******************************************************************************
@@ -364,7 +364,7 @@ gen married=1 if FQmarital_status!=-99
 	
 ****************************************	
 * ONLY KEEP PHASE 1 VARIABLES REQUIRED FOR ANALYSIS
-keep FQmetainstanceID `level1' wealth married FRS_result 
+keep FQmetainstanceID `level1' `wealth' married FRS_result 
 rename FQmetainstanceID female_ID
 
 ****************************************

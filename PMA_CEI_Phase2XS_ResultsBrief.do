@@ -155,7 +155,7 @@ else if country=="Kenya" {
 	gen check=(phase==2)
 	}
 else if country=="Nigeria" {
-	gen check=(phase=="2")
+	gen check=(phase==2)
 	}
 if check!=1 {
 	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
