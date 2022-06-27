@@ -671,9 +671,9 @@ forval y = 1/17 {
 		capture rename EA EA_ID
 		capture rename ClusterID Cluster_ID
 		
-		putexcel B`row'=("Phase `i'")
-		putexcel C`row'=("`PMAdatasett`i'dates'")
-
+		putexcel B`row'=("PMA Phase 2")
+		putexcel C`row'=("`PMAdatasetPhase2dates'")
+		
 		if "`strata'"!="" {
 			capture egen strata=concat($leve1_var ur), punct(-)
 			capture egen strata=concat($level1_var), punct(-)
@@ -684,30 +684,33 @@ forval y = 1/17 {
 	
 		svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
 
-		label define methods_list_num 1 "Female Sterilization" 2 "Male Sterilization" 3 "Implants" 4 "IUD"  5 "Injectables-IM"  ///
-			6 "Injectables, 1mo" 7 "Pill" 8 "Emergency Contraception" 9 "Male Condoms" 10 "Female Condoms"  11 "Diaphragm" ///
-			12 "Foam/Jelly" 13 "Std. Days/Cycle Beads" 14 "LAM" 15 "N Tablet"  16 "Injectable-SC" 17 "Other Modern", modify
-		local method_`y'_lab: label methods_list_num `y'
+forval y = 1/17 {
+	label define methods_list_num 1 "Female Sterilization" 2 "Male Sterilization" 3 "Implants" 4 "IUD"  5 "Injectables"  ///
+		6 "Injectables, 1mo" 7 "Pill" 8 "Emergency Contraception" 9 "Male Condoms" 10 "Female Condoms"  11 "Diaphragm" ///
+		12 "Foam/Jelly" 13 "Std. Days/Cycle Beads" 14 "LAM" 15 "N Tablet"  16 "Sayana Press" 17 "Other Modern", modify
+	local method_`y'_lab: label methods_list_num `y'
 
-		gen method_`y'=0 if mcp==1
+	gen method_`y'=0 if mcp==1
 		replace method_`y'=1 if current_methodnum_rc==`y'
 		capture replace method_17=1 if current_methodnum_rc==19
 		svy: tab method_`y' if mcp==1, percent
 		if e(r)==2 {
-			matrix prop_`y'=e(Prop)*100
-			matrix prop_`y'=round(prop_`y'[2,1], .1)
-			}
-		else {
-			matrix prop_`y'=0
-			}
-		putexcel A`row'=("`method_`y'_lab'")
-		putexcel B`row'=("Phase `i'")
-		putexcel C`row'=("`PMAdataset`i'dates'")
-		putexcel D`row' =matrix(prop_`y')
-		putexcel E`row'=(e(N))
-		local row=`row'+1
+		matrix prop_`y'=e(Prop)*100
+		matrix prop_`y'=round(prop_`y'[2,1], .1)
 		}
-	local row=`row'+`PMA2020dataset_count'+2
+		
+	else {
+		matrix prop_`y'=0
+		}
+	putexcel A`row'=("`method_`y'_lab'")
+	destring phase, replace
+	quietly sum phase
+	local phase `r(max)'
+	putexcel B`row'=("Phase 2")
+	putexcel C`row'=("`PMAdatasetPhase2dates'")
+	putexcel D`row' =matrix(prop_`y')
+	putexcel E`row'=(e(N))
+	local row=`row'+`datasetcount'+2
 	}
 
 ********************************************************************************
@@ -751,11 +754,11 @@ foreach col in H L P U Y AC AH AL AP {
 	}	
 
 ***** PMA2020 data
-putexcel A7=("PMA2020")
+putexcel A7=("PMA2020 and PMA Phases")
 local row=8
 
-forval i = 1/`PMA2020dataset_count' {
-	use "`PMA2020dataset`i''", clear
+forval i = 1/`PMAdataset_count' {
+	use "`PMAdataset`i''", clear
 	if "$level1"!="" {
 		numlabel, remove force
 		decode $level1_var, gen(str_$level1_var)
@@ -763,10 +766,20 @@ forval i = 1/`PMA2020dataset_count' {
 		keep if str_$level1_var== proper("$level1")
 		}
 	
-	quietly sum round
-	local round `r(max)'
-	putexcel B`row'=("Round `round'")
-	putexcel C`row'=("`PMA2020dataset`i'dates'")
+		capture confirm var round 
+		if _rc==0 {
+			quietly sum round
+			local round `r(max)'
+			putexcel B`row'=("Round `round'")
+			}
+		else {
+			cap gen phase=1
+			quietly sum phase
+			local phase `r(max)'
+			putexcel B`row'=("Phase `phase'")			
+			}
+			
+putexcel C`row'=("`PMAdataset`i'dates'")
 	
 * Generate Unmarried sexually active	
 	cap drop umsexactive
@@ -872,8 +885,7 @@ forval i = 1/`PMA2020dataset_count' {
 	
 ***** PMA DATA
 local row=`row'+1
-forval i = 1/`PMAdataset_count' {
-	use "`PMAdataset`i''", clear
+use "`PMAdatasetPhase2'", clear
 
 	if "$level1"!="" {
 		numlabel, remove force
@@ -885,11 +897,9 @@ forval i = 1/`PMAdataset_count' {
 	capture rename EA EA_ID
 	capture rename ClusterID Cluster_ID
 
-	putexcel A`row'=("PMA")
-	
-	
-	putexcel B`row'=("Phase `i'")
-	putexcel C`row'=("`PMAdataset`i'dates'")
+	putexcel A`row'=("PMA Phase2")
+	putexcel B`row'=("Phase 2")
+	putexcel C`row'=("`PMAdatasetPhase2dates'")
 
 * Generate Unmarried sexually active	
 	cap drop umsexactive
@@ -917,7 +927,6 @@ forval i = 1/`PMAdataset_count' {
 	mkmat FQresponse_3
 	putexcel AD`row'=matrix(FQresponse_3)
 	restore 
-	
 	
 	*** Estimate Percentage and 95% CI
 	keep if FRS_result==1 & HHQ_result==1 & last_night==1
@@ -985,7 +994,7 @@ forval i = 1/`PMAdataset_count' {
 	putexcel AO`row'=matrix(unmettot_umsex_ll)
 	putexcel AP`row'=matrix(unmettot_umsex_ul)
 	local row=`row'+1
-	}
+
 	
 **************************************************************************
 **************** MCPR TRENDS BY REGION - KENYA ONLY **********************
