@@ -663,11 +663,10 @@ forval y = 1/17 {
 		putexcel E`row'=(e(N))
 		local row=`row'+1
 		}
-	local row=`row' + `PMAdataset_count'+2	
+	local row=`row' +2
 	}
 	
-***** PMA PHASE Data
-local row=`PMAdataset_count'+2	
+***** PMA PHASE Data	
 use "`PMAdatasetPhase2'", clear
 keep if xs_sample == 1
 
@@ -693,6 +692,7 @@ keep if xs_sample == 1
 	
 		svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
 
+local row=`PMAdataset_count'+2
 forval y = 1/17 {
 	label define methods_list_num 1 "Female Sterilization" 2 "Male Sterilization" 3 "Implants" 4 "IUD"  5 "Injectables"  ///
 		6 "Injectables, 1mo" 7 "Pill" 8 "Emergency Contraception" 9 "Male Condoms" 10 "Female Condoms"  11 "Diaphragm" ///
@@ -719,7 +719,7 @@ forval y = 1/17 {
 	putexcel C`row'=("`PMAdatasetPhase2dates'")
 	putexcel D`row' =matrix(prop_`y')
 	putexcel E`row'=(e(N))
-	local row=`row'+`datasetcount'+2
+	local row=`row'+`PMAdataset_count'+2
 	}
 
 ********************************************************************************
