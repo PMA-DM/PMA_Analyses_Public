@@ -217,9 +217,9 @@ local strata "strata"
 *		   local subnational_yn "yes"
 *		   local subnational_unit county
 *		   local subnational "KERICHO"
-local subnational_yn "yes"
-local subnational_unit state
-local subnational "kano"
+local subnational_yn "no"
+local subnational_unit 
+local subnational 
 
 
 *******************************************************************************
@@ -503,26 +503,26 @@ forval i = 1/`PMAdataset_count' {
 	local row=`row'+1
 	}
 
-***** PMA PHASE Data
-putexcel A`row'=("PMA")
+***** PMA CURRENT PHASE
+use "`PMAdatasetPhase2'", clear
+keep if xs_sample==1
 
-forval i=1/`PMAdataset_count' {
-	use "`PMAdataset`i''", clear
-	if "$level1"!="" {
-		numlabel, remove force
-		decode $level1_var, gen(str_$level1_var)
-		replace str_$level1_var = proper(str_$level1_var)
-		keep if str_$level1_var == proper("$level1")
-		}
-	
-	capture rename EA EA_ID
-	capture rename ClusterID Cluster_ID
+if "$level1"!="" {
+	keep if level1=="$level1"	
+	replace level1 = upper(level1)
+	}
 
-	putexcel B`row'=("Phase `i'")
-	putexcel C`row'=("`PMAdataset`i'dates'")
+capture rename EA EA_ID
+capture rename ClusterID Cluster_ID
 
-	** COUNT - Female Sample - All / Married Women  **
-	preserve
+destring phase, replace
+quietly sum phase
+local phase `r(max)'
+putexcel B`row'=("Phase `phase'")			
+putexcel C`row'=("`PMAdatasetPhase2dates'")
+
+** COUNT - Female Sample - All / Married Women  **
+preserve
 		gen FQresponse_1=1 if FRS_result==1 & HHQ_result==1 & last_night==1
 		collapse (count) FQresponse_1
 		mkmat FQresponse_1
@@ -559,35 +559,33 @@ forval i=1/`PMAdataset_count' {
 	
 	*** Estimate Percentage and 95% CI
 	keep if FRS_result==1 & HHQ_result==1 & last_night==1
-	egen all=tag(FQmetainstanceID)
+egen all=tag(FQmetainstanceID)
+
+if "`strata'"!="" {
+	capture egen strata=concat(`strata'), punct(-)
+	}
+else{
+	gen strata=1
+	}
 	
-	if "`strata'"!="" {
-		capture egen strata=concat($leve1_var ur), punct(-)
-		capture egen strata=concat($level1_var), punct(-)
-		}
-	else{
-		gen strata=1
-		}
-		
-	svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
-	foreach group in all {
-		preserve
-		keep if `group'==1
-			foreach indicator in longacting shortacting tcp unmet_limit unmet_space totaldemand_sat {
-				svy: prop `indicator', citype(wilson) percent
-				matrix reference=r(table)
-				matrix `indicator'_`group'_percent=round(reference[1,2]	, .1)
-				}	
-		restore
-		}
-		putexcel E`row'=matrix(longacting_all_percent)
-		putexcel F`row'=matrix(shortacting_all_percent)
-		putexcel G`row'=matrix(tcp_all_percent)
-		putexcel H`row'=matrix(unmet_limit_all_percent)
-		putexcel I`row'=matrix(unmet_space_all_percent)
-		putexcel J`row'=matrix(totaldemand_sat_all_percent)
-		local row=`row'+1
-		}
+svyset `PSU' [pw=FQweight], strata(strata) singleunit(scaled)
+foreach group in all {
+preserve
+	keep if `group'==1
+		foreach indicator in longacting shortacting tcp unmet_limit unmet_space totaldemand_sat{
+			svy: prop `indicator', citype(wilson) percent
+			matrix reference=r(table)
+			matrix `indicator'_`group'_percent=round(reference[1,2]	, .1)
+			}	
+	restore
+	putexcel E`row'=matrix(longacting_all_percent)
+	putexcel F`row'=matrix(shortacting_all_percent)
+	putexcel G`row'=matrix(tcp_all_percent)
+	putexcel H`row'=matrix(unmet_limit_all_percent)
+	putexcel I`row'=matrix(unmet_space_all_percent)
+	putexcel J`row'=matrix(totaldemand_sat_all_percent)
+	}
+
 
 ********************************************************************************
 **********************TRENDS IN METHOD MIX**************************************
@@ -604,23 +602,34 @@ putexcel E1= ("N")
 
 local row=2
 forval y = 1/17 {
-	forval i = 1/`PMA2020dataset_count' {
-		use "`PMA2020dataset`i''", clear		
+	forval i = 1/`PMAdataset_count' {
+		use "`PMAdataset`i''", clear
+		
+		capture confirm var round 
+		if _rc==0 {
+			quietly sum round
+			local round `r(max)'
+			putexcel B`row'=("Round `round'")
+			}
+		else {
+			cap gen phase=1
+			quietly sum phase
+			local phase `r(max)'
+			putexcel B`row'=("Phase `phase'")			
+			}
+		
 		if "$level1"!="" {
 			numlabel, remove force
 			decode $level1_var, gen(str_$level1_var)
 			replace str_$level1_var =proper(str_$level1_var)
 			keep if str_$level1_var == proper("$level1")
 			}
-			
-		quietly sum round
-		local round `r(max)'
-		putexcel B`row'=("Round `round'")
-		putexcel C`row'=("`PMA2020dataset`i'dates'")
+
+		putexcel C`row'=("`PMAdataset`i'dates'")
+		
 
 		if "`strata'"!="" {
-			capture egen strata=concat($leve1_var ur), punct(-)
-			capture egen strata=concat($level1_var), punct(-)
+			capture egen strata=concat(`strata'), punct(-)
 			}
 		else{
 			gen strata=1
@@ -654,14 +663,14 @@ forval y = 1/17 {
 		putexcel E`row'=(e(N))
 		local row=`row'+1
 		}
-	local row=`row'+`PMAdataset_count'+2	
+	local row=`row' + `PMAdataset_count'+2	
 	}
-
+	
 ***** PMA PHASE Data
-local row=`PMA2020dataset_count'+2
-forval y = 1/17 {
-	forval i = 1/`PMAdataset_count' {
-		use "`PMAdataset`i''", clear
+local row=`PMAdataset_count'+2	
+use "`PMAdatasetPhase2'", clear
+keep if xs_sample == 1
+
 	if "$level1"!="" {
 		numlabel, remove force
 		decode $level1_var, gen(str_$level1_var)
