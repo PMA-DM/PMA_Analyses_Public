@@ -397,13 +397,12 @@ putexcel H6=("Unmet Need for Limiting"), txtwrap
 putexcel I6=("Unmet Need for Spacing"), txtwrap
 putexcel J6=("Demand Satisfied by Modern Method"), txtwrap
 
-
-***** PMA2020 DATA
-putexcel A7=("PMA2020")
+***** PMA2020 AND PMA PHASE DATA
+putexcel A7=("PMA2020 & PMA PHASE")
 
 local row=8
-forval i = 1/`PMA2020dataset_count' {
-	use "`PMA2020dataset`i''", clear
+forval i = 1/`PMAdataset_count' {
+	use "`PMAdataset`i''", clear
 	if "$level1"!="" {
 		numlabel, remove force
 		decode $level1_var, gen(str_$level1_var)
@@ -411,10 +410,20 @@ forval i = 1/`PMA2020dataset_count' {
 		keep if str_$level1_var == proper("$level1")
 		}
 		
-	quietly sum round
-	local round `r(max)'
-	putexcel B`row'=("Round `round'")
-	putexcel C`row'=("`PMA2020dataset`i'dates'")
+	capture confirm var round 
+		if _rc==0 {
+		    quietly sum round
+			local round `r(max)'
+			putexcel B`row'=("Round `round'")
+			}
+		else {
+			cap gen phase=1
+			quietly sum phase
+			local phase `r(max)'
+			putexcel B`row'=("Phase `phase'")			
+			}
+			
+	putexcel C`row'=("`PMAdataset`i'dates'")
 
 	** COUNT - Female Sample - All **
 	capture confirm var last_night
@@ -462,7 +471,7 @@ forval i = 1/`PMA2020dataset_count' {
 	egen all=tag(FQmetainstanceID)
 	
 	if "`strata'"!="" {
-		capture egen strata=concat($leve1_var ur), punct(-)
+		capture egen strata=concat(`strata'), punct(-)
 		capture egen strata=concat($level1_var), punct(-)
 		}
 	else{
