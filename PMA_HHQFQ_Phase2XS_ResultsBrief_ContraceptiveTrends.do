@@ -902,6 +902,7 @@ putexcel C`row'=("`PMAdataset`i'dates'")
 ***** PMA DATA
 local row=`row'+1
 use "`PMAdatasetPhase2'", clear
+keep if xs_sample == 1
 
 	if "$level1"!="" {
 		numlabel, remove force
@@ -1026,10 +1027,10 @@ putexcel D2 = ("mCPR%")
 
 local row 3
 
-forval i = 1/`PMAdataset_count' {
-	use "`PMAdataset`i''", clear
-	putexcel A`row' = ("Phase `i'")
-	
+use "`PMAdatasetPhase2'", clear
+keep if xs_sample == 1
+
+	putexcel A`row' = ("Phase `i'")	
 	decode county, gen(county_string)
 		gen county_string1=substr(county_string,4,.)
 		gen county_string2=subinstr(county_string1," ","",.)
@@ -1037,6 +1038,9 @@ forval i = 1/`PMAdataset_count' {
 		gen county_string4=regexr(county_string3,word(county_string3,1), proper(word(county_string3,1)))
 		replace county_string4="Pokot" if county_string4=="Westpokot"
 		replace county_string4="Kimbu" if county_string4=="Kiambu"
+		rename FQweight_Kiambu FQweight_Kimbu
+		rename FQweight_WestPokot FQweight_Pokot
+		
 	levelsof county_string4, local(levels) 
 	foreach l of local levels {
 		foreach group in all {
@@ -1058,7 +1062,6 @@ forval i = 1/`PMAdataset_count' {
 		local row=`row'+1
 		}	
 			
-	}
 		drop county_string county_string1 county_string2 county_string3 county_string4
 }
 
