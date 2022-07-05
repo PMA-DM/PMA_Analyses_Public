@@ -142,22 +142,29 @@ local PMAdataset5dates "11/2017-1/2018"
 local PMAdataset6 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_BFR1_HHQFQ_v3_6Nov2018/PMA2014_BFR1_HHQFQ_v3_6Nov2018.dta"
 
 * Dates of Data Collection for Dataset 6
-local PMAdataset6dates "12/2018-1/2019"
+local PMAdataset6dates "11-12/2017"
+
+***** SEVENTH DATASET *****
+* Dataset 7 Directory
+local PMAdataset7 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round7/Final_PublicRelease/HHQFQ/PMA2018_KER7_HHQFQ_v2_2Dec2019/PMA2018_KER7_HHQFQ_v2_2Dec2019.dta"
+
+* Dates of Data Collection for Dataset 7
+local PMAdataset7dates "11-12/2018"
 
 ***********************************************
 * PMA Phases *
 *****  PMA PHASE 1 Dataset ***** 
-local PMAdataset7 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_BFP1_HQFQ_v2.0_1Oct2021/PMA2020_BFP1_HQFQ_v2.0_1Oct2021.dta"
+local PMAdataset8 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2019_KEP1_HQFQ_v2.0_25Aug2021/PMA2019_KEP1_HQFQ_v2.0_25Aug2021.dta"
 
 * Dates of Data Collection for Dataset 1
-local PMAdataset7dates "01/2020-03/2020"
+local PMAdataset8dates "11-12/2019"
 
 ***** PMA PHASE 2 DATASET *****
 * Dataset 2 Directory
-local PMAdatasetPhase2 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
+local PMAdatasetPhase2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
 
 * Dates of Data Collection for Dataset 2
-local PMAdatasetPhase2dates "01/2021-03/2021"
+local PMAdatasetPhase2dates "11/2019-01/2020"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
