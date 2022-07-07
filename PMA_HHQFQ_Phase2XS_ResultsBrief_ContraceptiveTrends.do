@@ -64,11 +64,11 @@ numlabel, add
 * 	in quotation marks ("localmacro"):
 *******************************************************************************
 
-*	1. Total number of PMA datasets to include in the analysis excluding the current Phase analysis (Phase 2). The local should 
+*	1. Total number of PMA datasets to include in the analysis including the current Phase analysis. The local should 
 *		be the number.
 *		- For example: local PMAdataset_count 4
 *		- For example: local PMAdataset_count 7
-local PMAdataset_count 7
+local PMAdataset_count 9
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -76,7 +76,7 @@ local PMAdataset_count 7
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/clairesilberg/Documents/PMA_Local/Public Release Do Files/BF/Phase2/Contraceptive Trends"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Kenya/DataNotShared/Pub_Analysis"
 
 ************** DATASETS & DATES *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -104,42 +104,42 @@ local briefdir "/Users/clairesilberg/Documents/PMA_Local/Public Release Do Files
 * PMA2020 *
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round5/Final_PublicRelease/HHQFQ/PMA2017_BFR5_HHQFQ_v1_26Aug2018/PMA2017_BFR5_HHQFQ_v1_26Aug2018.dta"
+local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_KER1_HHQFQ_v4_22Oct2018 2/PMA2014_KER1_HHQFQ_v4_22Oct2018.dta"
 
 * Dates of Data Collection for Dataset 1
-local PMAdataset1dates "09/2020-11/2020"
+local PMAdataset1dates "5-7/2014"
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2019_BFR6_HHQFQ_v1_17May2019/PMA2019_BFR6_HHQFQ_v1_20May2019.dta" 
+local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round2/Final_PublicRelease/HHQ/PMA2014_KER2_HHQFQ_v3_2May2019/PMA2014_KER2_HHQFQ_v3_2May2019.dta" 
 
 * Dates of Data Collection for Dataset 2
-local PMAdataset2dates "4-6/2015"
+local PMAdataset2dates "11-12/2014"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset3 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round4/Final_PublicRelease/HHQ/PMA2016_BFR4_HHQFQ_v4_6Nov2018/PMA2016_BFR4_HHQFQ_v4_6Nov2018.dta"
+local PMAdataset3 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round3/Final_PublicRelease/HHQ/PMA2015_KER3_HHQFQ_v3_2May2019/PMA2015_KER3_HHQFQ_v3_2May2019.dta"
 
 * Dates of Data Collection for Dataset 3
-local PMAdataset3dates "3-5/2015"
+local PMAdataset3dates "6-7/2015"
 
 ***** FOURTH DATASET *****
 * Dataset 4 Directory
-local PMAdataset4 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round3/Final_PublicRelease/HHQ/PMA2016_BFR3_HHQFQ_v3_6Nov2018/PMA2016_BFR3_HHQFQ_v3_6Nov2018.dta"
+local PMAdataset4 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya//PMAKE_Datasets/Round4/Final_PublicRelease/HHQ/PMA2015_KER4_HHQFQ_v3_2May2019/PMA2015_KER4_HHQFQ_v3_2May2019.dta"
 
 * Dates of Data Collection for Dataset 4
 local PMAdataset4dates "11/2-16-2/2016"
 
 ***** FIFTH DATASET *****
 * Dataset 5 Directory
-local PMAdataset5 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round2/Final_PublicRelease/HHQ/PMA2015_BFR2_HHQFQ_v3_6Nov2018/PMA2015_BFR2_HHQFQ_v3_6Nov2018.dta"
+local PMAdataset5 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round5/Final_PublicRelease/HHQ/PMA2016_KER5_HHQFQ_v2_22Oct2018/PMA2016_KER5_HHQFQ_v2_22Oct2018.dta"
 
 * Dates of Data Collection for Dataset 5
-local PMAdataset5dates "11/2017-1/2018"
+local PMAdataset5dates "11-12/2016"
 
 ***** SIXTH DATASET *****
 * Dataset 6 Directory
-local PMAdataset6 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_BFR1_HHQFQ_v3_6Nov2018/PMA2014_BFR1_HHQFQ_v3_6Nov2018.dta"
+local PMAdataset6 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2017_KER6_HHQFQ_v1_28Aug2018/PMA2017_KER6_HHQFQ_v1_28Aug2018.dta"
 
 * Dates of Data Collection for Dataset 6
 local PMAdataset6dates "11-12/2017"
@@ -161,10 +161,10 @@ local PMAdataset8dates "11-12/2019"
 
 ***** PMA PHASE 2 DATASET *****
 * Dataset 2 Directory
-local PMAdatasetPhase2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
+local  PMAdataset9 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
 
 * Dates of Data Collection for Dataset 2
-local PMAdatasetPhase2dates "11/2019-01/2020"
+local  PMAdataset9dates "11/2019-01/2020"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -254,7 +254,7 @@ global level1 `subnational'
 cd "`briefdir'"
 
 * Open Phase 2 dataset
-use "`PMAdatasetPhase2'",clear
+use "`PMAdataset9'",clear
 
 * Confirm that correct variables were chosen for locals
 
@@ -410,6 +410,8 @@ putexcel A7=("PMA2020 & PMA PHASE")
 local row=8
 forval i = 1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
+	cap keep if xs_sample == 1
+	
 	if "$level1"!="" {
 		numlabel, remove force
 		decode $level1_var, gen(str_$level1_var)
@@ -424,7 +426,6 @@ forval i = 1/`PMAdataset_count' {
 			putexcel B`row'=("Round `round'")
 			}
 		else {
-			cap gen phase=1
 			quietly sum phase
 			local phase `r(max)'
 			putexcel B`row'=("Phase `phase'")			
@@ -510,89 +511,6 @@ forval i = 1/`PMAdataset_count' {
 	local row=`row'+1
 	}
 
-***** PMA CURRENT PHASE
-use "`PMAdatasetPhase2'", clear
-keep if xs_sample==1
-
-if "$level1"!="" {
-	keep if level1=="$level1"	
-	replace level1 = upper(level1)
-	}
-
-capture rename EA EA_ID
-capture rename ClusterID Cluster_ID
-
-destring phase, replace
-quietly sum phase
-local phase `r(max)'
-putexcel B`row'=("Phase `phase'")			
-putexcel C`row'=("`PMAdatasetPhase2dates'")
-
-** COUNT - Female Sample - All / Married Women  **
-preserve
-		gen FQresponse_1=1 if FRS_result==1 & HHQ_result==1 & last_night==1
-		collapse (count) FQresponse_1
-		mkmat FQresponse_1
-		putexcel D`row'=matrix(FQresponse_1)
-	restore
-
-	** Generate Longacting shortacting
-	gen shortacting= current_methodnum_rc>=5 & current_methodnum_rc<=16
-	label var shortacting "Current use of short acting contraceptive method"
-	
-	capture drop longacting
-	gen longacting=current_methodnum_rc>=1 & current_methodnum_rc<=4
-	label var shortacting "Current use of long acting contraceptive method"
-	
-	* Generate total demand = current use + unmet need
-	gen totaldemand=0
-	replace totaldemand=1 if cp==1 | unmettot==1
-	label variable totaldemand "Has contraceptive demand, i.e. current user or unmet need"
-	
-	* Generate total demand staisfied
-	gen totaldemand_sat=0 if totaldemand==1
-	replace totaldemand_sat=1 if totaldemand==1 & mcp==1
-	label variable totaldemand_sat "Contraceptive demand satisfied by modern method"
-	
-	* Unmet need for limiting
-	gen unmet_limit = 0 if unmet != .
-	replace unmet_limit = 1 if unmet == 2
-	label var unmet_limit "Unmet need for limiting"
-	
-	* Unmet need for spacing
-	gen unmet_space = 0 if unmet != .
-	replace unmet_space = 1 if unmet == 1
-	label var unmet_space "Unmet need for spacing"
-	
-	*** Estimate Percentage and 95% CI
-	keep if FRS_result==1 & HHQ_result==1 & last_night==1
-egen all=tag(FQmetainstanceID)
-
-if "`strata'"!="" {
-	capture egen strata=concat(`strata'), punct(-)
-	}
-else{
-	gen strata=1
-	}
-	
-svyset `PSU' [pw=FQweight], strata(strata) singleunit(scaled)
-foreach group in all {
-preserve
-	keep if `group'==1
-		foreach indicator in longacting shortacting tcp unmet_limit unmet_space totaldemand_sat{
-			svy: prop `indicator', citype(wilson) percent
-			matrix reference=r(table)
-			matrix `indicator'_`group'_percent=round(reference[1,2]	, .1)
-			}	
-	restore
-	putexcel E`row'=matrix(longacting_all_percent)
-	putexcel F`row'=matrix(shortacting_all_percent)
-	putexcel G`row'=matrix(tcp_all_percent)
-	putexcel H`row'=matrix(unmet_limit_all_percent)
-	putexcel I`row'=matrix(unmet_space_all_percent)
-	putexcel J`row'=matrix(totaldemand_sat_all_percent)
-	}
-
 
 ********************************************************************************
 **********************TRENDS IN METHOD MIX**************************************
@@ -611,6 +529,7 @@ local row=2
 forval y = 1/17 {
 	forval i = 1/`PMAdataset_count' {
 		use "`PMAdataset`i''", clear
+		capture keep if xs_sample == 1
 		
 		capture confirm var round 
 		if _rc==0 {
@@ -619,7 +538,6 @@ forval y = 1/17 {
 			putexcel B`row'=("Round `round'")
 			}
 		else {
-			cap gen phase=1
 			quietly sum phase
 			local phase `r(max)'
 			putexcel B`row'=("Phase `phase'")			
@@ -673,62 +591,6 @@ forval y = 1/17 {
 	local row=`row' +2
 	}
 	
-***** PMA PHASE Data	
-use "`PMAdatasetPhase2'", clear
-keep if xs_sample == 1
-
-	if "$level1"!="" {
-		numlabel, remove force
-		decode $level1_var, gen(str_$level1_var)
-		replace str_$level1_var = proper(str_$level1_var)
-		keep if str_$level1_var == proper("$level1")
-	}
-		capture rename EA EA_ID
-		capture rename ClusterID Cluster_ID
-		
-		putexcel B`row'=("PMA Phase 2")
-		putexcel C`row'=("`PMAdatasetPhase2dates'")
-		
-		if "`strata'"!="" {
-			capture egen strata=concat($leve1_var ur), punct(-)
-			capture egen strata=concat($level1_var), punct(-)
-			}
-		else{
-			gen strata=1
-			}
-	
-		svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
-
-local row=`PMAdataset_count'+2
-forval y = 1/17 {
-	label define methods_list_num 1 "Female Sterilization" 2 "Male Sterilization" 3 "Implants" 4 "IUD"  5 "Injectables"  ///
-		6 "Injectables, 1mo" 7 "Pill" 8 "Emergency Contraception" 9 "Male Condoms" 10 "Female Condoms"  11 "Diaphragm" ///
-		12 "Foam/Jelly" 13 "Std. Days/Cycle Beads" 14 "LAM" 15 "N Tablet"  16 "Sayana Press" 17 "Other Modern", modify
-	local method_`y'_lab: label methods_list_num `y'
-
-	gen method_`y'=0 if mcp==1
-		replace method_`y'=1 if current_methodnum_rc==`y'
-		capture replace method_17=1 if current_methodnum_rc==19
-		svy: tab method_`y' if mcp==1, percent
-		if e(r)==2 {
-		matrix prop_`y'=e(Prop)*100
-		matrix prop_`y'=round(prop_`y'[2,1], .1)
-		}
-		
-	else {
-		matrix prop_`y'=0
-		}
-	putexcel A`row'=("`method_`y'_lab'")
-	destring phase, replace
-	quietly sum phase
-	local phase `r(max)'
-	putexcel B`row'=("Phase 2")
-	putexcel C`row'=("`PMAdatasetPhase2dates'")
-	putexcel D`row' =matrix(prop_`y')
-	putexcel E`row'=(e(N))
-	local row=`row'+`PMAdataset_count'+2
-	}
-
 ********************************************************************************
 **********************TRENDS IN CPR,mCPR, UNMET NEED****************************
 ********************************************************************************
@@ -775,6 +637,8 @@ local row=8
 
 forval i = 1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
+	capture keep if xs_sample == 1
+	
 	if "$level1"!="" {
 		numlabel, remove force
 		decode $level1_var, gen(str_$level1_var)
@@ -898,121 +762,7 @@ putexcel C`row'=("`PMAdataset`i'dates'")
 	putexcel AP`row'=matrix(unmettot_umsex_ul)
 	local row=`row'+1
 	}
-	
-***** PMA DATA
-local row=`row'+1
-use "`PMAdatasetPhase2'", clear
-keep if xs_sample == 1
-
-	if "$level1"!="" {
-		numlabel, remove force
-		decode $level1_var, gen(str_$level1_var)
-		replace str_$level1_var = proper(str_$level1_var)
-		keep if str_$level1_var == proper("$level1")
-		}
-	
-	capture rename EA EA_ID
-	capture rename ClusterID Cluster_ID
-
-	putexcel A`row'=("PMA Phase2")
-	putexcel B`row'=("Phase 2")
-	putexcel C`row'=("`PMAdatasetPhase2dates'")
-
-* Generate Unmarried sexually active	
-	cap drop umsexactive
-	gen umsexactive=0 
-	replace umsexact=1 if (FQmarital_status!=1 & FQmarital_status!=2 & FQmarital_status !=.) & ((last_time_sex==2 & last_time_sex_value<=4 & last_time_sex_value>=0) | ///
-	(last_time_sex==1 & last_time_sex_value<=30 & last_time_sex_value>=0) | (last_time_sex==3 & last_time_sex_value<=1 & last_time_sex_value>=0))
-
-
-** COUNT - Female Sample - All / Married Women  **
-	preserve
-	gen FQresponse_1=1 if FRS_result==1 & HHQ_result==1 & last_night==1
-	collapse (count) FQresponse_1
-	mkmat FQresponse_1
-	putexcel D`row'=matrix(FQresponse_1)
-	restore
-	preserve
-	gen FQresponse_1=1 if FRS_result==1 & HHQ_result==1 & last_night==1 & (FQmarital_status==1 | FQmarital_status==2)
-	collapse (count) FQresponse_1
-	mkmat FQresponse_1
-	putexcel Q`row'=matrix(FQresponse_1)
-	restore 
-	preserve
-	gen FQresponse_3=1 if FRS_result==1 & HHQ_result==1 & last_night==1 &umsexactive == 1
-	collapse (count) FQresponse_3
-	mkmat FQresponse_3
-	putexcel AD`row'=matrix(FQresponse_3)
-	restore 
-	
-	*** Estimate Percentage and 95% CI
-	keep if FRS_result==1 & HHQ_result==1 & last_night==1
-	egen all=tag(FQmetainstanceID)
-	egen mar=tag(FQmetainstanceID) if (FQmarital_status==1 | FQmarital_status==2)
-	egen umsex = tag(FQmetainstanceID) if umsexactive == 1
-	
-	
-	if "`strata'"!="" {
-		capture egen strata=concat($level1_var ur), punct(-)
-		capture egen strata=concat($level1_var), punct(-)
-		}
-	else{
-		gen strata=1
-		}
 		
-	svyset `PSU' [pw=`weight'], strata(strata) singleunit(scaled)
-	foreach group in all mar umsex {
-		preserve
-		keep if `group'==1
-		foreach indicator in cp mcp unmettot {
-			svy: prop `indicator', citype(wilson) percent
-			matrix reference=r(table)
-			matrix `indicator'_`group'_percent=round(reference[1,2]	, .01)
-			matrix `indicator'_`group'_se=round(reference[2,2], .01)
-			matrix `indicator'_`group'_ll=round(reference[5,2], .01)
-			matrix `indicator'_`group'_ul=round(reference[6,2], .01)
-			}	
-		restore
-		}
-	putexcel E`row'=matrix(cp_all_percent)
-	putexcel F`row'=matrix(cp_all_se)
-	putexcel G`row'=matrix(cp_all_ll)
-	putexcel H`row'=matrix(cp_all_ul)
-	putexcel I`row'=matrix(mcp_all_percent)
-	putexcel J`row'=matrix(mcp_all_se)
-	putexcel K`row'=matrix(mcp_all_ll)
-	putexcel L`row'=matrix(mcp_all_ul)
-	putexcel M`row'=matrix(unmettot_all_percent)
-	putexcel N`row'=matrix(unmettot_all_se)
-	putexcel O`row'=matrix(unmettot_all_ll)
-	putexcel P`row'=matrix(unmettot_all_ul)
-	putexcel R`row'=matrix(cp_mar_percent)
-	putexcel S`row'=matrix(cp_mar_se)
-	putexcel T`row'=matrix(cp_mar_ll)
-	putexcel U`row'=matrix(cp_mar_ul)
-	putexcel V`row'=matrix(mcp_mar_percent)
-	putexcel W`row'=matrix(mcp_mar_se)
-	putexcel X`row'=matrix(mcp_mar_ll)
-	putexcel Y`row'=matrix(mcp_mar_ul)
-	putexcel Z`row'=matrix(unmettot_mar_percent)
-	putexcel AA`row'=matrix(unmettot_mar_se)
-	putexcel AB`row'=matrix(unmettot_mar_ll)
-	putexcel AC`row'=matrix(unmettot_mar_ul)
-	putexcel AE`row'=matrix(cp_umsex_percent)
-	putexcel AF`row'=matrix(cp_umsex_se)
-	putexcel AG`row'=matrix(cp_umsex_ll)
-	putexcel AH`row'=matrix(cp_umsex_ul)
-	putexcel AI`row'=matrix(mcp_umsex_percent)
-	putexcel AJ`row'=matrix(mcp_umsex_se)
-	putexcel AK`row'=matrix(mcp_umsex_ll)
-	putexcel AL`row'=matrix(mcp_umsex_ul)
-	putexcel AM`row'=matrix(unmettot_umsex_percent)
-	putexcel AN`row'=matrix(unmettot_umsex_se)
-	putexcel AO`row'=matrix(unmettot_umsex_ll)
-	putexcel AP`row'=matrix(unmettot_umsex_ul)
-	local row=`row'+1
-
-	
 **************************************************************************
 **************** MCPR TRENDS BY REGION - KENYA ONLY **********************
 **************************************************************************
@@ -1027,7 +777,7 @@ putexcel D2 = ("mCPR%")
 
 local row 3
 
-use "`PMAdatasetPhase2'", clear
+use "`PMAdataset9'", clear
 keep if xs_sample == 1
 
 	putexcel A`row' = ("Phase `i'")	
