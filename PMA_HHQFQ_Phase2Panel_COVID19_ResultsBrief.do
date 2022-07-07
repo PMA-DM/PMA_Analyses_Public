@@ -66,20 +66,23 @@ numlabel, add
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease/Phase 2/Bungoma"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Kenya/DataNotShared/Pub_Analysis/Covid19"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
 * Dataset 1 (Phase 1) Directory
-local PMAdataset1 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2019_KEP1_HQFQ_v2.0_25Aug2021/PMA2019_KEP1_HQFQ_v2.0_25Aug2021.dta"
+local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2019_KEP1_HQFQ_v2.0_25Aug2021/PMA2019_KEP1_HQFQ_v2.0_25Aug2021.dta"
+
 
 ***** SECOND DATASET *****
 * Dataset 2 (Phase 2) Directory
-local PMAdataset2 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
+local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
+
 
 ***** COVID-19 DATASET *****
-local COVID19dataset "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Covid19_FQFU/Final_PublicRelease/PMA2020_KEP1_Covid19_FQFU_v2.0_13Aug2021/PMA_KEP1_COVID19_FQFU_v2.0_13Aug2021.dta"
+local COVID19dataset "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Covid19_FQFU/Final_PublicRelease/PMA2020_KEP1_Covid19_FQFU_v2.0_13Aug2021/PMA_KEP1_COVID19_FQFU_v2.0_13Aug2021.dta"
+
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -111,8 +114,8 @@ local country "Kenya"
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
-local subnational_yn "yes"
-local subnational "BUNGOMA"
+local subnational_yn "no"
+local subnational ""
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -278,11 +281,9 @@ log using "`briefdir'/PMA_`country'_Phase2_Panel_COVID19_Analysis_`date'.log", r
 * Set local for xls file
 local tabout "PMA_`country'_Phase2_Panel_COVID19_Analysis_`date'.xls"
 
-* Set local for dataset
-local dataset "PMA_`country'_Phase2_Panel_COVID19_Analysis_`date'.dta"
+local P2dataset "PMA_`country'_Phase2_Panel_COVID19_Analysis_`date'.dta"
 
-tempfile Phase2
-save `Phase2', replace
+save `P2dataset', replace
 
 *******************************************************************************
 * SECTION 4: GENERATE NECESSARY VARIBLES AND SET UP DATA FOR ANALYSIS
@@ -292,7 +293,7 @@ save `Phase2', replace
 *******************************************************************************
 ****************************************	
 * PHASE 2 DATA
-use "`Phase2'", clear
+use "`P2dataset'", clear
 
 ****************************************	
 * MARITAL STATUS
@@ -342,8 +343,26 @@ foreach var in closed husbopp notransport restricted cost fear {
 label val any_difficulty yes_no_nr_list
 label var any_difficulty "Did the woman face any difficulty accessing care?"
 
-save `Phase2', replace
-	
+****Generate grouping of wealthquintile   for small Ns
+recode `wealth' (5=4), gen(smalln_high_`wealth')
+label define `wealth'_smalln_high_list 1 "Lowest quintile" 2 "Lower quintile" 3 "Middle quintile" 4 "Higher and highest quintiles"		
+label val smalln_high_`wealth' `wealth'_smalln_high_list
+
+recode `wealth' (2=1), gen(smalln_low_`wealth')
+recode smalln_low_`wealth' 3=2 4=3 5=4
+label define `wealth'_smalln_low_list 1 "Lowest and Lower quintile" 2 "Middle quintile" 3 "Higher quintile" 4 "Highest quintile"		
+label val smalln_low_`wealth' `wealth'_smalln_low_list
+
+*** Restrict population to xs women only
+keep if xs_sample == 1
+
+* Restrict to women with completed interviews
+keep if FRS_result==1 & HHQ_result==1
+
+* Restrict analysis to women who slept in the house the night before (de facto)
+keep if last_night==1
+
+save `P2dataset', replace	
 ****************************************	
 * PHASE 1 DATA
 use "`PMAdataset1'"
@@ -367,6 +386,17 @@ gen married=1 if FQmarital_status!=-99
 keep FQmetainstanceID `level1' `wealth' married FRS_result 
 rename FQmetainstanceID female_ID
 
+****Generate grouping of wealthquintile   for small Ns
+recode `wealth' (5=4), gen(smalln_high_`wealth')
+label define `wealth'_smalln_high_list 1 "Lowest quintile" 2 "Lower quintile" 3 "Middle quintile" 4 "Higher and highest quintiles"		
+label val smalln_high_`wealth' `wealth'_smalln_high_list
+
+recode `wealth' (2=1), gen(smalln_low_`wealth')
+recode smalln_low_`wealth' 3=2 4=3 5=4
+label define `wealth'_smalln_low_list 1 "Lowest and Lower quintile" 2 "Middle quintile" 3 "Higher quintile" 4 "Highest quintile"		
+label val smalln_low_`wealth' `wealth'_smalln_low_list
+
+
 ****************************************
 * DROP NON-FEMALE FORMS
 drop if female_ID==""
@@ -376,7 +406,7 @@ drop if female_ID==""
 rename * *_P1
 rename female_ID_P1 female_ID
 
-save `PHASE1', replace
+save `Phase1', replace
 
 ****************************************	
 * COVID-19 DATA
@@ -428,8 +458,10 @@ foreach var in why_visited_facility health_facility_difficulty {
 replace `var' ="" if (`var' == "-99"|	`var' == "-88"|`var' == "-77")
 }	
 
-save `dataset', replace
+* Set local for dataset
+local P1dataset "PMA_`country'_Phase1_CovidSurvey_Analysis_`date'.dta"
 
+save `P1dataset', replace
 
 
 *******************************************************************************
@@ -460,13 +492,13 @@ pause off
 * 	among all women 
 
 ** Tabout - COVID DATA
-use `dataset', clear
+use `P1dataset', clear
 tabout self_covid_concern [aw=cFQFUweight] ///
 	using `tabout', mi replace c(freq col) f(0 1) clab(n %) npos(row) ///
 		h2("Percent of respondents at the time of the Covid19 survey who are worried about getting infected - women who heard of COVID Weighted")
 		
 ** Tabout - PHASE 2 DATA
-use `Phase2', clear
+use `P2dataset', clear
 tabout self_covid_concern [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h2("Percent of respondents at P2 who are worried about getting infected with Covid-19 - all women Weighted")
@@ -487,7 +519,7 @@ tabout self_covid_concern [aw=FQweight] ///
 tabout income_loss_from_covid `wealth' [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at P2 who have experienced HH income loss in last 12m, of which that loss was due to Covid (by wealth) - All Women Weighted")
-
+	
 *******************************************************************************
 * Household Income Recovery
 *******************************************************************************	
@@ -506,17 +538,33 @@ tabout income_recovery `wealth' if income_loss_from_covid==1 [aw=FQweight] ///
 
 ** Tabout - COVID DATA
 *	Among women who have heard of COVID 
-use `dataset', clear
+use `P1dataset', clear
 tabout lack_food_24h `wealth' [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at the time of the Covid19 survey who experienced food insecurity during Covid restrictions (by wealth) - Women who heard of Covid Weighted")
 	
+	tabout lack_food_24h smalln_high_`wealth' [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at the time of the Covid19 survey who experienced food insecurity during Covid restrictions (by wealth-smallN-high list) - Women who heard of Covid Weighted")
+	
+	tabout lack_food_24h smalln_low_`wealth' [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at the time of the Covid19 survey who experienced food insecurity during Covid restrictions (by wealth-smallN-low list) - Women who heard of Covid Weighted")
+	
 ** Tabout - PHASE 2 DATA
 *	Among all women
-use `Phase2', clear
+use `P2dataset', clear
 tabout lack_food_24h_4w `wealth' [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at P2 who experienced food insecurity in the last 4 weeks (by wealth) - All Women Weighted")
+	
+tabout lack_food_24h_4w smalln_high_`wealth' [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at P2 who experienced food insecurity in the last 4 weeks (by wealth-smallN-high list) - All Women Weighted")
+	
+	tabout lack_food_24h_4w smalln_low_`wealth' [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at P2 who experienced food insecurity in the last 4 weeks (by wealth-smallN-low list) - All Women Weighted")
 	
 *******************************************************************************
 * Economic Reliance
@@ -526,17 +574,34 @@ tabout lack_food_24h_4w `wealth' [aw=FQweight] ///
 *	Among married women
 
 ** Tabout - COVID DATA
-use `dataset', clear
+use `P1dataset', clear
 tabout reliant_finance `wealth' if married==2 [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at the time of the Covid19 survey who were economically reliant on partner (by wealth) - Married Women Weighted")
 	
+	tabout reliant_finance smalln_high_`wealth' if married==2 [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at the time of the Covid19 survey who were economically reliant on partner (by wealth-smallN-high list) - Married Women Weighted")
+	
+	tabout reliant_finance smalln_low_`wealth' if married==2 [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at the time of the Covid19 survey who were economically reliant on partner (by wealth-smallN-low list) - Married Women Weighted")
+	
+	
 ** Tabout - PHASE 2 DATA
-use `Phase2', clear
+use `P2dataset', clear
 tabout reliant_finance `wealth' if married==2 [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents in-union at P2 who were economically reliant on partner (by wealth) - Married Women Weighted")	
 	
+	tabout reliant_finance smalln_high_`wealth' if married==2 [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents in-union at P2 who were economically reliant on partner (by wealth-smallN-high list) - Married Women Weighted")
+	
+	tabout reliant_finance smalln_low_`wealth' if married==2 [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents in-union at P2 who were economically reliant on partner (by wealth-smallN-low list) - Married Women Weighted")
+		
 *******************************************************************************
 *
 * SECTION 3: BARRIER TO ACCESSING HEALTH SERVICES
@@ -550,18 +615,33 @@ tabout reliant_finance `wealth' if married==2 [aw=FQweight] ///
 * Percent of respondents who want to visit a health facility for family planning
 *	among women who wanted to visit a health facility for any reason
 
-** Tabout - COVID DATA
-use `dataset', clear
+** Tabout - COVID DATAbr
+use `P1dataset', clear
 tabout why_visit_facility_fp `wealth' [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at the time of the covid19 survey who wanted to visit a health facility for family planning (by wealth) - Women who wanted to visit a facility for any reason (weighted)")	
+
+tabout why_visit_facility_fp smalln_high_`wealth' [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at the time of the covid19 survey who wanted to visit a health facility for family planning (by wealth-smallN-high list)) - Women who wanted to visit a facility for any reason (weighted)")	
+
+tabout why_visit_facility_fp smalln_low_`wealth' [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at the time of the covid19 survey who wanted to visit a health facility for family planning (by wealth-smallN-low list) - Women who wanted to visit a facility for any reason (weighted)")		
 	
 ** Tabout - PHASE 2 DATA
-use `Phase2', clear
+use `P2dataset', clear
 tabout why_visit_facility_fp `wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth) - Women who wanted to visit a facility for any reason (weighted)")	
+	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth) - Women who wanted to visit a facility for any reason (weighted)")
 	
+tabout why_visit_facility_fp smalln_high_`wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-high list) - Women who wanted to visit a facility for any reason (weighted)")	
+	
+tabout why_visit_facility_fp smalln_low_`wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-low list) - Women who wanted to visit a facility for any reason (weighted)")		
 *******************************************************************************
 * Difficulty Accessing a Health Facility
 *******************************************************************************
@@ -570,17 +650,33 @@ tabout why_visit_facility_fp `wealth' if why_visited_facility_4w!="-77" [aw=FQwe
 *	among women who wanted to visit a health facility for any reason
 
 ** Tabout - COVID DATA
-use `dataset', clear
+use `P1dataset', clear
 tabout any_difficulty `wealth' if  why_visited_facility != "" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")	
 	
+tabout any_difficulty smalln_high_`wealth' if  why_visited_facility != "" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")	
+	
+tabout any_difficulty smalln_low_`wealth' if  why_visited_facility != "" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")		
+	
 ** Tabout - PHASE 2 DATA
-use `Phase2', clear
+use `P2dataset', clear
 tabout any_difficulty `wealth' if  why_visited_facility_4w != "" & why_visited_facility_4w != "-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h2("Percent Experienced any difficulty in accessing healthcare at P2 (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
-	
+
+tabout any_difficulty smalln_high_`wealth' if  why_visited_facility_4w != "" & why_visited_facility_4w != "-77" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h2("Percent Experienced any difficulty in accessing healthcare at P2 (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+
+tabout any_difficulty smalln_low_`wealth' if  why_visited_facility_4w != "" & why_visited_facility_4w != "-77" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h2("Percent Experienced any difficulty in accessing healthcare at P2 (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")	
+			
 *******************************************************************************
 * Reasons for Difficulty Accessing Health Facility
 *******************************************************************************
@@ -589,71 +685,173 @@ tabout any_difficulty `wealth' if  why_visited_facility_4w != "" & why_visited_f
 ** among women who wanted to visit a health facilty for any reason
 
 ** Tabout - COVID DATA
-use `dataset', clear
+use `P1dataset', clear
 
 	* Facilty Closed
 	tabout health_facility_diff_closed `wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because the facility was closed at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 	
+	tabout health_facility_diff_closed smalln_high_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because the facility was closed at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout health_facility_diff_closed smalln_low_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because the facility was closed at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	
 	* Partner Disapproval
 	tabout health_facility_diff_husbopp `wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because their partner disapproved at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	tabout health_facility_diff_husbopp smalln_high_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because their partner disapproved at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout health_facility_diff_husbopp smalln_low_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because their partner disapproved at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
 	
 	* Lack of transportation
 	tabout health_facility_diff_notransport `wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of a lack of transportation at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 	
+	tabout health_facility_diff_notransport smalln_high_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of a lack of transportation at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	tabout health_facility_diff_notransport smalln_low_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of a lack of transportation at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
 	* Government restrictions on movement
 	tabout health_facility_diff_restricted `wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of government restrictions at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout health_facility_diff_restricted smalln_high_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of government restrictions at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+			tabout health_facility_diff_restricted smalln_low_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of government restrictions at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
 	
 	* Cost
 	tabout health_facility_diff_cost `wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of cost at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 	
+		tabout health_facility_diff_cost smalln_high_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of cost at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+			tabout health_facility_diff_cost smalln_low_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of cost at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
 	* Fear of COVID-19 at facility
 	tabout health_facility_diff_fear `wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of fear of Covid-19 at the facility at the time of the covid19 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 
+	tabout health_facility_diff_fear smalln_high_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of fear of Covid-19 at the facility at the time of the covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout health_facility_diff_fear smalln_low_`wealth' if why_visited_facility!="" [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of fear of Covid-19 at the facility at the time of the covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
 
 ** Tabout - PHASE 2 DATA 
-use `Phase2', clear
+use `P2dataset', clear
 
 	* Facilty Closed
 	tabout access_difficulty_4w_closed `wealth' if why_visited_facility!="" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because the facility was closed at the time of the P2 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
+
+	tabout access_difficulty_4w_closed smalln_high_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because the facility was closed at the time of the P2 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout access_difficulty_4w_closed smalln_low_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because the facility was closed at the time of the P2 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+
 	
 	* Partner Disapproval
 	tabout access_difficulty_4w_husbopp `wealth' if why_visited_facility!="" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because their partner disapproved at the time of the P2 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 	
+		tabout access_difficulty_4w_husbopp smalln_high_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because their partner disapproved at the time of the P2 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+			tabout access_difficulty_4w_husbopp smalln_low_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because their partner disapproved at the time of the P2 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
 	* Lack of transportation
 	tabout access_difficulty_4w_notransport `wealth' if why_visited_facility!="" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of a lack of transportation at the time of the P2 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	tabout access_difficulty_4w_notransport smalln_high_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of a lack of transportation at the time of the P2 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout access_difficulty_4w_notransport smalln_low_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of a lack of transportation at the time of the P2 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
 	
 	* Government restrictions on movement
 	tabout access_difficulty_4w_restricted `wealth' if why_visited_facility!="" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of government restrictions at the time of the P2 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 	
+		tabout access_difficulty_4w_restricted smalln_high_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of government restrictions at the time of the P2 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+			tabout access_difficulty_4w_restricted smalln_low_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of government restrictions at the time of the P2 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	
 	* Cost
 	tabout access_difficulty_4w_cost `wealth' if why_visited_facility!="" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of cost at the time of the P2 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
 	
+		tabout access_difficulty_4w_cost smalln_high_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of cost at the time of the P2 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	tabout access_difficulty_4w_cost smalln_low_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of cost at the time of the P2 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+	
 	* Fear of COVID-19 at facility
 	tabout access_difficulty_4w_fear `wealth' if why_visited_facility!="" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent experienced any difficulty in accessing healthcare because of fear of Covid-19 at the facility at the time of the P2 survey (by wealth) - Women who wanted to visit a health facility for any reason (weighted)")
+	
+		tabout access_difficulty_4w_fear smalln_high_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of fear of Covid-19 at the facility at the time of the P2 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason (weighted)")
+
+	
+		tabout access_difficulty_4w_fear smalln_low_`wealth' if why_visited_facility!="" [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent experienced any difficulty in accessing healthcare because of fear of Covid-19 at the facility at the time of the P2 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason (weighted)")
+
 
 *******************************************************************************
 * Success in Accessing Health Services
@@ -663,17 +861,35 @@ use `Phase2', clear
 ** Among women who wanted to access the facility
 
 ** Tabout - COVID DATA
-use `dataset', clear
+use `P1dataset', clear
 tabout accessed_health `wealth' [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent able to access the health services needed at the time of the Covid19 survey - Women who wanted to visit a health facility for any reason ")
+	h1("Percent able to access the health services needed at the time of the Covid19 survey (by wealth)- Women who wanted to visit a health facility for any reason")
+
+	tabout accessed_health smalln_high_`wealth' [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent able to access the health services needed at the time of the Covid19 survey (by wealth-smallN-high list) - Women who wanted to visit a health facility for any reason ")
+	
+		tabout accessed_health smalln_low_`wealth' [aw=cFQFUweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent able to access the health services needed at the time of the Covid19 survey (by wealth-smallN-low list) - Women who wanted to visit a health facility for any reason ")
 
 
 ** Tabout - PHASE 2 DATA 
-use `Phase2', clear
+use `P2dataset', clear
 tabout accessed_health `wealth' [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent able to access the health services needed at P2 - Women who wanted to visit a health facility for any reason")	
+	h1("Percent able to access the health services needed at P2 (by wealth) - Women who wanted to visit a health facility for any reason")	
+	
+	tabout accessed_health smalln_high_`wealth' [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent able to access the health services needed at P2 (by wealth-smallN-high list)- Women who wanted to visit a health facility for any reason")	
+
+	
+	tabout accessed_health smalln_low_`wealth' [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent able to access the health services needed at P2 (by wealth-smallN-low list)- Women who wanted to visit a health facility for any reason")	
+
 
 
 *******************************************************************************
@@ -686,6 +902,13 @@ tabout covid_fp_interruption `wealth' if cp==1 [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at P2 who report interrupted contraceptive use due to Covid (by wealth) - Current users (weighted)")
 
+tabout covid_fp_interruption smalln_high_`wealth' if cp==1 [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at P2 who report interrupted contraceptive use due to Covid (by wealth-smallN-high list) - Current users (weighted)")	
+	
+	tabout covid_fp_interruption smalln_low_`wealth' if cp==1 [aw=FQweight] ///
+	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
+	h1("Percent of respondents at P2 who report interrupted contraceptive use due to Covid (by wealth-smallN-low list) - Current users (weighted)")	
 
 *******************************************************************************
 *
