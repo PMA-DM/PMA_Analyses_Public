@@ -254,7 +254,8 @@ global level1 `subnational'
 cd "`briefdir'"
 
 * Open Phase 2 dataset
-use "`PMAdataset9'",clear
+* NOTE: Update PMAdataset below to correspond to local Phase 2 dataset, i.e. "PMAdatasetX"
+use "`PMAdataset7'",clear
 
 * Confirm that correct variables were chosen for locals
 
