@@ -180,7 +180,7 @@ else if country=="Kenya" {
 	gen check=(phase=="2")
 	}
 else if country=="Nigeria" {
-	gen check=(phase=="2")
+	gen check=(phase==2)
 	}
 if check!=1 {
 	di in smcl as error "The dataset you are using is not a PMA phase 2 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
@@ -270,20 +270,35 @@ gen subnational_yn="`subnational_yn'"
 *	Nigeria
 	if country=="Nigeria" & subnational_yn=="yes" {
 		gen subnational="`subnational'"
-		decode state, gen(state_string)
-		gen subnational_keep=substr(state_string,4,.)
-		gen subnational_keep1=subinstr(subnational_keep," ","",.)
-		gen check=(subnational_keep1==subnational)
-		keep if check==1
-		capture quietly regress check state
-			if _rc==2000 {
-				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				exit
-				}
+		capture confirm string var $level1_var
+		if _rc==0 {
+			gen check=(state==subnational)
+			keep if check==1
+		}
+		else {
+			decode state, gen(state_string)
+			gen subnational_keep=substr(state_string,4,.)
+			gen subnational_keep1=subinstr(subnational_keep," ","",.)
+			gen check=(subnational_keep1==subnational)
+			keep if check==1
+			capture quietly regress check state
+		}
+
+		if _rc==2000 {
+			di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+			exit
+			}
 		local country `country'_`subnational'
-		drop subnational state_string subnational_keep subnational_keep1 check
-		}	
 		
+		capture confirm string var $level1_var
+		if _rc==0 {
+			drop subnational check
+		}
+		else {
+			drop subnational state_string subnational_keep subnational_keep1 check			
+		}
+	}	
+
 *	Countries without national analysis
 	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
 		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
