@@ -68,7 +68,7 @@ numlabel, add
 *		  local datadir "/User/ealarson/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "C:\Users\annro\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
+local datadir "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_INP2_Rajasthan_HQFQ_v1.0_1Jul2022/PMA2021_INP2_Rajasthan_HQFQ_1Jul2022.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -76,7 +76,7 @@ local datadir "/Users/ealarson/Dropbox (Gates Institute)/5 Burkina Faso/PMABF_Da
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/India/DataNotShared/Pub_Analysis/xs"
 
 
 *******************************************************************************
@@ -93,7 +93,7 @@ local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 2
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "Burkina"
+local country "India"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -109,8 +109,13 @@ local country "Burkina"
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
-local subnational_yn "yes"
-local subnational "centre"
+local subnational_yn "no"
+local subnational ""
+*	1b.  
+*local group "GroupA"
+local group "GroupB"
+
+
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -130,7 +135,7 @@ local weight "FQweight"
 *		begin with "wealth" in the dataset
 *		- For example (Nigeria): wealth_National
 *		- For example (Burkina Faso): wealth
-local wealth "wealthtertile"
+local wealth "wealthquintile"
 
 *	4. The education macros correspond to the coding of the school variable for
 *	    each designated education level. In the briefs, PMA codes education as: 
@@ -168,20 +173,35 @@ cd "`briefdir'"
 
 * Open dataset
 use "`datadir'",clear
+tostring phase, replace
 
-* Confirm that it is phase 1 data
+* Confirm that it is phase 2 data
 if country=="Burkina" {
-	gen check=(phase==2)
+	gen check=(phase=="2")
 	}
 else if country=="DRC" {
-	gen check=(phase==2)
+	gen check=(phase=="2")
 	}
 else if country=="Kenya" {
 	gen check=(phase=="2")
 	}
 else if country=="Nigeria" {
 	gen check=(phase==2)
+	gen check=(phase=="2")
+	}	
+else if country=="Uganda" {
+	gen check=(phase=="2")
+	}	
+else if country=="India" {
+	gen check=(phase=="2")
+	}		
+else if country=="Cotedivoire" {
+	gen check=(phase=="2")
 	}
+else if country=="Niger" {
+	gen check=(phase=="2")
+	}	
+	
 if check!=1 {
 	di in smcl as error "The dataset you are using is not a PMA phase 2 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
 	exit
@@ -321,8 +341,13 @@ local dataset "PMA_`country'_Phase2_XS_HHQFQ_Analysis_`date'.dta"
 * Only keep the cross-sectional sample
 keep if xs_sample==1
 
-preserve
+
+** Generate variable to identify PMA Country GroupA
+	gen group = "`group'"
 	
+
+preserve
+
 * 	Generate a variable that will identify one observation per household and only 
 *		keep one observation per household
 	egen metatag=tag(metainstanceID)
@@ -421,6 +446,8 @@ save, replace
 ****************************************	
 * DATE OF THE INTERVIEW
 
+if group == "GroupA"{
+
 * Split FQdoi_corrected
 split FQdoi_corrected, gen(doi_)
 
@@ -454,7 +481,21 @@ gen doicmc=(doiyear-1900)*12+doimonth
 
 * Drop unnecessary variables
 drop doi_*
+}
 
+if group == "GroupB"{
+gen doimonth= month(dofc(FQdoi_correctedSIF))
+tab1 doimonth, mis
+
+* Generate doiyear (year of interview) variable in numeric
+gen doiyear = year(dofc(FQdoi_correctedSIF))
+
+cap drop doicmc
+gen doicmc=(doiyear-1900)*12+doimonth 
+
+}
+		
+	
 ****************************************	
 * URBAN/RURAL VARIABLE
 
@@ -494,6 +535,8 @@ label var age_cat "Age Categories (years)"
 ****************************************
 * EDUCATION
 
+cap rename school_cc school
+
 * Generate three education variables
 gen none_primary_education = `none_primary_education' 
 gen secondary_education  = `secondary_education' 
@@ -509,6 +552,9 @@ label var education "Highest level of education attained"
 
 ****************************************
 * WORKED
+
+cap rename work_yn_12mo work_12mo
+cap rename work_yn_7days work_7d
 
 * Generate a variable to indicate whether a woman has recetly worked 
 gen worked_recent = 0 
@@ -620,6 +666,11 @@ label variable wanted_nomore "% Wanted no more"
 label define wanted_nomorelist 1 "Wanted none at all" 0"Wanted then or later"
 label values wanted_nomore wanted_nomorelist
 
+* Intention to use contraception 
+gen intention_use_nonuser = intention_use if cp == 0 & pregnant == 0
+label var intention_use_nonuser "Percent of all women age 15-49 who are not currently using contraception but intend to use contraception in the next 12 months"
+label values intention_use_nonuser yes_no_dnk_nr_list
+
 ****************************************
 * METHOD INFORMATION INDEX PLUS
 
@@ -652,46 +703,10 @@ label variable healthworkerinfo "Received family planning info from provider/com
 * Public vs Private
 recode fp_provider_rw (1/19=1 "public") (-88 -99=0) (nonmiss=0 "not public"), gen(publicfp_rw)
 label variable publicfp_rw "Respondent or partner for method got first time from public provider"
-			
-save, replace
 
-****************************************
-* MEANS AND MEDIANS
 
 * Recode age at first use if women has children variable
 replace age_at_first_use_children=0 if ever_birth==0 & fp_ever_used==1
-
-* Generate program: Arguments to input are 1 (dataset), 2 (variable name), 
-*	3 (lower age bound), 4 (weight)
-capture program drop pmamediansimple
-program define pmamediansimple
-	
-	use `1', clear
-	keep if FQ_age>=`3' //age range for the tabulation
-	
-	gen one=1
-	drop if `2'==.
-	collapse (count) count=one [pweight=`4'], by(`2')
-	sort  `2'
-	gen ctotal=sum(count)
-	egen total=sum(count)
-	gen cp=ctotal/total
-	
-	keep if (cp <= 0.5 & cp[_n+1]>0.5) | (cp>0.5 & cp[_n-1]<=0.5)
-	
-	local median=(0.5-cp[1])/(cp[2]-cp[1])*(`2'[2]-`2'[1])+`2'[1] +1
-	
-	macro list _median
-	
-	clear
-	set obs 1
-	gen median=`median'
-	
-	end
-capture drop one
-	
-* Generate variables for median and mean calculations
-use "`dataset'", clear
 	
 ** Generate respondent age variable in months
 	gen birthyear=year(dofc(birthdateSIF))
@@ -734,155 +749,6 @@ format recent_birthSIF_td %td
 replace first_birthSIF_td=recent_birthSIF_td if birth_events==1
 gen agefirstbirth=(first_birthSIF_td-birthdateSIF_td)/365.25
 
-* Save dataset to use in median calculations
-save, replace
-
-* Generate temp files for brief development
-
-** Create a local macro for the dataset to use during median calculations
-** local median_dataset "PMA_`country'_`phase'_HHQFQ_XS_Analysis_`date'.dta"
-	tempfile median_file
-
-** Median age at first marriage
-	preserve
-		save median_file, replace
-		pmamediansimple median_file agemarriage 25 `weight'
-		gen urban="All Women"
-		tempfile afm_total
-		save `afm_total', replace 
-	restore
-
-	preserve
-		keep if urban==0
-		capture codebook metainstanceID
-		if _rc!=2000 { 
-			save median_file, replace
-			pmamediansimple median_file agemarriage 25 `weight'
-			gen urban="Rural"
-			tempfile afm_rural
-			save `afm_rural', replace
-		}
-	restore 
-
-	preserve
-		keep if urban==1
-		capture codebook metainstanceID
-		if _rc!=2000 { 
-			save median_file, replace
-			pmamediansimple median_file agemarriage 25 `weight'
-			gen urban="Urban"
-			tempfile afm_urban
-			save `afm_urban', replace
-		}
-	restore
-
-* 	Median age at first sex among all women who have had sex
-	preserve
-		keep if age_at_first_sex>0 & age_at_first_sex<50 
-		save `median_file', replace
-		pmamediansimple `median_file' age_at_first_sex 15 `weight'
-		gen urban="All Women"
-		tempfile afs_total
-		save `afs_total', replace
-	restore
-	
-	preserve 
-		keep if age_at_first_sex>0 & age_at_first_sex<50 & urban==0
-		capture codebook metainstanceID
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' age_at_first_sex 15 `weight'
-			gen urban="Rural"
-			tempfile afs_rural
-			save `afs_rural', replace 
-		}
-	restore
-	
-	preserve 
-		keep if age_at_first_sex>0 & age_at_first_sex<50 & urban==1 
-		capture codebook metainstanceID
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' age_at_first_sex 15 `weight'
-			gen urban="Urban"
-			tempfile afs_urban
-			save `afs_urban',replace
-		}
-	restore
-
-*	Median age at first contraceptive use among all women who have ever used contraception
-	preserve
-		keep if fp_ever_used==1 & age_at_first_use>0
-		save `median_file', replace
-		pmamediansimple `median_file' age_at_first_use 15 `weight'
-		gen urban="All Women"
-		tempfile afc_total
-		save `afc_total', replace
-	restore
-	
-	preserve
-		keep if fp_ever_used==1 & age_at_first_use>0 & urban==0
-		capture codebook metainstanceID
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' age_at_first_use 15 `weight'
-			gen urban="Rural"
-			tempfile afc_rural
-			save `afc_rural', replace
-		}
-	restore
-	
-	preserve
-		keep if fp_ever_used==1 & age_at_first_use>0 & urban==1
-		capture codebook metainstanceID
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' age_at_first_use 15 `weight'
-			gen urban="Urban"
-			tempfile afc_urban
-			save `afc_urban', replace
-		}
-	restore
-
-* 	Median age at first birth among all women who have ever given birth
-	preserve
-		keep if ever_birth==1
-		capture codebook metainstanceID
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' agefirstbirth 25 `weight'
-			gen urban="All Women"
-			tempfile afb_total
-			save `afb_total', replace
-		}
-	restore
-	
-	preserve
-		keep if ever_birth==1 & birth_events!=. & birth_events!=-99 & urban==0
-		capture codebook metainstanceID 
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' agefirstbirth 25 `weight'
-			gen urban="Rural"
-			tempfile afb_rural
-			save `afb_rural', replace
-		}
-	restore
-	
-	preserve
-		keep if ever_birth==1 & birth_events!=. & birth_events!=-99 & urban==1
-		capture codebook metainstanceID 
-		if _rc!=2000 {
-			save `median_file', replace
-			pmamediansimple `median_file' agefirstbirth 25 `weight'
-			gen urban="Urban"
-			tempfile afb_urban
-			save `afb_urban', replace
-		}
-	restore
-
-use "`dataset'", clear
-
 ****************************************
 * LIFE EVENTS BY 18 AND AGE-SPECFICIC RATES
 
@@ -924,7 +790,6 @@ foreach var in partner_know partner_decision why_not_decision partner_overall {
 	}
 
 save, replace
-
 
 *******************************************************************************
 * SECTION 7: PMA RESULTS BRIEF OUTPUT
@@ -1002,7 +867,7 @@ if r(N)>=50 {
 
 * Intention to use contraeption in the next year,
 *	among all women who are not currently using contraception
-tabout intention_use if cp==0 & pregnant==0 [aweight=`weight'] ///
+tabout intention_use_nonuser [aweight=`weight'] ///
 	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
 	h2("Intention to use contraception among women that are not pregnant and non-users of contraception (weighted)")
 	
@@ -1012,9 +877,12 @@ tabout intention_use if cp==0 & pregnant==0 [aweight=`weight'] ///
 	
 * Intention of most recent birth/current pregnancy, 
 *	among all women currently pregnant or who have giving birth in the last 5 years
-tabout unintend wanted_later wanted_nomore if tsinceb<=60 [aweight=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) nwt(`weight') npos(row) ///
+
+foreach var in unintend wanted_later wanted_nomore {
+tabout `var'  [aweight=`weight'] ///
+	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
 	h2("Fertility Intention Indicators (weighted) - women who are currently pregnant or who gave birth in the last 5 years")
+}
 	
 *******************************************************************************
 *
@@ -1032,14 +900,16 @@ tabout unintend wanted_later wanted_nomore if tsinceb<=60 [aweight=`weight'] ///
 *	2) Told what to do if they experienced side effects
 *	3) Told about other FP methods
 *	4) Told that they could switch to different method in the future
-tabout fp_side_effects fp_side_effects_instructions fp_told_other_methods fp_told_switch [aweight=`weight'] ///
-	using "`tabout'", oneway append c(col) f(1) clab(%) npos(row) ///
+foreach var in fp_side_effects fp_side_effects_instructions fp_told_other_methods fp_told_switch {
+tabout `var' [aweight=`weight'] ///
+	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
 	h2("MII+ Indicators (weighted) - current modern contraceptive users")
+}
 	
 * Percent of women who responded "Yes" to all four MII+ questions,
 *	among modern contraceptive users
 tabout mii [aweight=`weight'] ///
-	using "`tabout'", oneway append c(col) f(1) clab(%) npos(row) ///
+	using "`tabout'", oneway append c(col) f(1) clab(%)  npos(row) ///
 	h2("Percent of women who responded 'Yes' to all four MII+ indicators (weighted) - current modern contraceptive users")
 
 *******************************************************************************
@@ -1144,10 +1014,14 @@ tabout why_not_decision [aw=`weight'] ///
 *	2) Threatened to abandon them if they did not get pregnant
 *	3) Made them feel badly for wanting to use a FP method to delay or prevent pregnancy
 *	4) Prevented them from using a FP method to delay or prevent pregnancy
-tabout rc_forcepreg rc_treatbad rc_took_away_fp rc_partner_leave if married==1 [aw=`weight'] ///
-	using "`tabout'", append oneway c(col) f(1) clab(%) npos(row) ///
+
+foreach var in rc_forcepreg rc_treatbad rc_took_away_fp rc_partner_leave {
+	recode `var' -99=. -88=.
+tabout `var' if married==1 [aw=`weight'] ///
+	using "`tabout'", append c(col) f(1) clab(%) npos(row) ///
 	h2("Pregnancy Coercion Indicators (weighted) - married women")
-	
+}
+
 *******************************************************************************
 *
 * SECTION 5: SERVICE DELIVERY POINTS
@@ -1159,7 +1033,7 @@ tabout rc_forcepreg rc_treatbad rc_took_away_fp rc_partner_leave if married==1 [
 * Percent of women who obtained their modern method at a public facility,
 *	among current modern contraceptive users
 tabout publicfp_rw if mcp==1 [aw=`weight'] ///
-	using "`tabout'", append c(col) f(1) nwt(`weight') npos(row) ///
+	using "`tabout'", append c(col) f(1) npos(row) ///
 	h2("Respondent/partner received method from public facility (weighted) - current modern user") 
 
 *******************************************************************************
@@ -1194,10 +1068,8 @@ tabout urban [aw=`weight'] ///
 	h2("Distribution of de facto women by urban/rural - weighted")
 	
 
-
 *******************************************************************************
 * CLOSE
 *******************************************************************************
 
-erase "median_file.dta"
 log close
