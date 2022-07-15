@@ -68,15 +68,14 @@ numlabel, add
 *		be the number.
 *		- For example: local PMAdataset_count 4
 *		- For example: local PMAdataset_count 7
-local PMAdataset_count 9
+local PMAdataset_count 6 
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
 *		- For example (Mac): 
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
-*		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Kenya/DataNotShared/Pub_Analysis"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/India/DataNotShared/Pub_Analysis/Panel"
 
 ************** DATASETS & DATES *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -104,67 +103,70 @@ local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Kenya/DataNotShar
 * PMA2020 *
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round1/Final_PublicRelease/HHQ/PMA2014_KER1_HHQFQ_v4_22Oct2018 2/PMA2014_KER1_HHQFQ_v4_22Oct2018.dta"
+local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Round1/Final_PublicRelease/HHQ/PMA2016_INR1_Rajasthan_HHQFQ_v2_22Oct2018/PMA2016_INR1_Rajasthan_HHQFQ_v2_22Oct2018.dta"
 
 * Dates of Data Collection for Dataset 1
-local PMAdataset1dates "5-7/2014"
+local PMAdataset1dates "6-7/2016"
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round2/Final_PublicRelease/HHQ/PMA2014_KER2_HHQFQ_v3_2May2019/PMA2014_KER2_HHQFQ_v3_2May2019.dta" 
+local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Round2/Final_PublicRelease/HHQ/PMA2017_INR2_Rajasthan_HHQFQ_v2_22Oct2018/PMA2017_INR2_Rajasthan_HHQFQ_v2_22Oct2018.dta" 
 
 * Dates of Data Collection for Dataset 2
-local PMAdataset2dates "11-12/2014"
+local PMAdataset2dates "2-3/2017"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset3 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round3/Final_PublicRelease/HHQ/PMA2015_KER3_HHQFQ_v3_2May2019/PMA2015_KER3_HHQFQ_v3_2May2019.dta"
+local PMAdataset3 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Round3/Final_PublicRelease/HHQ/PMA2017_INR3_Rajasthan_HHQFQ_v2_22Oct2018/PMA2017_INR3_Rajasthan_HHQFQ_v2_22Oct2018.dta"
 
 * Dates of Data Collection for Dataset 3
-local PMAdataset3dates "6-7/2015"
+local PMAdataset3dates "8-9/2017"
 
 ***** FOURTH DATASET *****
 * Dataset 4 Directory
-local PMAdataset4 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya//PMAKE_Datasets/Round4/Final_PublicRelease/HHQ/PMA2015_KER4_HHQFQ_v3_2May2019/PMA2015_KER4_HHQFQ_v3_2May2019.dta"
+local PMAdataset4 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Round4/Final_PublicRelease/HHQFQ/INR4_Rajasthan_HHQFQ_v2_15Apr2019/PMA2018_INR4_HHQFQ_v2_15Apr2019.dta"
 
 * Dates of Data Collection for Dataset 4
-local PMAdataset4dates "11/2-16-2/2016"
+local PMAdataset4dates "5-6/2018"
 
 ***** FIFTH DATASET *****
 * Dataset 5 Directory
-local PMAdataset5 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round5/Final_PublicRelease/HHQ/PMA2016_KER5_HHQFQ_v2_22Oct2018/PMA2016_KER5_HHQFQ_v2_22Oct2018.dta"
+local PMAdataset5 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_INP1_Rajasthan_HQFQ_v2.0_19Jan2022/PMA2020_INP1_HQFQ_v2.0_19Jan2022.dta"
 
 * Dates of Data Collection for Dataset 5
-local PMAdataset5dates "11-12/2016"
+local PMAdataset5dates "9-11/2020"
 
 ***** SIXTH DATASET *****
 * Dataset 6 Directory
-local PMAdataset6 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round6/Final_PublicRelease/HHQFQ/PMA2017_KER6_HHQFQ_v1_28Aug2018/PMA2017_KER6_HHQFQ_v1_28Aug2018.dta"
+local PMAdataset6 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_INP2_Rajasthan_HQFQ_v1.0_1Jul2022/PMA2021_INP2_Rajasthan_HQFQ_1Jul2022.dta"
 
 * Dates of Data Collection for Dataset 6
-local PMAdataset6dates "11-12/2017"
+local PMAdataset6dates "9-11/2021"
 
 ***** SEVENTH DATASET *****
 * Dataset 7 Directory
-local PMAdataset7 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Round7/Final_PublicRelease/HHQFQ/PMA2018_KER7_HHQFQ_v2_2Dec2019/PMA2018_KER7_HHQFQ_v2_2Dec2019.dta"
+local PMAdataset7 
 
 * Dates of Data Collection for Dataset 7
-local PMAdataset7dates "11-12/2018"
+local PMAdataset7dates 
 
 ***********************************************
 * PMA Phases *
 *****  PMA PHASE 1 Dataset ***** 
-local PMAdataset8 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2019_KEP1_HQFQ_v2.0_25Aug2021/PMA2019_KEP1_HQFQ_v2.0_25Aug2021.dta"
+local PMAdataset8 
 
 * Dates of Data Collection for Dataset 1
-local PMAdataset8dates "11-12/2019"
+local PMAdataset8dates 
 
 ***** PMA PHASE 2 DATASET *****
 * Dataset 2 Directory
-local  PMAdataset9 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
+local  PMAdataset9 
 
 * Dates of Data Collection for Dataset 2
-local  PMAdataset9dates "11/2019-01/2020"
+local  PMAdataset9dates 
+
+* NOTE: Update PMA dataset below to correspond to local macro for Phase 2 dataset, i.e. `PMAdatasetX'
+local PMAPhase2dataset `PMAdataset6'
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -180,7 +182,7 @@ local  PMAdataset9dates "11/2019-01/2020"
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "Kenya"
+local country "India"
 
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
@@ -254,8 +256,7 @@ global level1 `subnational'
 cd "`briefdir'"
 
 * Open Phase 2 dataset
-* NOTE: Update PMAdataset below to correspond to local Phase 2 dataset, i.e. "PMAdatasetX"
-use "`PMAdataset7'",clear
+use "`PMAPhase2dataset'",clear
 
 * Confirm that correct variables were chosen for locals
 
