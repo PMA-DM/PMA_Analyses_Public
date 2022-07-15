@@ -175,12 +175,12 @@ cd "`briefdir'"
 use "`datadir'",clear
 tostring phase, replace
 
-* Confirm that it is phase 1 data
+* Confirm that it is phase 2 data
 if country=="Burkina" {
-	gen check=(phase==2)
+	gen check=(phase=="2")
 	}
 else if country=="DRC" {
-	gen check=(phase==2)
+	gen check=(phase=="2")
 	}
 else if country=="Kenya" {
 	gen check=(phase=="2")
