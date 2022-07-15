@@ -66,22 +66,23 @@ numlabel, add
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Kenya/DataNotShared/Pub_Analysis/Covid19"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Uganda/DataNotShared/Pub_Analysis/covid"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
 * Dataset 1 (Phase 1) Directory
-local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2019_KEP1_HQFQ_v2.0_25Aug2021/PMA2019_KEP1_HQFQ_v2.0_25Aug2021.dta"
+local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Uganda/PMAUG_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_UGP1_HQFQ_v3.0_29Dec2021/PMA2020_UGP1_HQFQ_v3.0_29Dec2021.dta"
 
 
 ***** SECOND DATASET *****
 * Dataset 2 (Phase 2) Directory
-local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2020_KEP2_HQFQ_v2.0_25Jan2022 2/PMA2020_KEP2_HQFQ_v2.0_25Jan2022.dta"
+local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Uganda/PMAUG_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_UGP2_HQFQ_v1.0_1Jun2022/PMA2021_UGP2_HQFQ_v1.0_1Jun2022.dta"
 
 
-***** COVID-19 DATASET *****
-local COVID19dataset "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Kenya/PMAKE_Datasets/Covid19_FQFU/Final_PublicRelease/PMA2020_KEP1_Covid19_FQFU_v2.0_13Aug2021/PMA_KEP1_COVID19_FQFU_v2.0_13Aug2021.dta"
+***** COVID-19 DATASET ***** 
+**(For Group B Countries: Cote d'Ivoire, India, Uganda and Niger, there is no Covid19 dataset). Please leave it blank
+local COVID19dataset 
 
 
 *******************************************************************************
@@ -117,6 +118,14 @@ local country "Kenya"
 local subnational_yn "no"
 local subnational ""
 
+*	1b. Please select the group the country belongs to. India, Uganda, Cotedivoire and Niger belong to Group B. Kenya, Nigeria, Burkina Faso and DRC belong to Group A
+*		For example: 
+*		local group GroupB  
+*		local group GroupA	
+* 	
+local group "GroupB"
+*
+*
 *	2. The weight local macro should be the weight variable that is used for  
 *		analyzing the data. Generally, it will be "FQweight", however for certain
 *		geographies, such as Nigeria, you will need to specify the weight for the
@@ -177,7 +186,8 @@ use "`PMAdataset2'"
 
 *	Country Variable
 	gen countrycheck="`country'"
-	gen check=(countrycheck==country)
+	gen check=(countrycheck==country)	
+	
 	if check!=1 {
 		di in smcl as error "The specified country is not the correct coding for this phase of data collection. Please search for the country variable in the dataset to identify the correct country code, update the local and rerun the .do file"
 		exit
@@ -274,7 +284,8 @@ gen subnational_yn="`subnational_yn'"
 		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
 		exit
 		}
-		
+
+				
 * Start log file
 log using "`briefdir'/PMA_`country'_Phase2_Panel_COVID19_Analysis_`date'.log", replace		
 
@@ -363,8 +374,12 @@ keep if FRS_result==1 & HHQ_result==1
 keep if last_night==1
 
 save `P2dataset', replace	
+
 ****************************************	
 * PHASE 1 DATA
+
+if `group' == "GroupA" {
+
 use "`PMAdataset1'"
 tempfile Phase1 
 save `Phase1', replace
@@ -462,7 +477,51 @@ replace `var' ="" if (`var' == "-99"|	`var' == "-88"|`var' == "-77")
 local P1dataset "PMA_`country'_Phase1_CovidSurvey_Analysis_`date'.dta"
 
 save `P1dataset', replace
+}
 
+
+if `group' == "GroupB" {
+		
+ Generate dichotomous "married" variable to represent all women married or 
+*	currently living with a man
+gen married=1 if FQmarital_status!=-99
+	replace married=2 if FQmarital_status==1 | FQmarital_status==2
+	label define married_list 1 "Single/Divorced/Widowed/Seperated" ///
+		2 "Married/Currently living with a man"
+	label values married married_list
+	label variable married "Married or currently living with a man"
+	
+****************************************	
+
+****Generate grouping of wealthquintile   for small Ns
+recode `wealth' (5=4), gen(smalln_high_`wealth')
+label define `wealth'_smalln_high_list 1 "Lowest quintile" 2 "Lower quintile" 3 "Middle quintile" 4 "Higher and highest quintiles"		
+label val smalln_high_`wealth' `wealth'_smalln_high_list
+
+recode `wealth' (2=1), gen(smalln_low_`wealth')
+recode smalln_low_`wealth' 3=2 4=3 5=4
+label define `wealth'_smalln_low_list 1 "Lowest and Lower quintile" 2 "Middle quintile" 3 "Higher quintile" 4 "Highest quintile"		
+label val smalln_low_`wealth' `wealth'_smalln_low_list
+	
+gen any_difficulty=0 if why_visited_facility != ""
+foreach var in facility_closed preferred_unavailable partner_disapproval no_transport restricted_movement not_affordable fear_infection other {	
+	replace any_difficulty=1 if access_diff_4w_`var'==1 & why_visited_facility != ""
+	}
+label val any_difficulty yes_no_list
+label var any_difficulty "Did the woman face any difficulty accessing care?"
+	
+* Recode all negative values as missing
+foreach var in self_covid_concern lack_food_24h reliant_finance ///
+why_visit_facility_fp accessed_health {
+	recode `var' -99 -88 -77=.
+	}
+	
+* Recode in string variable	
+foreach var in why_visited_facility health_facility_difficulty {
+replace `var' ="" if (`var' == "-99"|	`var' == "-88"|`var' == "-77")
+}	
+	
+}
 
 *******************************************************************************
 * SECTION 5: PMA RESULTS BRIEF OUTPUT
