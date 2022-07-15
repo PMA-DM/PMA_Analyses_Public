@@ -284,7 +284,7 @@ use "`PMAdataset7'",clear
 		
 *	Strata Variable
 	capture confirm var `strata'
-	if _rc!=0 {
+	if (_rc!=0 & country!="DRC") {
 		di in smcl as error "Variable `strata' not found in dataset. Please search for the correct strata variable in the dataset to specify as the local macro and rerun the .do file. Some countries do not have a strata variable and the macro should be left blank"
 		exit
 		} 
@@ -355,20 +355,35 @@ gen subnational_yn="`subnational_yn'"
 *	Nigeria
 	if country=="Nigeria" & subnational_yn=="yes" {
 		gen subnational="`subnational'"
-		decode state, gen(state_string)
-		gen subnational_keep=substr(state_string,4,.)
-		gen subnational_keep1=subinstr(subnational_keep," ","",.)
-		gen check=(subnational_keep1==subnational)
-		keep if check==1
-		capture quietly regress check state
-			if _rc==2000 {
-				di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
-				exit
-				}
+		capture confirm string var $level1_var
+		if _rc==0 {
+			gen check=(state==subnational)
+			keep if check==1
+		}
+		else {
+			decode state, gen(state_string)
+			gen subnational_keep=substr(state_string,4,.)
+			gen subnational_keep1=subinstr(subnational_keep," ","",.)
+			gen check=(subnational_keep1==subnational)
+			keep if check==1
+			capture quietly regress check state
+		}
+
+		if _rc==2000 {
+			di in smcl as error "The specified sub-national level is not correct. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
+			exit
+			}
 		local country `country'_`subnational'
-		drop subnational state_string subnational_keep subnational_keep1 check
-		}	
 		
+		capture confirm string var $level1_var
+		if _rc==0 {
+			drop subnational check
+		}
+		else {
+			drop subnational state_string subnational_keep subnational_keep1 check			
+		}
+	}
+
 *	Countries without national analysis
 	if (country=="DRC" | country=="Nigeria") & subnational_yn!="yes" {
 		di in smcl as error "Please specify a sub-national level for this country as national analysis is not available. Please search for the sub-national variable in the dataset to identify the correct spelling of the sub-national level, update the local and rerun the .do file"
@@ -412,14 +427,25 @@ local row=8
 forval i = 1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
 	cap keep if xs_sample == 1
-	
+
 	if "$level1"!="" {
-		numlabel, remove force
-		decode $level1_var, gen(str_$level1_var)
-		replace str_$level1_var = proper(str_$level1_var)
-		keep if str_$level1_var == proper("$level1")
-		}
 		
+		numlabel, remove force
+		
+		capture confirm string var $level1_var		
+		if _rc==0 {
+			gen str_$level1_var = subinstr($level1_var," ","",.)	
+			replace str_$level1_var = proper(str_$level1_var)
+			keep if str_$level1_var == proper("$level1")
+		}		
+		else {
+			decode $level1_var, gen(str_$level1_var)
+			replace str_$level1_var = subinstr(str_$level1_var," ","",.)	
+			replace str_$level1_var = proper(str_$level1_var)
+			keep if str_$level1_var == proper("$level1")
+		}
+	}
+
 	capture confirm var round 
 		if _rc==0 {
 		    quietly sum round
@@ -544,17 +570,26 @@ forval y = 1/17 {
 			putexcel B`row'=("Phase `phase'")			
 			}
 		
-		if "$level1"!="" {
-			numlabel, remove force
-			decode $level1_var, gen(str_$level1_var)
-			replace str_$level1_var =proper(str_$level1_var)
-			keep if str_$level1_var == proper("$level1")
+		if "$level1"!="" {			
+			numlabel, remove force			
+			capture confirm string var $level1_var		
+			if _rc==0 {
+				gen str_$level1_var = subinstr($level1_var," ","",.)	
+				replace str_$level1_var = proper(str_$level1_var)
+				keep if str_$level1_var == proper("$level1")
+			}		
+			else {
+				decode $level1_var, gen(str_$level1_var)
+				replace str_$level1_var = subinstr(str_$level1_var," ","",.)	
+				replace str_$level1_var = proper(str_$level1_var)
+				keep if str_$level1_var == proper("$level1")
 			}
+		}
 
 		putexcel C`row'=("`PMAdataset`i'dates'")
 		
-
-		if "`strata'"!="" {
+		capture confirm var strata
+		if _rc==0 & "`strata'"!="" {
 			capture egen strata=concat(`strata'), punct(-)
 			}
 		else{
@@ -640,11 +675,20 @@ forval i = 1/`PMAdataset_count' {
 	use "`PMAdataset`i''", clear
 	capture keep if xs_sample == 1
 	
-	if "$level1"!="" {
-		numlabel, remove force
-		decode $level1_var, gen(str_$level1_var)
-		replace str_$level1_var = proper(str_$level1_var)
-		keep if str_$level1_var== proper("$level1")
+		if "$level1"!="" {			
+			numlabel, remove force			
+			capture confirm string var $level1_var		
+			if _rc==0 {
+				gen str_$level1_var = subinstr($level1_var," ","",.)	
+				replace str_$level1_var = proper(str_$level1_var)
+				keep if str_$level1_var == proper("$level1")
+			}		
+			else {
+				decode $level1_var, gen(str_$level1_var)
+				replace str_$level1_var = subinstr(str_$level1_var," ","",.)	
+				replace str_$level1_var = proper(str_$level1_var)
+				keep if str_$level1_var == proper("$level1")
+			}
 		}
 	
 		capture confirm var round 
