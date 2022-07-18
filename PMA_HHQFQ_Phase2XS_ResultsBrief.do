@@ -186,7 +186,6 @@ else if country=="Kenya" {
 	gen check=(phase=="2")
 	}
 else if country=="Nigeria" {
-	gen check=(phase==2)
 	gen check=(phase=="2")
 	}	
 else if country=="Uganda" {
