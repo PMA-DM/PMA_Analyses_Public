@@ -81,7 +81,7 @@ local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Cou
 
 
 ***** COVID-19 DATASET ***** 
-**(For Group B Countries: Cote d'Ivoire, India, Uganda and Niger, there is no Covid19 dataset). Please leave it blank
+**(For Group B Countries: Cote d'Ivoire, India, Uganda, Niger, and DRC (Kongo Central) there is no Covid19 dataset). Please leave it blank
 local COVID19dataset 
 
 
@@ -265,6 +265,9 @@ gen subnational_yn="`subnational_yn'"
 *	Nigeria
 	if country=="Nigeria" & subnational_yn=="yes" {
 		gen subnational="`subnational'"
+		ren state state1
+		encode state1, gen(state)
+		numlabel, add
 		decode state, gen(state_string)
 		gen subnational_keep=substr(state_string,4,.)
 		gen subnational_keep1=subinstr(subnational_keep," ","",.)
@@ -276,7 +279,7 @@ gen subnational_yn="`subnational_yn'"
 				exit
 				}
 		local country `country'_`subnational'
-		drop subnational state_string subnational_keep subnational_keep1 check
+		drop subnational state_string subnational_keep subnational_keep1 check state1
 		}	
 		
 *	Countries without national analysis
