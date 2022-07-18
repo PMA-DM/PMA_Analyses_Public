@@ -381,7 +381,7 @@ save `P2dataset', replace
 ****************************************	
 * PHASE 1 DATA
 
-if `group' == "GroupA" {
+gen group = "`group'"
 
 use "`PMAdataset1'"
 tempfile Phase1 
