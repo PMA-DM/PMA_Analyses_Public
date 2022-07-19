@@ -165,7 +165,7 @@ local  PMAdataset9
 * Dates of Data Collection for Dataset 2
 local  PMAdataset9dates 
 
-* NOTE: Update PMA dataset below to correspond to local macro for Phase 2 dataset, i.e. `PMAdatasetX'
+* NOTE: Update PMA dataset below to correspond to local macro for Phase 2 dataset. For example if the local macro for Phase 2 is PMAdataset9, then update that below as `PMAdataset9'
 local PMAPhase2dataset `PMAdataset6'
 
 *******************************************************************************
