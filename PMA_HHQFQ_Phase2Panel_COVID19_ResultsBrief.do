@@ -357,6 +357,14 @@ foreach var in closed husbopp notransport restricted cost fear {
 label val any_difficulty yes_no_nr_list
 label var any_difficulty "Did the woman face any difficulty accessing care?"
 
+* Generate variables: Why visit facility
+gen why_visit_facility_fp_gen = why_visit_facility_fp if why_visited_facility_4w!="-77"
+label val why_visit_facility_fp_gen yes_no_list
+label var why_visit_facility_fp_gen "Visited facility for FP in the past 4 weeks" 
+
+rename why_visit_facility_fp why_visit_facility_fp_orig
+rename why_visit_facility_fp_gen why_visit_facility_fp 
+
 ****Generate grouping of wealthquintile   for small Ns
 recode `wealth' (5=4), gen(smalln_high_`wealth')
 label define `wealth'_smalln_high_list 1 "Lowest quintile" 2 "Lower quintile" 3 "Middle quintile" 4 "Higher and highest quintiles"		
@@ -710,29 +718,29 @@ tabout reliant_finance `wealth' if married==2 [aw=FQweight] ///
 use `P1dataset', clear
 tabout why_visit_facility_fp `wealth' [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth) - Women who wanted to visit a facility for any reason (weighted)")	
+	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth, weighted)")	
 
 tabout why_visit_facility_fp smalln_high_`wealth' [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth-smallN-high list)) - Women who wanted to visit a facility for any reason (weighted)")	
+	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth-smallN-high list, weighted)")	
 
 tabout why_visit_facility_fp smalln_low_`wealth' [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth-smallN-low list) - Women who wanted to visit a facility for any reason (weighted)")		
+	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth-smallN-low list, weighted)")		
 	
 ** Tabout - PHASE 2 DATA
 use `P2dataset', clear
 tabout why_visit_facility_fp `wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth) - Women who wanted to visit a facility for any reason (weighted)")
+	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth,weighted)")
 	
 tabout why_visit_facility_fp smalln_high_`wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-high list) - Women who wanted to visit a facility for any reason (weighted)")	
+	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-high list, weighted)")	
 	
 tabout why_visit_facility_fp smalln_low_`wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
-	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-low list) - Women who wanted to visit a facility for any reason (weighted)")		
+	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-low list, weighted)")	
 *******************************************************************************
 * Difficulty Accessing a Health Facility
 *******************************************************************************
