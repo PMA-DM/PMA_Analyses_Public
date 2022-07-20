@@ -393,9 +393,7 @@ use "`PMAdataset1'"
 gen group = "`group'"
 tempfile Phase1 
 save `Phase1', replace
-
 ****************************************	
-
 
 * For group A countries, covid indicators are available in a seperate Covid survey. We merge the Phase 1 indicators containing relevant wealth & demographic data with the covid survey.Below, we generate relevant disggregators before analysis 
 
@@ -422,7 +420,7 @@ label val smalln_low_`wealth' `wealth'_smalln_low_list
 	
 ****************************************	
 * ONLY KEEP PHASE 1 VARIABLES REQUIRED FOR ANALYSIS
-keep FQmetainstanceID `level1' `wealth' married FRS_result 
+keep FQmetainstanceID `level1' `wealth' married FRS_result group
 rename FQmetainstanceID female_ID
 
 ****************************************
@@ -438,7 +436,7 @@ save `Phase1', replace
 
 ****************************************	
 
-
+preserve
 * COVID-19 DATA
 use "`COVID19dataset'"
 tempfile Covid
@@ -497,9 +495,10 @@ local P1dataset "PMA_`country'_Phase1_Panel_COVID19_Analysis_`date'.dta"
 
 save `P1dataset', replace
 }
+restore 
 
 * For group B countries, covid indicators are available in the Phase 1 survey. Below, we generate relevant disggregators before analysis 
-
+preserve
 if group == "GroupB" {
 	
 	if "$level1"!="" {
@@ -537,6 +536,7 @@ foreach var in self_covid_concern lack_food_24h reliant_finance why_visit_facili
 foreach var in why_visited_facility health_facility_difficulty {
 replace `var' ="" if (`var' == "-99"|	`var' == "-88"|`var' == "-77")
 
+
 drop if age>49
 keep if FRS_result==1 & female_ID!=""
 * Restrict analysis to women who slept in the house the night before (de facto)
@@ -562,7 +562,7 @@ local P1dataset "PMA_`country'_Phase1_Panel_COVID19_Analysis_`date'.dta"
 save `P1dataset', replace
 }		
 }
-
+restore
 *******************************************************************************
 * SECTION 5: PMA RESULTS BRIEF OUTPUT
 *
