@@ -479,6 +479,9 @@ foreach var in why_visited_facility health_facility_difficulty {
 replace `var' ="" if (`var' == "-99"|	`var' == "-88"|`var' == "-77")
 }	
 
+* Recode visited facility for FP to remove women who didn't go to a facility
+replace why_visit_facility_fp=. if why_visited_facility==""
+
 ****Generate grouping of wealthquintile   for small Ns
 recode `wealth' (5=4), gen(smalln_high_`wealth')
 label define `wealth'_smalln_high_list 1 "Lowest quintile" 2 "Lower quintile" 3 "Middle quintile" 4 "Higher and highest quintiles"		
@@ -715,29 +718,29 @@ tabout reliant_finance `wealth' if married==2 [aw=FQweight] ///
 
 ** Tabout - COVID DATAbr
 use `P1dataset', clear
-tabout why_visit_facility_fp `wealth' [aw=cFQFUweight] ///
+tabout why_visit_facility_fp `wealth' if  why_visited_facility != "" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth, weighted)")	
 
-tabout why_visit_facility_fp smalln_high_`wealth' [aw=cFQFUweight] ///
+tabout why_visit_facility_fp smalln_high_`wealth' if  why_visited_facility != "" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth-smallN-high list, weighted)")	
 
-tabout why_visit_facility_fp smalln_low_`wealth' [aw=cFQFUweight] ///
+tabout why_visit_facility_fp smalln_low_`wealth' if  why_visited_facility != "" [aw=cFQFUweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at the time of the Covid19/Phase 1  who wanted to visit a health facility for family planning (by wealth-smallN-low list, weighted)")		
 	
 ** Tabout - PHASE 2 DATA
 use `P2dataset', clear
-tabout why_visit_facility_fp `wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
+tabout why_visit_facility_fp `wealth' if why_visited_facility_4w != "" & why_visited_facility_4w != "-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth,weighted)")
 	
-tabout why_visit_facility_fp smalln_high_`wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
+tabout why_visit_facility_fp smalln_high_`wealth' if why_visited_facility_4w != "" & why_visited_facility_4w != "-77" [aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-high list, weighted)")	
 	
-tabout why_visit_facility_fp smalln_low_`wealth' if why_visited_facility_4w!="-77" [aw=FQweight] ///
+tabout why_visit_facility_fp smalln_low_`wealth' if why_visited_facility_4w != "" & why_visited_facility_4w != "-77"[aw=FQweight] ///
 	using `tabout', append c(freq col) f(0 1) clab(n %) npos(row) ///
 	h1("Percent of respondents at P2 who wanted to visit a health facility for family planning in the last 4 weeks (by wealth-smallN-low list, weighted)")	
 *******************************************************************************
