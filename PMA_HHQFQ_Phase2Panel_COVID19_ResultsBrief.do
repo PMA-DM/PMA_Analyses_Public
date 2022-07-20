@@ -66,24 +66,23 @@ numlabel, add
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Uganda/DataNotShared/Pub_Analysis/covid"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/India/DataNotShared/Pub_Analysis/covid"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
 * Dataset 1 (Phase 1) Directory
-local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Uganda/PMAUG_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_UGP1_HQFQ_v3.0_29Dec2021/PMA2020_UGP1_HQFQ_v3.0_29Dec2021.dta"
+local PMAdataset1 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2020_INP1_Rajasthan_HQFQ_v2.0_19Jan2022/PMA2020_INP1_HQFQ_v2.0_19Jan2022.dta"
 
 
 ***** SECOND DATASET *****
 * Dataset 2 (Phase 2) Directory
-local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Uganda/PMAUG_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_UGP2_HQFQ_v1.0_1Jun2022/PMA2021_UGP2_HQFQ_v1.0_1Jun2022.dta"
+local PMAdataset2 "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Rajasthan/PMARJ_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2021_INP2_Rajasthan_HQFQ_v1.0_1Jul2022/PMA2021_INP2_Rajasthan_HQFQ_1Jul2022.dta"
 
 
 ***** COVID-19 DATASET ***** 
-**(For Group B Countries: Cote d'Ivoire, India, Uganda, Niger, and DRC (Kongo Central) there is no Covid19 dataset). Please leave it blank
+**Please leave it blank for Group B Countries: Cote d'Ivoire, India(Rajasthan), Uganda, Niger, and DRC (Kongo Central) there is no Covid19 dataset). 
 local COVID19dataset 
-
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -99,7 +98,7 @@ local COVID19dataset
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-local country "Uganda"
+local country "India"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -120,8 +119,8 @@ local subnational ""
 
 *	1b. Please select the group the country belongs to. India, Uganda, Cotedivoire and Niger belong to Group B. Kenya, Nigeria, Burkina Faso and DRC belong to Group A
 *		For example: 
-*		local group GroupB  
-*		local group GroupA	
+*		local group "GroupB"  
+*		local group "GroupA"	
 * 	
 local group "GroupB"
 *
@@ -157,13 +156,13 @@ local wealth "wealthquintile"
 
 local none_primary_education "(school==0| school==1)"
 local secondary_education "(school==2 | school==3)"
-local tertiary_education  "(school==4 | school==5)"
+local tertiary_education  "(school==4)"
 
 *	5. The level1 macro corresponds to the highest geographical level in the
 *	    the dataset. This is likely county, state, region, or province
 *		- For example (Kenya): county
 *		- For example (Burkina Faso) region
-local level1 county
+local level1 district
 
 
 *******************************************************************************
@@ -397,6 +396,7 @@ save `Phase1', replace
 
 * For group A countries, covid indicators are available in a seperate Covid survey. We merge the Phase 1 indicators containing relevant wealth & demographic data with the covid survey.Below, we generate relevant disggregators before analysis 
 
+preserve
 if group == "GroupA" {
 * Generate dichotomous "married" variable to represent all women married or 
 *	currently living with a man
@@ -436,7 +436,6 @@ save `Phase1', replace
 
 ****************************************	
 
-preserve
 * COVID-19 DATA
 use "`COVID19dataset'"
 tempfile Covid
