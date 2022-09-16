@@ -147,7 +147,7 @@ else if country=="Kenya" {
 	gen check=(phase==2)
 	}
 else if country=="Nigeria" {
-	gen check=(phase=="2")
+	gen check=(phase==2)
 	}
 if check!=1 {
 	di in smcl as error "The dataset you are using is not a PMA phase 2 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
@@ -284,6 +284,11 @@ gen sector=.
 * IN/OUTSTOCK OF METHOD - PERCENT OF FACILITIES
 
 *Combine injectable variables, depo and sayana if both are asked
+capture confirm var stockout_why_inj_dp_cc 
+if _rc == 0 {
+	ren stockout_why_inj_*_cc stockout_why_*_cc
+}
+
 capture confirm var provided_sayana_press 
 if _rc == 0 {
 	gen provided_injectables = .
@@ -309,8 +314,8 @@ if _rc == 0 {
 		replace stockout_why_injectables = 4 if (stockout_why_dp == 4| stockout_why_sp == 4)
 		replace stockout_why_injectables = 5 if (stockout_why_dp == 5| stockout_why_sp == 5)
 		replace stockout_why_injectables = 96 if (stockout_why_dp == 96| stockout_why_sp == 96) & stockout_why_injectables==.
-		label values stockout_why_injectables out_of_stock_reason_list	
 	}
+	 
 * Generate Label
 label define offer_stockout_lab 1 "In stock" 2 "In stock but not observed" 3 "Out of stock" 4 "Don't offer"
 

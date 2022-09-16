@@ -331,6 +331,8 @@ recode FQ_age -99=. -88=. -77=.
 ****************************************
 * EDUCATION
 
+cap rename school_cc school
+
 * Generate three education variables
 gen none_primary_education=`none_primary_education' 
 gen secondary_education=`secondary_education' 
@@ -348,6 +350,9 @@ label var education "Highest level of education attained"
 * WORKED
 
 * Generate a variable to indicate whether a woman worked outside the home 
+cap rename work_yn_12mo work_12mo
+cap rename work_yn_7days work_7d
+
 gen work = 0 
 replace work = 1 if (work_12mo == 1| work_7d == 1)
 replace work =. if (work_12mo == . & work_7d == .)
@@ -387,7 +392,7 @@ foreach var in partner_know partner_decision why_not_decision partner_overall {
 
 ****************************************
 * Only Keep Phase 1 Variables Required for Analysis
-keep FQmetainstanceID `level1_var'  age5 education wealth married work ///
+keep FQmetainstanceID `level1_var'  age5 education `wealth' married work ///
 	 partner_support FRS_result eligible last_night HHQ_result cp ///
 	 current_methodnum_rc pregnant country FQ_age flw_willing unmettot ///
 	 intention_use urban parity female_ID

@@ -65,7 +65,7 @@ numlabel, add
 *		  local datadir "/User/ealarson/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "C:\Users\annro\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Phase2/Final_PublicRelease/CQ/PMA2020_KEP2_CQ_v1.0_25Aug2021/PMA2020_KEP2_CQ_Baseline_v1.0_25Aug2021.dta"
+local datadir "/Users/varshasrivatsan/Dropbox (Gates Institute)/Core/PMA Countries/Uganda/PMAUG_Datasets/Phase2/Final_PublicRelease/CQ/PMA2021_UGP2_CQ_baseline_v1.0_1Jun2022/PMA2021_UGP2_CQ_Baseline_1Jun2022.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -73,7 +73,7 @@ local datadir "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease/Phase 2/West Pokot"
+local briefdir "/Users/varshasrivatsan/Documents/PMA/Gitkraken/Uganda/DataNotShared/Pub_Analysis/CEI"
 
 
 *******************************************************************************
@@ -88,9 +88,9 @@ local briefdir "/Users/ealarson/Documents/PMA/Kenya/PublicRelease/Phase 2/West P
 *	1. The country local macro should be the name of the country. Please 
 *		capitalize all country names. For regional or state level datasets, the  
 *		name of the local should be "Country_Region" or "Country_State"
-*		- For example: local country "NG"
-*		- For example: local country "NE_Niamey"
-local country "Kenya"
+*		- For example: local country "Nigeria"
+*		- For example: local country "KE_Niamey"
+local country "Uganda"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
@@ -106,8 +106,8 @@ local country "Kenya"
 *		 - For example (Subnational estimate for Kenya, Kericho county):
 *		   local subnational_yn "yes"
 *		   local subnational "KERICHO"
-local subnational_yn "yes"
-local subnational "WEST_POKOT"
+local subnational_yn "no"
+local subnational ""
 
 *******************************************************************************
 * SECTION 3: CREATE MACRO FOR DATE, XLS and Dataset
@@ -157,6 +157,14 @@ else if country=="Kenya" {
 else if country=="Nigeria" {
 	gen check=(phase==2)
 	}
+else if country=="Uganda" {
+	gen check=(phase==2)
+	}
+else if country=="India" {
+	gen check=(phase==2)
+	}		
+	
+	
 if check!=1 {
 	di in smcl as error "The dataset you are using is not a PMA phase 1 XS dataset. This .do file is to generate the .xls files for PMA Phase 2 XS surveys only. Please use a PMA Phase 2 XS survey and rerun the .do file"
 	exit
