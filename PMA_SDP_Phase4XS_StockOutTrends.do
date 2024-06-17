@@ -136,7 +136,7 @@ local PMAdataset2 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase2/
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset3 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/SQ/Previoulsy released versions/PMA2022_BFP3_SQ_v1.0_1Sep2022/PMA2022_BFP3_SQ_Questionnaire_v1.0_1Sep2022.dta"
+local PMAdataset3 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase3/Final_PublicRelease/SQ/Previoulsy released versions/PMA2022_BFP3_SQ_v1.0_1Sep2022/PMA2022_BFP3_SQ_Questionnaire_v1.0_1Sep2022.dta"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory

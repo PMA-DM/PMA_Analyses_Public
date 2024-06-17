@@ -176,22 +176,22 @@ cap destring phase, replace
 
 * Confirm that it is Phase 4 data
 if country=="Burkina" {
-	gen check=(phase==3)
+	gen check=(phase==4)
 	}
 else if country=="DRC" {
-	gen check=(phase==3)
+	gen check=(phase==4)
 	}
 else if country=="Nigeria" {
-	gen check=(phase==3)
+	gen check=(phase==4)
 	}	
 else if country=="Uganda" {
-	gen check=(phase==3)
+	gen check=(phase==4)
 	}	
 else if country=="Cotedivoire" {
-	gen check=(phase==3)
+	gen check=(phase==4)
 	}
 else if country=="Niger" {
-	gen check=(phase==3)
+	gen check=(phase==4)
 	}	
 	
 if check!=1 {

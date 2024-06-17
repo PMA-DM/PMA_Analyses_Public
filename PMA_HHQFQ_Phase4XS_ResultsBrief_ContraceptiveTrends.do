@@ -158,12 +158,19 @@ local  PMAdataset8 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase2
 * Dates of Data Collection for Dataset 2
 local  PMAdataset8dates "01-02/2021"
 
-***** PMA Phase 4 DATASET *****
+***** PMA Phase 3 DATASET *****
 * Dataset 3 Directory
-local  PMAdataset9 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/PHASE4/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
+local  PMAdataset9 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase3/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
 
 * Dates of Data Collection for Dataset 3
 local  PMAdataset9dates "01-2/2022"
+
+***** PMA Phase 4 DATASET *****
+* Dataset 4 Directory
+local  PMAdataset10 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
+
+* Dates of Data Collection for Dataset 4
+local  PMAdataset10dates "01-2/2022"
 
 * NOTE: Update PMA dataset below to correspond to local macro for Phase 4 dataset. For example if the local macro for Phase 4 is PMAdataset9, then update that below as `PMAdataset9'
 local PMAPHASE4dataset `PMAdataset9'
