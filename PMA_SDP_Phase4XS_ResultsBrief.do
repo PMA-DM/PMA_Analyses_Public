@@ -68,7 +68,7 @@ numlabel, add
 *		  local datadir "~/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "~\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/SQ/Previoulsy released versions/PMA2022_BFP3_SQ_v1.0_1Sep2022/PMA2022_BFP3_SQ_Questionnaire_v1.0_1Sep2022.dta"
+local datadir "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/SQ/PMA2024_BFP4_SQ_v1.0_1Sep2024/PMA2024_BFP4_SQ_v1.0_1Sep2024.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -76,7 +76,7 @@ local datadir "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase4/Fina
 *		  local briefdir "~/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "~\PMA2020\NigeriaAnalysisOutput"
-local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/Data_Not_Shared/Analyses_Private_Datadir"
+local briefdir "/Users/guymartialbai/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/#Data_Not_Shared/Analyses_Private_Datadir/Phase4"
 
 
 *******************************************************************************
