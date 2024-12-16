@@ -65,7 +65,7 @@ numlabel, add
 *		  local datadir "~/Desktop/PMA2020/PMA2018_NGR5_National_HHQFQ_v5_4Nov2019"
 *		- For example (PC):
 * 		  local datadir "~\PMA2020\PMA2018_NGR5_National_HHQFQ_v5_4Nov2019.dta"
-local datadir "~/Dropbox (Gates Institute)/UG-Uganda/PMAUG_Datasets/Phase4/Prelim100/UGP3_CQ_NONAME_22Feb2023.dta"
+local datadir "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/CQ/PMA2024_BFP4_CQ_v1.0_1Sep2024/PMA2024_BFP4_CQ_v1.0_1Sep2024.dta"
 
 *	2. A directory for the folder where you want to save the dataset, xls and
 *		log files that this .do file creates
@@ -73,7 +73,7 @@ local datadir "~/Dropbox (Gates Institute)/UG-Uganda/PMAUG_Datasets/Phase4/Preli
 *		  local briefdir "~/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "~\PMA2020\NigeriaAnalysisOutput"
-local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/Data_Not_Shared/Analyses_Private_Datadir"
+local briefdir "/Users/guymartialbai/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/#Data_Not_Shared/Analyses_Private_Datadir/Phase4"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY
@@ -89,7 +89,7 @@ local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/Dat
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "Nigeria"
 *		- For example: local country "KE_Niamey"
-local country "Uganda"
+local country "Burkina"
 
 *	1a. The subnational macros allow you to generate the estimates on one of
 *		 PMA's subnational restulsts brief. The value for the subnational_yn 
