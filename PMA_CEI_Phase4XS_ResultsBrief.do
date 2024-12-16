@@ -246,11 +246,11 @@ local tabout "PMA_`country'_Phase4_XS_CEI_Analysis_`date'.xls"
 local dataset "PMA_`country'_Phase4_XS_CEI_Analysis_`date'.dta"
 
 * Response Rate
-tabout cei_result using "`tabout'", replace ///
+tabout CEI_result using "`tabout'", replace ///
 		cells(freq col) h2("CEI response rate") f(0 1) clab(n %)	
 
 * Create analytical sample: Only keep completed surveys & women counseled on fp
-keep if cei_result==1 & fp_info_yn==1
+keep if CEI_result==1 & fp_info_yn==1
 
 * Save dataset so can replicate analysis results later
 save "`dataset'", replace
