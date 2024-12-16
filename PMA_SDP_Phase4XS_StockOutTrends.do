@@ -81,7 +81,7 @@ local PMAdataset_count 4
 *		  local briefdir "~/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "~\PMA2020\NigeriaAnalysisOutput"
-local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/Data_Not_Shared/Analyses_Private_Datadir"
+local briefdir "/Users/guymartialbai/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/#Data_Not_Shared/Analyses_Private_Datadir/Phase4"
 
 ************** DATASETS *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -98,49 +98,49 @@ local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/Dat
 * PMA2020 DATASETS
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMA2020dataset1 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Round1/Final_PublicRelease/SDP/PMA2014_BFR1_SDP_v1_5Sep2016/PMA2014_BFR1_SDP_v1_5Sep2016.dta" 
+local PMA2020dataset1 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Round1/Final_PublicRelease/SDP/PMA2014_BFR1_SDP_v1_5Sep2016/PMA2014_BFR1_SDP_v1_5Sep2016.dta" 
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMA2020dataset2 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Round2/Final_PublicRelease/SDP/PMA2015_BFR2_SDP_v1_5Sep2016/PMA2015_BFR2_SDP_v1_5Sep2016.dta"
+local PMA2020dataset2 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Round2/Final_PublicRelease/SDP/PMA2015_BFR2_SDP_v1_5Sep2016/PMA2015_BFR2_SDP_v1_5Sep2016.dta"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMA2020dataset3 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Round3/Final_PublicRelease/SDP/PMA2016_BFR3_SDP_v1_28Nov2016/PMA2016_BFR3_SDP_v1_28Nov2016.dta"
+local PMA2020dataset3 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Round3/Final_PublicRelease/SDP/PMA2016_BFR3_SDP_v1_28Nov2016/PMA2016_BFR3_SDP_v1_28Nov2016.dta"
 
 ***** FOURTH DATASET *****
 * Dataset 4 Directory
-local PMA2020dataset4 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Round4/Final_PublicRelease/SDP/PMA2016_BFR4_SDP_v1_3March2018/PMA2016_BFR4_SDP_v1_3Mar2018.dta"
+local PMA2020dataset4 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Round4/Final_PublicRelease/SDP/PMA2016_BFR4_SDP_v1_3March2018/PMA2016_BFR4_SDP_v1_3Mar2018.dta"
 
 ***** FIFTH DATASET *****
 * Dataset 5 Directory
-local PMA2020dataset5 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Round5/Final_PublicRelease/SDP/PMA2017_BFR5_SDP_v1_31Aug2018/PMA2017_BFR5_SDP_v1_31Aug2018.dta"
+local PMA2020dataset5 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Round5/Final_PublicRelease/SDP/PMA2017_BFR5_SDP_v1_31Aug2018/PMA2017_BFR5_SDP_v1_31Aug2018.dta"
 
 ***** SIXTH DATASET *****
 * Dataset 6 Directory
-local PMA2020dataset6 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Round6/Final_PublicRelease/SDP/PMA2019_BFR6_SDP_v1_17May2019/PMA2019_BFR6_SDP_v1_17May2019.dta"
+local PMA2020dataset6 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Round6/Final_PublicRelease/SDP/PMA2019_BFR6_SDP_v1_17May2019/PMA2019_BFR6_SDP_v1_17May2019.dta"
 
 ***** SEVENTH DATASET *****
 * Dataset 7 Directory
-local PMA2020dataset7 "/Users/ealarson/Dropbox (Gates Institute)/12 Kenya/PMAKE_Datasets/Round7/Final_PublicRelease/SDP/PMA2018_KER7_SDP_v1_17May2019/PMA2018_KER7_SDP_v1_17May2019.dta"
+local PMA2020dataset7 
 
 ***********************************************
 * PMA DATASETS
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase1/Final_PublicRelease/SQ/Previously released versions/PMA_BFP1_SQ_v1_14Sep2020/PMA_BFP1_SQ_Baseline_v1_14Sep2020.dta"
+local PMAdataset1 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Phase1/Final_PublicRelease/SQ/PMA2020_BFP1_SQ_v2.0_1Sep2024/PMA2020_BFP1_SQ_v2.0_1Sep2024.dta"
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase2/Final_PublicRelease/SQ/Previously released versions/PMA2021_BFP2_SQ_v2.0_6May2022/PMA2021_BFP2_SQ_v2.0_6May2022.dta"
+local PMAdataset2 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Phase2/Final_PublicRelease/SQ/PMA2021_BFP2_SQ_v3.0_1Sep2024/PMA2021_BFP2_SQ_v3.0_1Sep2024.dta"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset3 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase3/Final_PublicRelease/SQ/Previoulsy released versions/PMA2022_BFP3_SQ_v1.0_1Sep2022/PMA2022_BFP3_SQ_Questionnaire_v1.0_1Sep2022.dta"
+local PMAdataset3 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Phase3/Final_PublicRelease/SQ/PMA2022_BFP3_SQ_v2.0_1Sep2024/PMA2022_BFP3_SQ_Questionnaire_v2.0_1Sep2024.dta"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset4 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/SQ/Previoulsy released versions/PMA2022_BFP3_SQ_v1.0_1Sep2022/PMA2022_BFP3_SQ_Questionnaire_v1.0_1Sep2022.dta"
+local PMAdataset4 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/BF-Burkina/PMABF_Datasets/Phase4/Final_PublicRelease/SQ/PMA2024_BFP4_SQ_v1.0_1Sep2024/PMA2024_BFP4_SQ_v1.0_1Sep2024.dta"
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
