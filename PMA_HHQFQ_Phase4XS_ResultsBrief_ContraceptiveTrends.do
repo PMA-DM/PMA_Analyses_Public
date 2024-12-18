@@ -173,7 +173,7 @@ local  PMAdataset10 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase
 local  PMAdataset10dates "01-2/2022"
 
 * NOTE: Update PMA dataset below to correspond to local macro for Phase 4 dataset. For example if the local macro for Phase 4 is PMAdataset9, then update that below as `PMAdataset9'
-local PMAPHASE4dataset `PMAdataset9'
+local PMAPhase4dataset `PMAdataset6'
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
