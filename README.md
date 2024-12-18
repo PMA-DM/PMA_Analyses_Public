@@ -13,10 +13,12 @@ _Currently the .do files in this repository generate the following outputs:_
 - PMA COVID-19 brief
 - PMA Ethiopia 2019 SDP Technical Report
 - PMA Ethiopia Cohort 1: 6-Weeks and 6-Months MNH Technical Reports
-
-_We are working on .do files for the following outputs:_
 - PMA Phase 3 XS brief: Household and SDP sections
-- PMA Phase 3 Panel brief 
+- PMA Phase 3 Panel brief
+  
+_We are working on .do files for the following outputs:_
+- PMA Phase 4 XS brief: Household and SDP sections
+- PMA Phase 4 Panel brief 
 
 ***Please note: Data presented in the PMA2020 2-pagers or PMA briefs online represent preliminary results and therefore there may be slight differences between the .do file results and those in the brief. Please access [DataLab](https://datalab.pmadata.org/) to cross check any discrepancies and get the final estimates.***
 
@@ -38,10 +40,12 @@ _Actuellement, les .do files de ce répertoire génèrent les outputs suivants :
 - PMA COVID-19, brief de l'enquête COVID-19
 - Rapport "Sites de prestation de santé" du PMA Ethiopia 2019
 - PMA Ethiopia Cohort 1: rapport MNH des enquêtes à 6-Semaines et à 6-Mois
-
-_Nous travaillons sur les .do files pour les outputs suivant :_
 - PMA Phase 3, brief de l'enquête transversale, sections "Ménages/Femmes" et "Sites de prestation de santé"
 - PMA Phase 3, brief de l'enquête par panel
+
+_Nous travaillons sur les .do files pour les outputs suivant :_
+- PMA Phase 4, brief de l'enquête transversale, sections "Ménages/Femmes" et "Sites de prestation de santé"
+- PMA Phase 4, brief de l'enquête par panel
 
 ***Veuillez noter : Les données présentées dans le 2-pager de PMA2020 ou les briefs de PMA sur le site web représentent les résultats préliminares, et par conséquent il est possible que vous trouviez de légères différences entre les résultats du .do file et ceux qui se trouvent dans le 2-pager. Veuillez visiter [DataLab](https://datalab.pmadata.org/) pour vérifier les résultats et obtenir les estimations finales.***
 
