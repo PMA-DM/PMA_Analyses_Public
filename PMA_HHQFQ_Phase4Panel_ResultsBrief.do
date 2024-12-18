@@ -1,11 +1,11 @@
 /*******************************************************************************
 * The following .do file will create the .xls file output that PMA used to 
-* 	generate its Phase 3 Panel briefs using PMA's publicly available Household 
+* 	generate its Phase 4 Panel briefs using PMA's publicly available Household 
 *	and Female dataset
 *
-* This .do file will only work on Phase 1, Phase 2 and Phase 3 HHQFQ panel  
+* This .do file will only work on Phase 1, Phase 2, Phase 3 and Phase 4 HHQFQ panel  
 *	datasets. You can  find the .do files to generate the .xls file outputs for  
-* 	PMA's publicly available Phase 3 SDP, CQ and COVID19 datasets and other     
+* 	PMA's publicly available Phase 4 SDP, CQ and COVID19 datasets and other     
 *   surveys in the PMA_Analyses_Public repository
 *
 * If you have any questions on how to use this or any of the other .do files in
@@ -15,13 +15,13 @@
 
 /*******************************************************************************
 *
-*  FILENAME:		PMA_HHQFQ_Phase3Panel_ResultsBrief.do
-*  PURPOSE:			Generate the .xls output for the PMA Phase 3 Panel Results Brief
+*  FILENAME:		PMA_HHQFQ_Phase4Panel_ResultsBrief.do
+*  PURPOSE:			Generate the .xls output for the PMA Phase 4 Panel Results Brief
 *  CREATED BY: 		Guy Bai (gbai5@jhu.edu)
-*  DATA IN:			PMA's Phase3 Panel HHQFQ publicly released datasets
-*  DATA OUT: 		PMA_COUNTRY_Phase3_Panel_Analysis_DATE.dta
-*  FILE OUT: 		PMA_COUNTRY_Phase3_Panel_Analysis_DATE.xls
-*  LOG FILE OUT: 	PMA_COUNTRY_Phase3_Panel_Log_DATE.log
+*  DATA IN:			PMA's Phase4 Panel HHQFQ publicly released datasets
+*  DATA OUT: 		PMA_COUNTRY_Phase4_Panel_Analysis_DATE.dta
+*  FILE OUT: 		PMA_COUNTRY_Phase4_Panel_Analysis_DATE.xls
+*  LOG FILE OUT: 	PMA_COUNTRY_Phase4_Panel_Log_DATE.log
 *
 *******************************************************************************/
 
@@ -66,21 +66,26 @@ numlabel, add
 *		  local briefdir "~/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "~\PMA2020\NigeriaAnalysisOutput"
-local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/Data_Not_Shared/Analyses_Private_Datadir"
+local briefdir "/Users/guymartialbai/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/#Data_Not_Shared/Analyses_Private_Datadir/Phase4"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase1/Final_PublicRelease/HQFQ/Previously released version/PMA2020_BFP1_HQFQ_v2.0_1Oct2021/PMA2020_BFP1_HQFQ_v2.0_1Oct2021.dta"
+local PMAdataset1 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/NE-Niger/PMANE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2021_NEP1_HQFQ_v2.0_1Sep2024/PMA2021_NEP1_HQFQ_v2.0_1Sep2024.dta" 
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase2/Final_PublicRelease/HQFQ/Previously released versions/PMA2021_BFP2_HQFQ_v1.0_7Oct2021/PMA2021_BFP2_HQFQ_v1.0_1Oct2021.dta"
+local PMAdataset2 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/NE-Niger/PMANE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2022_NEP2_HQFQ_v2.0_1Sep2024/PMA2022_NEP2_HQFQ_v2.0_1Sep2024.dta"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset3 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase3/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
+local PMAdataset3 "~/Dropbox (Gates Institute)/NE-Niger/PMANE_Datasets/Phase3/Final_PublicRelease/HQFQ/PMA2023_NEP3_HQFQ_v1.0_1Sep2023/PMA2023_NEP3_HQFQ_1Sep2023.dta" 
+
+***** FOURTH DATASET *****
+* Dataset 4 Directory
+local PMAdataset4 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/NE-Niger/PMANE_Datasets/Phase4/Final_PublicRelease/HQFQ/PMA2024_NEP4_HQFQ_v1.0_1Sep2024/PMA2024_NEP4_HQFQ_v1.0_1Sep2024.dta"
+
 
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
@@ -96,7 +101,7 @@ local PMAdataset3 "~/Dropbox (Gates Institute)/BF-Burkina/PMABF_Datasets/Phase3/
 *		name of the local should be "Country_Region" or "Country_State"
 *		- For example: local country "NG"
 *		- For example: local country "NE_Niamey"
-global country "Burkina"
+global country "Niger"
 local country $country
 
 *	1a. The subnational macros allow you to generate the estimates on one of
@@ -181,7 +186,7 @@ local date=subinstr("`c_today'", " ", "",.)
 cd "`briefdir'"
 
 * Confirm that correct variables were chosen for locals
-forvalues i=1/3 {
+forvalues i=1/4 {
 	
 	use "`PMAdataset`i''", clear
 	
@@ -289,13 +294,13 @@ forvalues i=1/3 {
 }
 		
 * Start log file
-log using "`briefdir'/PMA_`country'_Phase3_Panel_Analysis_`date'.log", replace		
+log using "`briefdir'/PMA_`country'_Phase4_Panel_Analysis_`date'.log", replace		
 
 * Set local for xls file
-local tabout "PMA_`country'_Phase3_Panel_Analysis_`date'.xls"
+local tabout "PMA_`country'_Phase4_Panel_Analysis_`date'.xls"
 
 * Set local for dataset
-local dataset "PMA_`country'_Phase3_Panel_Analysis_`date'.dta"
+local dataset "PMA_`country'_Phase4_Panel_Analysis_`date'.dta"
 
 *******************************************************************************
 * SECTION 4: GENERATE NECESSARY VARIABLES AND SET UP DATA FOR ANALYSIS
@@ -304,9 +309,9 @@ local dataset "PMA_`country'_Phase3_Panel_Analysis_`date'.dta"
 *	move, update or delete
 *******************************************************************************
 
-forvalues x=1/3	{
+forvalues x=1/4	{
 
-	* OPEN PHASE 1, 2, or 3 DATASET HERE 
+	* OPEN PHASE 1, 2, 3 or 4 DATASET HERE 
 	use "`Phase`x''", clear
 
 	****************************************	
@@ -393,12 +398,12 @@ forvalues x=1/3	{
 		* Only Keep Phase 1 Variables Required for Analysis
 		keep FQmetainstanceID age5 education `wealth' married ///
 			partner_support FRS_result eligible last_night HHQ_result cp ///
-			current_methodnum_rc pregnant country FQ_age flw_willing unmettot ///
+			current_methodnum_rc pregnant country FQ_age FQflw_willing unmettot ///
 			intention_use urban parity female_ID
 		
 		* Identify sample enrolled for panel at P1 for P2 
 		gen new_panel_eligible=0 if female_ID != ""
-		replace new_panel_eligible=1 if FQ_age<=48 & flw_willing==1 
+		replace new_panel_eligible=1 if FQ_age<=48 & FQflw_willing==1 
 		label var new_panel_eligible "Phase `x' population enrolled for P2 panel"
 		label val new_panel_eligible yes_no_list	
 	}
@@ -409,38 +414,60 @@ forvalues x=1/3	{
 		* Only Keep Phase 2 Variables Required for Analysis	
 		keep FQmetainstanceID age5 education `wealth' married /// 
 			partner_support FRS_result eligible last_night HHQ_result cp /// 
-			current_methodnum_rc pregnant country FQ_age flw_willing unmettot ///
+			current_methodnum_rc pregnant country FQ_age FQflw_willing unmettot ///
 			intention_use urban parity panel_woman xs_sample newly_enrolled female_ID P2FUweight
 			
 		*Identify sample enrolled for panel at P2 for P3 
 		gen new_panel_eligible=0 if female_ID != ""
-		replace new_panel_eligible=1 if FQ_age<=48 & xs_sample==1 & newly_enrolled==1 & flw_willing==1
+		replace new_panel_eligible=1 if FQ_age<=48 & xs_sample==1 & newly_enrolled==1 & FQflw_willing==1
 		label var new_panel_eligible "Phase `x' population enrolled for P3 panel"
 		label val new_panel_eligible yes_no_list	
 	}
 	
+	
 	if `x'==3 {
+		
+		* Only Keep Phase 3 Variables Required for Analysis	
+		keep FQmetainstanceID age5 education `wealth' married /// 
+			partner_support FRS_result eligible last_night HHQ_result cp /// 
+			current_methodnum_rc pregnant country FQ_age FQflw_willing unmettot ///
+			intention_use urban parity panel_woman xs_sample newly_enrolled female_ID P1P2P3_FUweight P1P3_FUweight P2P3_FUweight
+			
+		*Identify sample enrolled for panel at P2 for P3 
+		gen new_panel_eligible=0 if female_ID != ""
+		replace new_panel_eligible=1 if FQ_age<=48 & xs_sample==1 & newly_enrolled==1 & FQflw_willing==1
+		label var new_panel_eligible "Phase `x' population enrolled for P4 panel"
+		label val new_panel_eligible yes_no_list	
+	}
+	
+	
+	if `x'==4 {
 			
 		capture confirm var unmettot, exact
 		if _rc!=0 {
 			gen unmettot = 1
 			} 	
 		
-		capture confirm var P1P2P3_FUweight, exact
+		capture confirm var P1234_FUweight, exact
 		if _rc!=0 {
-			gen P1P2P3_FUweight = 1 if FRS_result==1 & last_night==1
+			gen P1234_FUweight = 1 if FRS_result==1 & last_night==1
 			}
 			
-		capture confirm var P2P3_FUweight, exact
+		capture confirm var P2P4_FUweight, exact
 		if _rc!=0 {
-			gen P2P3_FUweight = 1 if FRS_result==1 & last_night==1
+			gen P2P4_FUweight = 1 if FRS_result==1 & last_night==1
 			}	
 			
-		keep FQmetainstanceID age5 education `wealth' married ///
+		capture confirm var P3P4_FUweight, exact
+		if _rc!=0 {
+			gen P3P4_FUweight = 1 if FRS_result==1 & last_night==1
+			}	
+
+			keep FQmetainstanceID age5 education `wealth' married ///
 			partner_support FRS_result eligible last_night HHQ_result cp ///
 			current_methodnum_rc pregnant country FQ_age FQflw_willing unmettot ///
 			intention_use urban parity  panel_woman xs_sample newly_enrolled female_ID ///
-			P1P2P3_FUweight P2P3_FUweight		 
+			P1234_FUweight P2P4_FUweight P3P4_FUweight
 	}
 
 save "PMA_`country'_Phase`x'_Panel_Analysis_`date'.dta", replace
@@ -450,7 +477,7 @@ save "PMA_`country'_Phase`x'_Panel_Analysis_`date'.dta", replace
 *******************************************************************************
 * SECTION X: PREPARE AND MERGE DATASETS FOR PHASE 3 PANEL ANALYSIS
 *******************************************************************************
-* Xa. Prepare Phase 1, 2 and 3 datasets before merging 
+* Xa. Prepare Phase 1, 2, 3 and 4 datasets before merging 
 
 * Phase 1	
 	use "PMA_`country'_Phase1_Panel_Analysis_`date'.dta", clear
@@ -480,15 +507,26 @@ save "PMA_`country'_Phase`x'_Panel_Analysis_`date'.dta", replace
 
 * Phase 3	
 	use "PMA_`country'_Phase3_Panel_Analysis_`date'.dta", clear
+	keep if (new_panel_eligible==1 | female_ID != "")
 	cap rename FRS_result_cc FRS_result
 	rename * *_P3
 	rename female_ID_P3 female_ID
 	replace female_ID=FQmetainstanceID if female_ID==""
-	keep if female_ID != ""
-	sort FRS_result_P3
-	duplicates drop female_ID, force
+	duplicates drop female_ID, force // [NOTE]: We are not supposed to have duplicates on female_ID here 	
 	tempfile `country'_Phase3
 	save ``country'_Phase3'.dta, replace
+	
+* Phase 4
+	use "PMA_`country'_Phase4_Panel_Analysis_`date'.dta", clear
+	cap rename FRS_result_cc FRS_result
+	rename * *_P4
+	rename female_ID_P4 female_ID
+	replace female_ID=FQmetainstanceID if female_ID==""
+	keep if female_ID != ""
+	sort FRS_result_P4
+	duplicates drop female_ID, force
+	tempfile `country'_Phase4
+	save ``country'_Phase4'.dta, replace	
 
 * Xb. Merge P1 data with P2 data 
 
@@ -500,7 +538,7 @@ label define P1P2_merge_lab 1 "P1 Panel Women LTFU at P2" 2 "XS Women at P2"  3 
 label values P1P2_merge P1P2_merge_lab
 
 * Capture newly enrolled panel women at Phase 2, including women who were de facto at Phase 2 but not at Phase 1
-replace new_panel_eligible_P2=1 if P1P2_merge==2 & newly_enrolled_P2==. & FQ_age_P2<=48 & flw_willing_P2==1
+replace new_panel_eligible_P2=1 if P1P2_merge==2 & newly_enrolled_P2==. & FQ_age_P2<=48 & FQflw_willing_P2==1
 
 tempfile P1P2_Merged
 save `P1P2_Merged'.dta, replace
@@ -509,8 +547,18 @@ save `P1P2_Merged'.dta, replace
 merge 1:1 female_ID using "``country'_Phase3'.dta" , gen(P1P2P3_merge)
 
 * Label variable P1P2P3_merge
-label define P1P2P3_merge_lab 1 "Panel Women Not found at P3" 2 "XS Women at P3" 3 "Women Found P1/P3 or P2/P3 or P1/P2/P3"
+label define P1P2P3_merge_lab 1 "Panel Women Not found at P3" 2 "XS Women at P3" 3 "Panel Women Found at P3"
 label values P1P2P3_merge P1P2P3_merge_lab
+
+* Capture newly enrolled panel women at Phase 3
+replace new_panel_eligible_P3 = 1 if P1P2P3_merge== 2 & newly_enrolled_P3 == . & FQ_age_P3 <= 48 & FQflw_willing_P3 == 1
+
+* Xd. Merge P1/P2/P3 data with P4 data 
+merge 1:1 female_ID using "``country'_Phase4'.dta" , gen(P1234_merge)
+
+* Label variable P1P2P3_merge
+label define P1234_merge_lab 1 "Panel Women Not found at P4" 2 "XS Women at P4" 3 "Panel Women Found at P4"
+label values P1234_merge P1234_merge_lab
 
 *******************************************************************************
 * Summary Tables Calculation
@@ -546,16 +594,22 @@ label values P1P2P3_merge P1P2P3_merge_lab
 	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
 	h2("Women enrolled at Phase 1 who Completed Phase 3") h3(nil)
 	
-	* Women First Enrolled at P1 who completed P2 & P3 surveys #P1Enrolled_CompletedP2P3
-	tabout P1P2P3_merge if new_panel_eligible_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & last_night_P2==1 & last_night_P3==1 ///
+	* Women First Enrolled at P1 who completed P4 survey #P1Enrolled_CompletedP4
+	tabout P1234_merge if new_panel_eligible_P1==1 & FRS_result_P4==1 & last_night_P4==1 ///
 	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
-	h2("Women enrolled at Phase 1 who Completed both Phase 2 and Phase 3") h3(nil)
-
-	* Women First Enrolled at P1 who completed P1 & P2 & P3 surveys #P1Enrolled_CompletedP1P2P3
-	tabout P1P2P3_merge if new_panel_eligible_P1==1 & FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & last_night_P1==1 & last_night_P2==1 & last_night_P3==1 ///
+	h2("Women enrolled at Phase 1 who Completed Phase 4") h3(nil)	
+	
+	* Women First Enrolled at P1 who completed P2 & P3 surveys #P1Enrolled_CompletedP3P4
+	tabout P1234_merge if new_panel_eligible_P1==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P3==1 & last_night_P4==1 ///
 	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
-	h2("Women enrolled at Phase 1 who Completed Phase 1, Phase 2 and Phase 3") h3(nil)	
-
+	h2("Women enrolled at Phase 1 who Completed both Phase 3 and Phase 4") h3(nil)
+	
+	* Women First Enrolled at P1 who completed P1 & P2 & P3 & P4 surveys #P1Enrolled_CompletedP1P2P3P4
+	tabout P1234_merge if new_panel_eligible_P1==1 & FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P1==1 & last_night_P2==1 & last_night_P3==1 & last_night_P4==1 ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("Women enrolled at Phase 1 who Completed Phase 1, Phase 2, Phase 3 and Phase 4") h3(nil)	
+	
+	
 **********************************************	
 * 1.b. Enrolled at Phase 2
 **********************************************
@@ -576,22 +630,54 @@ label values P1P2P3_merge P1P2P3_merge_lab
 	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
 	h2("Women first enrolled at Phase 2 who Completed Phase 3") h3(nil)
 	
-	* Women First Enrolled at P2 who completed P2 & P3 survey #P2Enrolled_CompletedP2P3
-	tabout P1P2P3_merge if new_panel_eligible_P2==1 & FRS_result_P2==1 & FRS_result_P3==1 & last_night_P2==1 & last_night_P3==1 ///
+	* Women First Enrolled at P2 who completed P4 survey #P2Enrolled_CompletedP4
+	tabout P1234_merge if new_panel_eligible_P2==1 & FRS_result_P2==1 & FRS_result_P4==1 & last_night_P4==1 ///
 	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
-	h2("Women first enrolled at Phase 2 who Completed Phase 2 and Phase 3") h3(nil)
+	h2("Women first enrolled at Phase 2 who Completed Phase 4") h3(nil)
 
+	* Women First Enrolled at P2 who completed P2 & P3 surveys #P2Enrolled_CompletedP3P4
+	tabout P1234_merge if new_panel_eligible_P2==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P3==1 & last_night_P4==1 ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("Women first enrolled at Phase 2 who Completed Phase 3 and Phase 4") h3(nil)
+	
+	
+**********************************************	
+* 1.b. Enrolled at Phase 3
+**********************************************
+	
+	** Women who were enrolled at P3 #P3Enrolled
+	tabout new_panel_eligible_P3 if new_panel_eligible_P3==1  ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("ENROLLED AT PHASE 3") ///
+	h3("Women enrolled at Phase 3")
+	
+	** Among the Women who were enrolled at P3, how many completed survey #P3Enrolled_CompletedP3
+	tabout new_panel_eligible_P3 if new_panel_eligible_P3==1 & FRS_result_P3==1 & last_night_P3==1 ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none)  ///
+	h2("Women enrolled at Phase 3 who Completed Phase 3") h3(nil)
+
+	* Women First Enrolled at P3 who completed P4 survey #P3Enrolled_CompletedP4
+	tabout P1234_merge if new_panel_eligible_P3==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P4==1 ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("Women first enrolled at Phase 3 who Completed Phase 4") h3(nil)
+	
+	* Women First Enrolled at P3 who completed P3 & P4 surveys #P3Enrolled_CompletedP3P4
+	tabout P1234_merge if new_panel_eligible_P3==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P3==1 & last_night_P4==1 ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("Women first enrolled at Phase 3 who Completed Phase 3 and Phase 4") h3(nil)
+
+	
 **********************************************	
 * 1.c. Total Women Calculations
 **********************************************
 
-	** Total number of panel women enrolled #TotalPanelWomen_Enrolled (P1Enrolled + P2Enrolled)
+	** Total number of panel women enrolled #TotalPanelWomen_Enrolled (P1Enrolled + P2Enrolled + P3Enrolled)
 	gen totalpanel_eligible=0
-	replace totalpanel_eligible=1 if new_panel_eligible_P1==1 | new_panel_eligible_P2==1
+	replace totalpanel_eligible=1 if new_panel_eligible_P1==1 | new_panel_eligible_P2==1 | new_panel_eligible_P3==1
 	tabout totalpanel_eligible if totalpanel_eligible==1 ///
 	using `tabout' , append cells(freq) f(0) clab(n) ptotal(none) ///
 	h2("TOTAL PANEL WOMEN") ///
-	h3("Total panel women enrolled at Phase 1 and Phase 2")
+	h3("Total panel women enrolled at Phase 1, Phase 2 and Phase 3")
 
 	** Total number of panel women who completed P1 #TotalPanelWomen_CompletedP1
 	gen TotalPanelWomen_CompletedP1=0
@@ -606,26 +692,33 @@ label values P1P2P3_merge P1P2P3_merge_lab
 	tabout TotalPanelWomen_CompletedP2 if TotalPanelWomen_CompletedP2==1 ///
 	using `tabout' , append cells(freq) f(0) clab(n) ptotal(none) ///
 	h2("Total panel women who completed Phase 2") h3(nil)
-
+	
 	* Total number of women who completed P3 survey #TotalPanelWomen_CompletedP3
 	gen TotalPanelWomen_CompletedP3=0
-	replace TotalPanelWomen_CompletedP3=1 if (new_panel_eligible_P2==1 & FRS_result_P3==1 & last_night_P3==1) | (new_panel_eligible_P1==1 & FRS_result_P3==1 & last_night_P3==1) 
+	replace TotalPanelWomen_CompletedP3=1 if (new_panel_eligible_P2==1 & FRS_result_P3==1 & last_night_P3==1) | (new_panel_eligible_P1==1 & FRS_result_P3==1 & last_night_P3==1) | (new_panel_eligible_P3 == 1 & FRS_result_P3 == 1 & last_night_P3 == 1)
 	tabout TotalPanelWomen_CompletedP3 if TotalPanelWomen_CompletedP3==1 ///
 	using `tabout' , append cells(freq) f(0) clab(n) ptotal(none) ///
 	h2("Total panel women who completed Phase 3") h3(nil)
-	
-	* Total number of women who completed P2 and P3 surveys
-	gen TotalPanelWomen_CompletedP2P3=0
-	replace TotalPanelWomen_CompletedP2P3=1 if P1P2P3_merge==3 & last_night_P2==1 & last_night_P3==1 & FRS_result_P2==1 & FRS_result_P3==1 
-	tabout TotalPanelWomen_CompletedP2P3 if TotalPanelWomen_CompletedP2P3==1 ///
+		
+	* Total number of women who completed P4 survey #TotalPanelWomen_CompletedP4
+	gen TotalPanelWomen_CompletedP4=0
+	replace TotalPanelWomen_CompletedP4=1 if (new_panel_eligible_P3==1 & FRS_result_P4==1 & last_night_P4==1) | (new_panel_eligible_P2==1 & FRS_result_P4==1 & last_night_P4==1) | (new_panel_eligible_P1==1 & FRS_result_P4==1 & last_night_P4==1)
+	tabout TotalPanelWomen_CompletedP4 if TotalPanelWomen_CompletedP4==1 ///
 	using `tabout' , append cells(freq) f(0) clab(n) ptotal(none) ///
-	h2("Total panel women who completed Phase 2 and Phase 3") h3(nil)
-
-	* Total number of women who completed P1, P2 and P3 surveys
-	tabout P1P2P3_merge if new_panel_eligible_P1==1 & FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & last_night_P1==1 & last_night_P2==1 & last_night_P3==1 ///
-	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
-	h2("Total panel women who Completed Phase 1, Phase 2 and Phase 3") h3(nil)	
+	h2("Total panel women who completed Phase 4") h3(nil)
+	 
+	* Total number of women who completed P3 and P4 surveys
+	gen TotalPanelWomen_CompletedP3P4=0
+	replace TotalPanelWomen_CompletedP3P4=1 if P1234_merge==3 & last_night_P3==1 & last_night_P4==1 & FRS_result_P3==1 & FRS_result_P4==1 
+	tabout TotalPanelWomen_CompletedP3P4 if TotalPanelWomen_CompletedP3P4==1 ///
+	using `tabout' , append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("Total panel women who completed Phase 3 and Phase 4") h3(nil)	
 	
+	* Total number of women who completed P1, P2, P3 and P4 surveys
+	tabout P1234_merge if new_panel_eligible_P1==1 & FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P1==1 & last_night_P2==1 & last_night_P3==1 & last_night_P4==1 ///
+	using `tabout', append cells(freq) f(0) clab(n) ptotal(none) ///
+	h2("Total panel women who Completed Phase 1, Phase 2, Phase 3 and Phase 4") h3(nil)	
+		
 	
 *******************************************************************************
 * SECTION 5: RESPONSE RATES
@@ -633,17 +726,17 @@ label values P1P2P3_merge P1P2P3_merge_lab
 * Section 5 will generate household and female survey response rates. To
 * 	generate the correct response rates, please do not move, update or delete
 *******************************************************************************
-drop if P1P2P3_merge==2
+drop if P1234_merge==2
 
 * Tabout Response Rate Among All Panel Eligible Women  
-tabout FRS_result_P3 ///
+tabout FRS_result_P4 ///
 	using `tabout', append cells(freq col) f(0 1) clab(n %) ///
 	h2("FQ Result, among panel eligible women")
 
 * Keep only merged observations of de facto women
-keep if P1P2P3_merge==3 
-keep if (last_night_P1==1 | last_night_P2==1 | last_night_P3==1)
-drop P1P2P3_merge
+keep if P1234_merge==3 
+keep if (last_night_P1==1 | last_night_P2==1 | last_night_P3==1 | last_night_P4==1)
+drop P1234_merge
 
 save "`dataset'", replace
 
@@ -654,6 +747,7 @@ save "`dataset'", replace
 * 	move, update or delete
 *******************************************************************************
 * Change in Contraceptive Use Sankey
+
 	** Phase 2 Change in Contraceptive Use
 	gen phase2_cp_group=.
 		replace phase2_cp_group=0 if pregnant_P2==1
@@ -680,15 +774,34 @@ save "`dataset'", replace
 		label define cp_grouped_label3 0 "Phase 3 Pregnant" 1 "Phase 3 Not using FP" 2 "Phase 3 Using FP"
 		label val phase3_cp_group cp_grouped_label3
 		label var phase3_cp_group "Contraceptive use status from Phase 3 Survey"
+
+	** Phase 4 Change in Contraceptive Usex
+	gen phase4_cp_group=.
+		replace phase4_cp_group=0 if pregnant_P4==1
+		replace phase4_cp_group=1 if cp_P4==0 & pregnant_P4!=1
+		replace phase4_cp_group=2 if cp_P4==1
+		label define cp_grouped_label4 0 "Phase 4 Pregnant" 1 "Phase 4 Not using FP" 2 "Phase 4 Using FP"
+		label val phase4_cp_group cp_grouped_label4
+		label var phase4_cp_group "Contraceptive use status from Phase 4 Survey"
 		
 	preserve
-	keep if phase3_cp_group != . & phase2_cp_group	!=. & phase1_cp_group !=.
-	keep if last_night_P1==1 & last_night_P2==1 & last_night_P3==1
+	keep if phase3_cp_group != . & phase2_cp_group	!=. & phase1_cp_group !=. & phase4_cp_group !=.
+	keep if last_night_P1==1 & last_night_P2==1 & last_night_P3==1 & last_night_P4 ==1
 	tempfile Sankey1
 	save `Sankey1', replace
 	restore
 		
 	* Change in Method Use Sankey
+	** Phase 4 Change in Method Use
+	gen phase4_method_group=.
+		replace phase4_method_group=0 if cp_P4==0 
+		replace phase4_method_group=1 if cp_P4==1 & current_methodnum_rc_P4>=30 
+		replace phase4_method_group=2 if cp_P4==1 & current_methodnum_rc_P4>=5 & current_methodnum_rc_P4<30 
+		replace phase4_method_group=3 if cp_P4==1 & current_methodnum_rc_P4>=1 & current_methodnum_rc_P4<5 
+		label define method_grouped_label4 0 "Phase 4 No use" 1 "Phase 4 Traditional" 2 "Phase 4 Short Acting" 3 "Phase 4 Long Acting"
+		label val phase4_method_group method_grouped_label4
+		label var phase4_method_group "Method use status from Phase 4 Survey"		
+	
 	** Phase 3 Change in Method Use
 	gen phase3_method_group=.
 		replace phase3_method_group=0 if cp_P3==0 
@@ -723,41 +836,41 @@ save "`dataset'", replace
 
 
 	preserve
-	keep if phase3_method_group != . & phase2_method_group	!=. & phase1_method_group !=.
-	keep if last_night_P1==1 & last_night_P2==1 & last_night_P3==1
+	keep if phase4_method_group != . & phase3_method_group != . & phase2_method_group	!=. & phase1_method_group !=.
+	keep if last_night_P1==1 & last_night_P2==1 & last_night_P3==1 & last_night_P4 ==1
 	tempfile Sankey2
 	save `Sankey2', replace
 	restore
-		
+	
 							
 	**Continuers
 	gen continuers=0
-		replace continuers=1 if (cp_P3==1 & cp_P2==1) & (current_methodnum_rc_P3==current_methodnum_rc_P2)
-		label var continuers "Women using the same method at P3 as P2"
+		replace continuers=1 if (cp_P4==1 & cp_P3==1) & (current_methodnum_rc_P4==current_methodnum_rc_P3)
+		label var continuers "Women using the same method at P4 as P3"
 		label val continuers yes_no_list
 		
 	**Discontinuers
 	gen discontinuers=0
-		replace discontinuers=1 if cp_P3==0 & cp_P2==1 
-		label var discontinuers "Women who used a method at P2 but are no longer using a method/pregnant at P3"
+		replace discontinuers=1 if cp_P4==0 & cp_P3==1 
+		label var discontinuers "Women who used a method at P3 but are no longer using a method/pregnant at P4"
 		label val discontinuers yes_no_list
 		
 	**Adopters
 	gen adopters=0
-		replace adopters=1 if cp_P3==1 & cp_P2==0 
-		label var adopters "Women who were not using a method/pregnant at P2 but are using at P3"
+		replace adopters=1 if cp_P4==1 & cp_P3==0 
+		label var adopters "Women who were not using a method/pregnant at P3 but are using at P4"
 		label val adopters yes_no_list	
 		
-	**Non-Adopters
+	**Continued non-use
 	gen non_adopters=0
-		replace non_adopters=1 if cp_P3==0 & cp_P2==0 
-		label var non_adopters "Women who were not using a method/pregnant at P2 and are not using at P3"
+		replace non_adopters=1 if cp_P4==0 & cp_P3==0 
+		label var non_adopters "Women who were not using a method/pregnant at P3 and are not using at P4"
 		label val non_adopters yes_no_list		
 		
 	**Switchers
 	gen switchers=0
-		replace switchers=1 if (cp_P3==1 & cp_P2==1) & (current_methodnum_rc_P3!=current_methodnum_rc_P2) 
-		label var switchers "Women who switched methods between P2 and P3"
+		replace switchers=1 if (cp_P4==1 & cp_P3==1) & (current_methodnum_rc_P4!=current_methodnum_rc_P3) 
+		label var switchers "Women who switched methods between P3 and P4"
 		label val switchers yes_no_list	
 		
 	**Categorical Variable 
@@ -766,7 +879,7 @@ save "`dataset'", replace
 		replace contraceptive_dynamics=3 if adopters==1
 		replace contraceptive_dynamics=4 if non_adopters==1
 		replace contraceptive_dynamics=5 if switchers==1
-		label var contraceptive_dynamics "Women's contraceptive use between Phase 2 and Phase 3"
+		label var contraceptive_dynamics "Women's contraceptive use between Phase 3 and Phase 4"
 		label define c_dynamics_list 1 "Continued using the same method" 2 "Stopped using a method" 3 "Started using a method" 4 "Continued non-use" 5 "Changed methods" 
 		label val contraceptive_dynamics c_dynamics_list
 
@@ -774,7 +887,7 @@ save "`dataset'", replace
 	gen stopped_use=0
 		replace stopped_use=1 if discontinuers==1
 		replace stopped_use=2 if discontinuers==1 & pregnant_P3==1
-		label var stopped_use "Women who stopped using a method or got pregnant between P2 and P3"
+		label var stopped_use "Women who stopped using a method or got pregnant between P3 and P4"
 		label define stopped_use_list 0 "Continued non-use" 1 "Stopped using a method" 2 "Became pregnant" 
 		label val stopped_use stopped_use_list
 		
@@ -802,7 +915,7 @@ pause off
 *******************************************************************************
 preserve
 *Only among women in the Sankey Charts
-keep if FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & last_night_P1==1 & last_night_P2==1 & last_night_P3==1
+keep if FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & FRS_result_P4==1 & last_night_P1==1 & last_night_P2==1 & last_night_P3==1 & last_night_P4==1
 
 *******************************************************************************
 * Change in Contraceptive Use or Non-Use
@@ -812,14 +925,17 @@ keep if FRS_result_P1==1 & FRS_result_P2==1 & FRS_result_P3==1 & last_night_P1==
 * 	among all women 
 
 ** Tabout
-tabout phase1_cp_group phase2_cp_group [aw=P1P2P3_FUweight] ///
+tabout phase1_cp_group phase2_cp_group [aw=P1234_FUweight] ///
 	using `tabout', append c(freq) f(0) clab(n) ///
 		h1("Women who changed their contraceptive use status between Phase 1 (Row) and Phase 2 (Column) - Weighted")
 		
-tabout phase2_cp_group phase3_cp_group [aw=P1P2P3_FUweight] ///
+tabout phase2_cp_group phase3_cp_group [aw=P1234_FUweight] ///
 	using `tabout', append c(freq) f(0) clab(n) ///
 		h1("Women who changed their contraceptive use status between Phase 2 (Row) and Phase 3 (Column) - Weighted")
 		
+tabout phase3_cp_group phase4_cp_group [aw=P1234_FUweight] ///
+	using `tabout', append c(freq) f(0) clab(n) ///
+		h1("Women who changed their contraceptive use status between Phase 3 (Row) and Phase 4 (Column) - Weighted")
 	
 *******************************************************************************
 * Change in Contraceptive Method Type
@@ -829,13 +945,17 @@ tabout phase2_cp_group phase3_cp_group [aw=P1P2P3_FUweight] ///
 *	among all respondents
 
 ** Tabout
-tabout phase1_method_group phase2_method_group [aw=P1P2P3_FUweight] ///
+tabout phase1_method_group phase2_method_group [aw=P1234_FUweight] ///
 	using `tabout', append c(freq) f(0) clab(n) ///
 	h1("Women who changed their method type status between Phase 1 (Row) and Phase 2 (Column) - Weighted")
 
-tabout phase2_method_group phase3_method_group [aw=P1P2P3_FUweight] ///
+tabout phase2_method_group phase3_method_group [aw=P1234_FUweight] ///
 	using `tabout', append c(freq) f(0) clab(n) ///
-	h1("Women who changed their method type status between Phase 1 (Row) and Phase 3 (Column) - Weighted")
+	h1("Women who changed their method type status between Phase 2 (Row) and Phase 3 (Column) - Weighted")
+
+tabout phase3_method_group phase4_method_group [aw=P1234_FUweight] ///
+	using `tabout', append c(freq) f(0) clab(n) ///
+	h1("Women who changed their method type status between Phase 3 (Row) and Phase 4 (Column) - Weighted")
 
 
 *******************************************************************************
@@ -843,17 +963,21 @@ tabout phase2_method_group phase3_method_group [aw=P1P2P3_FUweight] ///
 *******************************************************************************
 		
 ** Percentages
-tabout phase1_cp_group if phase2_cp_group!=. & phase3_cp_group !=. [aw=P1P2P3_FUweight] ///
+tabout phase1_cp_group if phase2_cp_group!=. & phase3_cp_group !=. & phase4_cp_group !=. [aw=P1234_FUweight] ///
 	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
 	h2("Contraceptive use status (Phase 1) - Weighted")
 
-tabout phase2_cp_group if phase1_cp_group!=. & phase3_cp_group !=. [aw=P1P2P3_FUweight] ///
+tabout phase2_cp_group if phase1_cp_group!=. & phase3_cp_group !=. & phase4_cp_group !=. [aw=P1234_FUweight] ///
 	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
 	h2("Contraceptive use status (Phase 2) - Weighted")	
 
-tabout phase3_cp_group if phase1_cp_group!=. & phase2_cp_group !=. [aw=P1P2P3_FUweight] ///
+tabout phase3_cp_group if phase1_cp_group!=. & phase2_cp_group !=. & phase4_cp_group !=. [aw=P1234_FUweight] ///
 	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
 	h2("Contraceptive use status (Phase 3) - Weighted")	
+
+tabout phase4_cp_group if phase1_cp_group!=. & phase2_cp_group !=. & phase3_cp_group !=. [aw=P1234_FUweight] ///
+	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
+	h2("Contraceptive use status (Phase 4) - Weighted")	
 
 	
 *******************************************************************************
@@ -861,18 +985,22 @@ tabout phase3_cp_group if phase1_cp_group!=. & phase2_cp_group !=. [aw=P1P2P3_FU
 *******************************************************************************
 	
 ** Percentages
-tabout phase1_method_group if phase2_method_group!=. & phase3_method_group !=. [aw=P1P2P3_FUweight] ///
+tabout phase1_method_group if phase2_method_group!=. & phase3_method_group !=. & phase4_method_group !=. [aw=P1234_FUweight] ///
 	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
 	h2("Method type status (Phase 1) - Weighted")
 
-tabout phase2_method_group if phase1_method_group!=. & phase3_method_group !=. [aw=P1P2P3_FUweight] ///
+tabout phase2_method_group if phase1_method_group!=. & phase3_method_group !=. & phase4_method_group !=. [aw=P1234_FUweight] ///
 	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
 	h2("Method type status (Phase 2) - Weighted")
 
-tabout phase3_method_group if phase1_method_group!=. & phase2_method_group !=. [aw=P1P2P3_FUweight] ///
+tabout phase3_method_group if phase1_method_group!=. & phase2_method_group !=. & phase4_method_group !=. [aw=P1234_FUweight] ///
 	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
 	h2("Method type status (Phase 3) - Weighted")	
 
+tabout phase4_method_group if phase1_method_group!=. & phase2_method_group !=. & phase3_method_group !=. [aw=P1234_FUweight] ///
+	using `tabout', append oneway c(freq col) f(0 1) clab(n %) ///
+	h2("Method type status (Phase 4) - Weighted")	
+	
 restore	
 
 *******************************************************************************
@@ -881,8 +1009,8 @@ restore
 *
 *******************************************************************************
 preserve
-*Only among women who completed P3 and P2
-keep if FRS_result_P2==1 & FRS_result_P3==1 & last_night_P2==1 & last_night_P3==1
+*Only among women who completed P3 and P4
+keep if FRS_result_P4==1 & FRS_result_P3==1 & last_night_P4==1 & last_night_P3==1
 
 *******************************************************************************
 * Contraceptive Dynamics
@@ -890,27 +1018,27 @@ keep if FRS_result_P2==1 & FRS_result_P3==1 & last_night_P2==1 & last_night_P3==
 
 * Change in contraceptive use status, by age
 *	among all respondents
-tabout contraceptive_dynamics age5_P2 [aw=P2P3_FUweight_P3] ///
+tabout contraceptive_dynamics age5_P3 [aw=P3P4_FUweight_P4] ///
 	using `tabout', append	c(col) f(1) clab(%) npos(row) ///
-	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 2 and PMA Phase 3, by age at P2")
+	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 3 and PMA Phase 4, by age at P3")
 
 * Change in contraceptive use status, by education level
 *	among all respondents	
-tabout contraceptive_dynamics education_P2 [aw=P2P3_FUweight_P3] ///
+tabout contraceptive_dynamics education_P3 [aw=P3P4_FUweight_P4] ///
 	using `tabout', append	c(col) f(1) clab(%) npos(row) ///
-	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 2 and PMA Phase 3, by education level at P2")
+	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 3 and PMA Phase 4, by education level at P3")
 
 * Change in contraceptive use status, by marital status
 *	among all respondents	
-tabout contraceptive_dynamics married_P2 [aw=P2P3_FUweight_P3] ///
+tabout contraceptive_dynamics married_P3 [aw=P3P4_FUweight_P4] ///
 	using `tabout', append	c(col) f(1) clab(%) npos(row) ///
-	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 2 and PMA Phase 3, by marital status at P2")
+	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 3 and PMA Phase 4, by marital status at P3")
 
 * Change in contraceptive use status, by parity
 *	among all respondents	
-tabout contraceptive_dynamics parity_P2 [aw=P2P3_FUweight_P3] ///
+tabout contraceptive_dynamics parity_P3 [aw=P3P4_FUweight_P4] ///
 	using `tabout', append	c(col) f(1) clab(%) npos(row) ///
-	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 2 and PMA Phase 3, by parity level at P2")
+	h1("Percent of women age 15-49 who engaged in one of the following contraceptive use behaviors between PMA Phase 3 and PMA Phase 4, by parity level at P3")
 	
 *******************************************************************************
 *
@@ -922,18 +1050,18 @@ tabout contraceptive_dynamics parity_P2 [aw=P2P3_FUweight_P3] ///
 * Other Dynamics 
 *******************************************************************************
 *Contraceptive discontinuation
-	tabout stopped_use if unmettot_P3==1 [aw=P2P3_FUweight] ///
+	tabout stopped_use if unmettot_P4==1 [aw=P3P4_FUweight] ///
 		using `tabout', append	c(col) f(1) clab(%) npos(row)  ///
-		h2("Among women 15-49 with unmet need at Phase 3, the percentage that stopped using a contraceptive method or became pregnant since Phase 2 (Weighted)")
+		h2("Among women 15-49 with unmet need at Phase 4, the percentage that stopped using a contraceptive method or became pregnant since Phase 3 (Weighted)")
 		
 
 *Prediction of uptake
 rename partner_supportive*P1 partner_support_P1
 
-foreach strat in partner_supportive_P2 intention_use_P2 unmettot_P2 {
-	tabout adopters `strat' if cp_P2==0 [aw=P2P3_FUweight] ///
+foreach strat in partner_supportive_cc_P3 intention_use_P3 unmettot_P3 {
+	tabout adopters `strat' if cp_P3==0 [aw=P3P4_FUweight] ///
 		using `tabout', append	c(col) f(1) clab(%) npos(row)  ///
-		h1("Percent of women age 15-49 who were not using an FP method at Phase 2 and who adopted an FP method between Phase 2 and Phase 3, by their ``strat'_lab' at Phase 2")
+		h1("Percent of women age 15-49 who were not using an FP method at Phase 3 and who adopted an FP method between Phase 3 and Phase 4, by their `strat' at Phase 3")
 	}
 
 restore
