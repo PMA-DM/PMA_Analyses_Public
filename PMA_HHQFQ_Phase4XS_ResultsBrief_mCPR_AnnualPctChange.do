@@ -19,13 +19,13 @@
 
 /*******************************************************************************
 *
-*  FILENAME:		PMA_HHQFQ_Phase2XS_ResultsBrief_mCPR_AnnualPctChange.do
+*  FILENAME:		PMA_HHQFQ_Phase4XS_ResultsBrief_mCPR_AnnualPctChange.do
 *  PURPOSE:			Generate the .xls output with the mCPR Annual Percent Change for the PMA Phase 4 XS Results Brief
-*  CREATED BY: 		Elizabeth Larson (elarso11@jhu.edu)
-*  DATA IN:			PMA's Phase1 XS HHQFQ publicly released dataset
-*  DATA OUT: 		PMA_COUNTRY_PHASE2_XS_ContraceptiveTrends_DATE.dta
-*  FILE OUT: 		PMA_COUNTRY_PHASE2_XS_ContraceptiveTrends_DATE.xls
-*  LOG FILE OUT: 	PMA_COUNTRY_PHASE2_XS_ContraceptiveTrends_Log_DATE.log
+*  CREATED BY: 		Guy Bai (gbai5@jhu.edu)
+*  DATA IN:			PMA's Phase4 XS HHQFQ publicly released dataset
+*  DATA OUT: 		PMA_COUNTRY_Phase4XS_ContraceptiveTrends_DATE.dta
+*  FILE OUT: 		PMA_COUNTRY_Phase4XS_ContraceptiveTrends_DATE.xls
+*  LOG FILE OUT: 	PMA_COUNTRY_Phase4XS_ContraceptiveTrends_Log_DATE.log
 *
 *******************************************************************************/
 
@@ -82,7 +82,7 @@ local PMAdataset_count 2
 *		  local briefdir "/User/ealarson/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "C:\Users\annro\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/ealarson/Documents/PMA/Burkina Faso/PublicRelease/Phase 4/untitled folder"
+local briefdir "~/Documents/PMA/Burkina Faso/PublicRelease/Phase 4/untitled folder"
 
 ************** DATASETS & DATES *************
 *	Directory for each of the publicly available PMA2020 and PMA datasets on  
@@ -163,13 +163,19 @@ local datasetyear9 "2020"
 
 ***** THIRD DATASET (PHASE 3) *****
 * Dataset 3 Directory
-local PMAdataset3 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Phase3/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
+local PMAdataset3 "~/Dropbox (Gates Institute)/PMABF_Datasets/Phase3/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
 local datasetyear10 "2021"
 
 ***** FOURTH DATASET (PHASE 4) *****
 * Dataset 3 Directory
-local PMAdataset4 "/Users/clairesilberg/Dropbox (Gates Institute)/PMABF_Datasets/Phase4/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
+local PMAdataset4 "~/Dropbox (Gates Institute)/PMABF_Datasets/Phase4/Final_PublicRelease/HQFQ/PMA2022_BFP3_HQFQ_v2.0_12Jul2023/PMA2022_BFP3_HQFQ_v2.0_12Jul2023.dta"
 local datasetyear11 "2023"
+
+***** FOURTH DATASET (PHASE 4) *****
+* Dataset 3 Directory
+local PMAdataset5 "~/Dropbox (Gates Institute)/PMABF_Datasets/Phase4/Final_PublicRelease/HQFQ/PMA20224_BFP4_HQFQ_v2.0_12Sep2024/PMA2024_BFP4_HQFQ_v2.0_12Sep2024.dta"
+local datasetyear12 "2024"
+
 *******************************************************************************
 * SECTION 2: SET MACROS FOR THE COUNTRY, WEIGHT, WEALTH AND EDUCATION
 *
@@ -385,13 +391,13 @@ gen subnational_yn="`subnational_yn'"
 		}
 		
 * Start log file
-log using "`briefdir'/PMA_`country'_Phase2_XS_HHQFQ_mCPR_AnnualPctChange_Log_`date'.log", replace		
+log using "`briefdir'/PMA_`country'_Phase4XS_HHQFQ_mCPR_AnnualPctChange_Log_`date'.log", replace		
 
 * Set local for xls file
-local excel "PMA_`country'_Phase2_XS_HHQFQ_mCPR_AnnualPctChange_`date'.xls"
+local excel "PMA_`country'_Phase4XS_HHQFQ_mCPR_AnnualPctChange_`date'.xls"
 
 * Set local for dataset
-local dataset "PMA_`country'_Phase2_XS_HHQFQ_mCPR_AnnualPctChange_`date'.dta"
+local dataset "PMA_`country'_Phase4XS_HHQFQ_mCPR_AnnualPctChange_`date'.dta"
 
 *******************************************************************************
 * SECTION 5: SET UP DATASETS
