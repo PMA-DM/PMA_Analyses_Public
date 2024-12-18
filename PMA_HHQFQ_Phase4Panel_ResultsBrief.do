@@ -66,25 +66,25 @@ numlabel, add
 *		  local briefdir "~/Desktop/PMA2020/NigeriaAnalysisOutput"
 *		- For example (PC): 
 *		  local briefdir "~\PMA2020\NigeriaAnalysisOutput"
-local briefdir "/Users/guymartialbai/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/#Data_Not_Shared/Analyses_Private_Datadir/Phase4"
+local briefdir "~/Documents/PMA/PMA_DataManagement/DM_GitKraken/DM_Baltimore/#Data_Not_Shared/Analyses_Private_Datadir/Phase4"
 
 ************** DATASETS & DATES *************
 
 ***** FIRST DATASET *****
 * Dataset 1 Directory
-local PMAdataset1 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/NE-Niger/PMANE_Datasets/Phase1/Final_PublicRelease/HQFQ/PMA2021_NEP1_HQFQ_v2.0_1Sep2024/PMA2021_NEP1_HQFQ_v2.0_1Sep2024.dta" 
+local PMAdataset1 "~/DATA_DIRECTORY/Phase1/Final_PublicRelease/HQFQ/PMA2021_NEP1_HQFQ_v2.0_1Sep2024/PMA2021_NEP1_HQFQ_v2.0_1Sep2024.dta" 
 
 ***** SECOND DATASET *****
 * Dataset 2 Directory
-local PMAdataset2 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/NE-Niger/PMANE_Datasets/Phase2/Final_PublicRelease/HQFQ/PMA2022_NEP2_HQFQ_v2.0_1Sep2024/PMA2022_NEP2_HQFQ_v2.0_1Sep2024.dta"
+local PMAdataset2 "~/DATA_DIRECTORY/Phase2/Final_PublicRelease/HQFQ/PMA2022_NEP2_HQFQ_v2.0_1Sep2024/PMA2022_NEP2_HQFQ_v2.0_1Sep2024.dta"
 
 ***** THIRD DATASET *****
 * Dataset 3 Directory
-local PMAdataset3 "~/Dropbox (Gates Institute)/NE-Niger/PMANE_Datasets/Phase3/Final_PublicRelease/HQFQ/PMA2023_NEP3_HQFQ_v1.0_1Sep2023/PMA2023_NEP3_HQFQ_1Sep2023.dta" 
+local PMAdataset3 "~/DATA_DIRECTORY/Phase3/Final_PublicRelease/HQFQ/PMA2023_NEP3_HQFQ_v1.0_1Sep2023/PMA2023_NEP3_HQFQ_1Sep2023.dta" 
 
 ***** FOURTH DATASET *****
 * Dataset 4 Directory
-local PMAdataset4 "/Users/guymartialbai/Gates Institute Dropbox/Guy Martial BAI/NE-Niger/PMANE_Datasets/Phase4/Final_PublicRelease/HQFQ/PMA2024_NEP4_HQFQ_v1.0_1Sep2024/PMA2024_NEP4_HQFQ_v1.0_1Sep2024.dta"
+local PMAdataset4 "~/DATA_DIRECTORY/Phase4/Final_PublicRelease/HQFQ/PMA2024_NEP4_HQFQ_v1.0_1Sep2024/PMA2024_NEP4_HQFQ_v1.0_1Sep2024.dta"
 
 
 *******************************************************************************
